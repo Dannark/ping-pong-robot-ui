@@ -33,6 +33,9 @@ int tiltMenuIndex = 0;
 int launcherIndex = 0;
 int feederIndex = 0;
 int timerMenuIndex = 0;
+int settingsIndex = 0;  // 0: Servo 1, 1: Servo 2, 2: Back
+int settingsServoEditIndex = 0;  // 0: MIN, 1: MID, 2: MAX, 3: Back
+int settingsServoSelected = 0;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
 
 Config cfg;
 

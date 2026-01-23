@@ -30,12 +30,13 @@ void loop() {
 
   switch (currentScreen) {
     case SCREEN_HOME: {
-      if (nav == NAV_UP) homeIndex = clampInt(homeIndex - 1, 0, 1);
-      if (nav == NAV_DOWN) homeIndex = clampInt(homeIndex + 1, 0, 1);
+      if (nav == NAV_UP) homeIndex = clampInt(homeIndex - 1, 0, 2);
+      if (nav == NAV_DOWN) homeIndex = clampInt(homeIndex + 1, 0, 2);
 
       if (swPressedEvent) {
         if (homeIndex == 0) currentScreen = SCREEN_WIZARD;
         if (homeIndex == 1) currentScreen = SCREEN_INFO;
+        if (homeIndex == 2) { settingsIndex = 0; currentScreen = SCREEN_SETTINGS; }
       }
 
       renderHome();
@@ -45,6 +46,82 @@ void loop() {
     case SCREEN_INFO: {
       if (swPressedEvent) currentScreen = SCREEN_HOME;
       renderInfo();
+      break;
+    }
+
+    case SCREEN_SETTINGS: {
+      if (nav == NAV_UP) settingsIndex = clampInt(settingsIndex - 1, 0, 2);
+      if (nav == NAV_DOWN) settingsIndex = clampInt(settingsIndex + 1, 0, 2);
+
+      if (swPressedEvent) {
+        if (settingsIndex == 0) {
+          // Servo 1
+          settingsServoSelected = 0;
+          settingsServoEditIndex = 0;
+          currentScreen = SCREEN_SETTINGS_SERVO;
+        } else if (settingsIndex == 1) {
+          // Servo 2
+          settingsServoSelected = 1;
+          settingsServoEditIndex = 0;
+          currentScreen = SCREEN_SETTINGS_SERVO;
+        } else if (settingsIndex == 2) {
+          // Back
+          currentScreen = SCREEN_HOME;
+        }
+      }
+
+      renderSettings();
+      break;
+    }
+
+    case SCREEN_SETTINGS_SERVO: {
+      if (nav == NAV_UP) settingsServoEditIndex = clampInt(settingsServoEditIndex - 1, 0, 3);
+      if (nav == NAV_DOWN) settingsServoEditIndex = clampInt(settingsServoEditIndex + 1, 0, 3);
+
+      // Edição dos valores
+      if (nav == NAV_LEFT) {
+        if (settingsServoSelected == 0) {
+          // Servo 1 (TILT)
+          switch (settingsServoEditIndex) {
+            case 0: servo_tilt_up = clampInt(servo_tilt_up - 1, 0, 180); break;
+            case 1: servo_tilt_mid = clampInt(servo_tilt_mid - 1, 0, 180); break;
+            case 2: servo_tilt_down = clampInt(servo_tilt_down - 1, 0, 180); break;
+          }
+        } else {
+          // Servo 2 (PAN)
+          switch (settingsServoEditIndex) {
+            case 0: servo_pan_left = clampInt(servo_pan_left - 1, 0, 180); break;
+            case 1: servo_pan_mid = clampInt(servo_pan_mid - 1, 0, 180); break;
+            case 2: servo_pan_right = clampInt(servo_pan_right - 1, 0, 180); break;
+          }
+        }
+      }
+      if (nav == NAV_RIGHT) {
+        if (settingsServoSelected == 0) {
+          // Servo 1 (TILT)
+          switch (settingsServoEditIndex) {
+            case 0: servo_tilt_up = clampInt(servo_tilt_up + 1, 0, 180); break;
+            case 1: servo_tilt_mid = clampInt(servo_tilt_mid + 1, 0, 180); break;
+            case 2: servo_tilt_down = clampInt(servo_tilt_down + 1, 0, 180); break;
+          }
+        } else {
+          // Servo 2 (PAN)
+          switch (settingsServoEditIndex) {
+            case 0: servo_pan_left = clampInt(servo_pan_left + 1, 0, 180); break;
+            case 1: servo_pan_mid = clampInt(servo_pan_mid + 1, 0, 180); break;
+            case 2: servo_pan_right = clampInt(servo_pan_right + 1, 0, 180); break;
+          }
+        }
+      }
+
+      if (swPressedEvent) {
+        if (settingsServoEditIndex == 3) {
+          // Back para tela de Settings
+          currentScreen = SCREEN_SETTINGS;
+        }
+      }
+
+      renderSettingsServo();
       break;
     }
 

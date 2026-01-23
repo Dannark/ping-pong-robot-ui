@@ -12,5 +12,7 @@ void renderLauncher();
 void renderFeeder();
 void renderTimer();
 void renderRunning();
+void renderSettings();
+void renderSettingsServo();
 
 #endif

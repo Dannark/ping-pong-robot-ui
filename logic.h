@@ -26,6 +26,9 @@ extern int tiltMenuIndex;
 extern int launcherIndex;
 extern int feederIndex;
 extern int timerMenuIndex;
+extern int settingsIndex;  // 0: Servo 1, 1: Servo 2, 2: Back
+extern int settingsServoEditIndex;  // 0: MIN, 1: MID, 2: MAX, 3: Back
+extern int settingsServoSelected;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
 
 extern Config cfg;
 

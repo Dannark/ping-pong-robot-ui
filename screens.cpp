@@ -3,15 +3,16 @@
 #include "logic.h"
 #include "config.h"
 #include "motors.h"
+#include "servos.h"
 #include <Arduino.h>
 
 void renderHome() {
   display.clearDisplay();
   drawHeader("HOME");
 
-  const char* items[2] = { "Start Wizard", "Info / Stats" };
+  const char* items[3] = { "Start Wizard", "Info / Stats", "Settings" };
 
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 3; i++) {
     display.setCursor(0, BODY_Y + i * 12);
     display.print(i == homeIndex ? "> " : "  ");
     display.println(items[i]);
@@ -114,6 +115,11 @@ void renderAxisEdit(const char* title, float value) {
   float tilt = (title[0] == 'T') ? value : cfg.tiltTarget;
 
   drawMiniRadar(38, 12, 52, pan, tilt);
+
+  // Mostra o valor acima da label SW=OK
+  display.setCursor(0, 48);
+  display.print("v: ");
+  display.print(value, 2);
 
   display.setCursor(0, 56);
   display.print("SW=OK");
@@ -242,6 +248,96 @@ void renderRunning() {
 
   // Radar a bit higher
   drawMiniRadar(92, BODY_Y + 14, 32, livePan, liveTilt);
+
+  display.display();
+}
+
+void renderSettings() {
+  display.clearDisplay();
+  drawHeader("SETTINGS");
+
+  display.setCursor(0, BODY_Y);
+  display.print(settingsIndex == 0 ? "> " : "  ");
+  display.println("Servo 1");
+
+  display.setCursor(0, BODY_Y + 12);
+  display.print(settingsIndex == 1 ? "> " : "  ");
+  display.println("Servo 2");
+
+  display.setCursor(0, BODY_Y + 24);
+  display.print(settingsIndex == 2 ? "> " : "  ");
+  display.println("Back");
+
+  display.display();
+}
+
+void renderSettingsServo() {
+  display.clearDisplay();
+  
+  // Título baseado no servo selecionado
+  if (settingsServoSelected == 0) {
+    drawHeader("SERVO 1");
+  } else {
+    drawHeader("SERVO 2");
+  }
+
+  // Mostra os limites do servo selecionado
+  if (settingsServoSelected == 0) {
+    // Servo 1 (TILT)
+    display.setCursor(0, BODY_Y);
+    display.print(settingsServoEditIndex == 0 ? "> " : "  ");
+    display.print("MIN: ");
+    if (settingsServoEditIndex == 0) display.print("[");
+    display.print(servo_tilt_up);
+    if (settingsServoEditIndex == 0) display.print("]");
+    else display.println();
+
+    display.setCursor(0, BODY_Y + 12);
+    display.print(settingsServoEditIndex == 1 ? "> " : "  ");
+    display.print("MID: ");
+    if (settingsServoEditIndex == 1) display.print("[");
+    display.print(servo_tilt_mid);
+    if (settingsServoEditIndex == 1) display.print("]");
+    else display.println();
+
+    display.setCursor(0, BODY_Y + 24);
+    display.print(settingsServoEditIndex == 2 ? "> " : "  ");
+    display.print("MAX: ");
+    if (settingsServoEditIndex == 2) display.print("[");
+    display.print(servo_tilt_down);
+    if (settingsServoEditIndex == 2) display.print("]");
+    else display.println();
+  } else {
+    // Servo 2 (PAN)
+    display.setCursor(0, BODY_Y);
+    display.print(settingsServoEditIndex == 0 ? "> " : "  ");
+    display.print("MIN: ");
+    if (settingsServoEditIndex == 0) display.print("[");
+    display.print(servo_pan_left);
+    if (settingsServoEditIndex == 0) display.print("]");
+    else display.println();
+
+    display.setCursor(0, BODY_Y + 12);
+    display.print(settingsServoEditIndex == 1 ? "> " : "  ");
+    display.print("MID: ");
+    if (settingsServoEditIndex == 1) display.print("[");
+    display.print(servo_pan_mid);
+    if (settingsServoEditIndex == 1) display.print("]");
+    else display.println();
+
+    display.setCursor(0, BODY_Y + 24);
+    display.print(settingsServoEditIndex == 2 ? "> " : "  ");
+    display.print("MAX: ");
+    if (settingsServoEditIndex == 2) display.print("[");
+    display.print(servo_pan_right);
+    if (settingsServoEditIndex == 2) display.print("]");
+    else display.println();
+  }
+
+  // Back
+  display.setCursor(0, BODY_Y + 36);
+  display.print(settingsServoEditIndex == 3 ? "> " : "  ");
+  display.println("Back");
 
   display.display();
 }
