@@ -8,6 +8,7 @@
 #include "display.h"
 #include "logic.h"
 #include "screens.h"
+#include "servos.h"
 
 // ================= Main =================
 void setup() {
@@ -15,6 +16,7 @@ void setup() {
 
   initJoystick();
   initDisplay();
+  initServos();
 }
 
 void loop() {
@@ -137,6 +139,9 @@ void loop() {
       float stickX = joyToNorm(analogRead(JOY_X));
       applyIncremental(cfg.panTarget, stickX);
 
+      // Atualizar servos em tempo real durante edição
+      updateServos(cfg.panTarget, cfg.tiltTarget);
+
       if (swPressedEvent) currentScreen = SCREEN_PAN;
       renderAxisEdit("PAN", cfg.panTarget);
       break;
@@ -145,6 +150,9 @@ void loop() {
     case SCREEN_TILT_EDIT: {
       float stickY = joyToNorm(analogRead(JOY_Y));
       applyIncremental(cfg.tiltTarget, stickY);
+
+      // Atualizar servos em tempo real durante edição
+      updateServos(cfg.panTarget, cfg.tiltTarget);
 
       if (swPressedEvent) currentScreen = SCREEN_TILT;
       renderAxisEdit("TILT", cfg.tiltTarget);

@@ -1,6 +1,7 @@
 #include "logic.h"
 #include "config.h"
 #include "utils.h"
+#include "servos.h"
 #include <Arduino.h>
 
 // ================= Auto state vars =================
@@ -92,6 +93,9 @@ void updateRunningLogic() {
   } else {
     applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step);
   }
+
+  // Atualizar servos com os valores normalizados
+  updateServos(livePan, liveTilt);
 }
 
 void updateAxisPreviewTargets() {
