@@ -9,6 +9,7 @@
 #include "logic.h"
 #include "screens.h"
 #include "servos.h"
+#include "motors.h"
 
 // ================= Main =================
 void setup() {
@@ -17,6 +18,7 @@ void setup() {
   initJoystick();
   initDisplay();
   initServos();
+  initMotors();
 }
 
 void loop() {
@@ -224,6 +226,7 @@ void loop() {
       // short press => back to wizard
       if (swPressedEvent) {
         isRunning = false;
+        stopAllMotors();
         currentScreen = SCREEN_WIZARD;
       }
 

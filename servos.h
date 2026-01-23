@@ -9,7 +9,7 @@
 #define SERVO_TILT_DOWN 120
 
 // ===== SERVO 2 (PAN) =====
-#define SERVO_PAN_LEFT  45
+#define SERVO_PAN_LEFT  15
 #define SERVO_PAN_MID   70
 #define SERVO_PAN_RIGHT 125
 

@@ -2,6 +2,7 @@
 #include "config.h"
 #include "utils.h"
 #include "servos.h"
+#include "motors.h"
 #include <Arduino.h>
 
 // ================= Auto state vars =================
@@ -74,6 +75,7 @@ void updateRunningLogic() {
   unsigned long tms = timerMsByIndex(cfg.timerIndex);
   if (tms > 0 && millis() - runStartMs >= tms) {
     isRunning = false;
+    stopAllMotors();
     currentScreen = SCREEN_HOME;
     return;
   }
@@ -96,6 +98,12 @@ void updateRunningLogic() {
 
   // Atualizar servos com os valores normalizados
   updateServos(livePan, liveTilt);
+
+  // Atualizar motores do launcher (M1, M2, M3)
+  updateLauncherMotors(cfg.launcherPower, cfg.spinMode);
+
+  // Atualizar motor feeder (M4)
+  updateFeederMotor(cfg.feederSpeed, cfg.feederMode);
 }
 
 void updateAxisPreviewTargets() {
@@ -114,6 +122,7 @@ void goBackToWizard() {
 
 void cancelToHome() {
   isRunning = false;
+  stopAllMotors();
   currentScreen = SCREEN_HOME;
 }
 

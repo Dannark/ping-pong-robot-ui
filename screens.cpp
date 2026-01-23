@@ -2,6 +2,7 @@
 #include "display.h"
 #include "logic.h"
 #include "config.h"
+#include "motors.h"
 #include <Arduino.h>
 
 void renderHome() {
@@ -140,6 +141,20 @@ void renderLauncher() {
 
   // Visualizador de spin no canto direito
   drawSpinVisualizer(92, BODY_Y, 32, cfg.spinMode);
+
+  // Mostra as potências dos motores na última linha (só se não for NONE)
+  if (cfg.spinMode != SPIN_NONE) {
+    int speed1, speed2, speed3;
+    getLauncherMotorSpeeds(cfg.launcherPower, cfg.spinMode, speed1, speed2, speed3);
+    
+    display.setCursor(0, 56);
+    display.print("M1:");
+    display.print(speed1);
+    display.print(" M2:");
+    display.print(speed2);
+    display.print(" M3:");
+    display.print(speed3);
+  }
 
   display.display();
 }
