@@ -8,6 +8,7 @@
 void initDisplay();
 void drawHeader(const char* title);
 void drawMiniRadar(int x0, int y0, int size, float pan, float tilt);
+void drawSpinVisualizer(int x0, int y0, int size, SpinMode spinMode);
 
 extern Adafruit_SSD1306 display;
 

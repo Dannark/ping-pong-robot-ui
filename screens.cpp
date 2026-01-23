@@ -138,6 +138,9 @@ void renderLauncher() {
   display.print(launcherIndex == 2 ? "> " : "  ");
   display.println("Back");
 
+  // Visualizador de spin no canto direito
+  drawSpinVisualizer(92, BODY_Y, 32, cfg.spinMode);
+
   display.display();
 }
 

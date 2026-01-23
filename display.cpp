@@ -1,4 +1,5 @@
 #include "display.h"
+#include "config.h"
 #include <Wire.h>
 #include <Arduino.h>
 
@@ -40,4 +41,64 @@ void drawMiniRadar(int x0, int y0, int size, float pan, float tilt) {
   int px = cx + (int)(pan * (size / 2 - 2));
   int py = cy + (int)(tilt * (size / 2 - 2));
   display.fillCircle(px, py, 2, SSD1306_WHITE);
+}
+
+void drawSpinVisualizer(int x0, int y0, int size, SpinMode spinMode) {
+  int cx = x0 + size / 2;
+  int cy = y0 + size / 2;
+  int radius = size / 2 - 2;
+
+  // Desenha a bolinha (círculo maior)
+  display.drawCircle(cx, cy, radius, SSD1306_WHITE);
+
+  // Se for NONE, não desenha seta (ou desenha um círculo pequeno no centro)
+  if (spinMode == SPIN_NONE) {
+    display.fillCircle(cx, cy, 2, SSD1306_WHITE);
+    return;
+  }
+
+  // Desenha a seta indicando a direção do spin
+  int arrowLength = radius - 4;
+  int arrowHeadSize = 3;
+
+  switch (spinMode) {
+    case SPIN_TOP: {
+      // Seta para cima
+      int endY = cy - arrowLength;
+      display.drawLine(cx, cy, cx, endY, SSD1306_WHITE);
+      // Cabeça da seta (triângulo)
+      display.drawLine(cx, endY, cx - arrowHeadSize, endY + arrowHeadSize, SSD1306_WHITE);
+      display.drawLine(cx, endY, cx + arrowHeadSize, endY + arrowHeadSize, SSD1306_WHITE);
+      break;
+    }
+    case SPIN_BACK: {
+      // Seta para baixo
+      int endY = cy + arrowLength;
+      display.drawLine(cx, cy, cx, endY, SSD1306_WHITE);
+      // Cabeça da seta (triângulo)
+      display.drawLine(cx, endY, cx - arrowHeadSize, endY - arrowHeadSize, SSD1306_WHITE);
+      display.drawLine(cx, endY, cx + arrowHeadSize, endY - arrowHeadSize, SSD1306_WHITE);
+      break;
+    }
+    case SPIN_LEFT: {
+      // Seta para esquerda
+      int endX = cx - arrowLength;
+      display.drawLine(cx, cy, endX, cy, SSD1306_WHITE);
+      // Cabeça da seta (triângulo)
+      display.drawLine(endX, cy, endX + arrowHeadSize, cy - arrowHeadSize, SSD1306_WHITE);
+      display.drawLine(endX, cy, endX + arrowHeadSize, cy + arrowHeadSize, SSD1306_WHITE);
+      break;
+    }
+    case SPIN_RIGHT: {
+      // Seta para direita
+      int endX = cx + arrowLength;
+      display.drawLine(cx, cy, endX, cy, SSD1306_WHITE);
+      // Cabeça da seta (triângulo)
+      display.drawLine(endX, cy, endX - arrowHeadSize, cy - arrowHeadSize, SSD1306_WHITE);
+      display.drawLine(endX, cy, endX - arrowHeadSize, cy + arrowHeadSize, SSD1306_WHITE);
+      break;
+    }
+    default:
+      break;
+  }
 }
