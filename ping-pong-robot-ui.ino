@@ -26,6 +26,17 @@ void loop() {
   updateRunningLogic();
   updateAxisPreviewTargets();
 
+  // Long press em qualquer tela volta para Home (exceto se já estiver no Home)
+  if (swLongPressEvent && currentScreen != SCREEN_HOME) {
+    if (isRunning) {
+      stopAllMotors();
+      isRunning = false;
+    }
+    currentScreen = SCREEN_HOME;
+    // Pula o resto do loop para evitar processar outros eventos
+    return;
+  }
+
   NavEvent nav = readNavEvent();
 
   switch (currentScreen) {
@@ -305,11 +316,6 @@ void loop() {
         isRunning = false;
         stopAllMotors();
         currentScreen = SCREEN_WIZARD;
-      }
-
-      // long press => cancel and go home
-      if (swLongPressEvent) {
-        cancelToHome();
       }
 
       renderRunning();
