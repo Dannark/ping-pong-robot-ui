@@ -5,6 +5,11 @@
 #include "motors.h"
 #include <Arduino.h>
 
+// Forward declaration para acessar os motores diretamente
+extern AF_DCMotor motor1;
+extern AF_DCMotor motor2;
+extern AF_DCMotor motor3;
+
 // ================= Auto state vars =================
 float panDir = 1.0f;
 float tiltDir = 1.0f;
@@ -31,6 +36,7 @@ int panMenuIndex = 0;
 int tiltMenuIndex = 0;
 
 int launcherIndex = 0;
+int spinIndex = 0;
 int feederIndex = 0;
 int timerMenuIndex = 0;
 int settingsIndex = 0;  // 0: Servo 1, 1: Servo 2, 2: Back
@@ -103,7 +109,7 @@ void updateRunningLogic() {
   updateServos(livePan, liveTilt);
 
   // Atualizar motores do launcher (M1, M2, M3)
-  updateLauncherMotors(cfg.launcherPower, cfg.spinMode);
+  updateLauncherMotors(cfg.launcherPower, cfg.spinMode, cfg.spinIntensity);
 
   // Atualizar motor feeder (M4)
   updateFeederMotor(cfg.feederSpeed, cfg.feederMode);
@@ -136,7 +142,27 @@ void startRunning() {
   livePan = cfg.panTarget;
   liveTilt = cfg.tiltTarget;
 
+  // Inicia os motores gradualmente para evitar pico de corrente
+  // Primeiro inicia com velocidade baixa (metade da velocidade configurada)
+  int initialSpeed = cfg.launcherPower / 2;
+  if (initialSpeed < 50) initialSpeed = 50; // Mínimo de 50 para garantir que gire
+  
+  // Reseta cache e inicia com velocidade reduzida
+  resetMotorCache();
+  
+  motor1.setSpeed(initialSpeed);
+  motor2.setSpeed(initialSpeed);
+  motor3.setSpeed(initialSpeed);
+  motor1.run(FORWARD);
+  motor2.run(FORWARD);
+  motor3.run(FORWARD);
+  
+  // Atualiza cache manualmente (sem spin no início)
+  setMotorCache(initialSpeed, initialSpeed, initialSpeed);
+
   currentScreen = SCREEN_RUNNING;
+  
+  // A velocidade completa será aplicada no próximo loop através de updateRunningLogic()
 }
 
 // ================= Axis menu helpers =================

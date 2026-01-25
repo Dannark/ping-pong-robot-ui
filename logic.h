@@ -24,6 +24,7 @@ extern int wizardIndex;
 extern int panMenuIndex;
 extern int tiltMenuIndex;
 extern int launcherIndex;
+extern int spinIndex;
 extern int feederIndex;
 extern int timerMenuIndex;
 extern int settingsIndex;  // 0: Servo 1, 1: Servo 2, 2: Back

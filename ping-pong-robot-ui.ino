@@ -258,16 +258,34 @@ void loop() {
         if (nav == NAV_RIGHT) cfg.launcherPower = clampInt(cfg.launcherPower + 5, 0, 255);
       }
 
-      if (launcherIndex == 1) {
-        if (nav == NAV_LEFT)  cfg.spinMode = (SpinMode)((cfg.spinMode + SPIN_MODE_COUNT - 1) % SPIN_MODE_COUNT);
-        if (nav == NAV_RIGHT) cfg.spinMode = (SpinMode)((cfg.spinMode + 1) % SPIN_MODE_COUNT);
-      }
-
       if (swPressedEvent) {
+        if (launcherIndex == 1) { spinIndex = 0; currentScreen = SCREEN_SPIN; }
         if (launcherIndex == 2) goBackToWizard();
       }
 
       renderLauncher();
+      break;
+    }
+
+    case SCREEN_SPIN: {
+      if (nav == NAV_UP) spinIndex = clampInt(spinIndex - 1, 0, 2);
+      if (nav == NAV_DOWN) spinIndex = clampInt(spinIndex + 1, 0, 2);
+
+      if (spinIndex == 0) {
+        if (nav == NAV_LEFT)  cfg.spinMode = (SpinMode)((cfg.spinMode + SPIN_MODE_COUNT - 1) % SPIN_MODE_COUNT);
+        if (nav == NAV_RIGHT) cfg.spinMode = (SpinMode)((cfg.spinMode + 1) % SPIN_MODE_COUNT);
+      }
+
+      if (spinIndex == 1) {
+        if (nav == NAV_LEFT)  cfg.spinIntensity = clampInt(cfg.spinIntensity - 10, 0, 255);
+        if (nav == NAV_RIGHT) cfg.spinIntensity = clampInt(cfg.spinIntensity + 10, 0, 255);
+      }
+
+      if (swPressedEvent) {
+        if (spinIndex == 2) currentScreen = SCREEN_LAUNCHER;
+      }
+
+      renderSpin();
       break;
     }
 

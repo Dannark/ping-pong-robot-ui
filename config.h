@@ -29,6 +29,7 @@ enum Screen {
   SCREEN_PAN,
   SCREEN_TILT,
   SCREEN_LAUNCHER,
+  SCREEN_SPIN,
   SCREEN_FEEDER,
   SCREEN_TIMER,
   SCREEN_RUNNING,
@@ -84,8 +85,9 @@ struct Config {
   float panAuto2Step = 0.25f;
   float tiltAuto2Step = 0.25f;
 
-  int launcherPower = 200;  // 0..255
+  int launcherPower = 200;  // 0..255 - velocidade máxima dos motores
   SpinMode spinMode = SPIN_NONE;
+  int spinIntensity = 120;  // 0..255 - valor subtraído dos motores secundários (0 = sem spin)
 
   int feederSpeed = 80;     // 0..255
   FeederMode feederMode = FEED_CONTINUOUS;

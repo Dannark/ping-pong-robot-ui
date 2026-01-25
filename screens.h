@@ -9,6 +9,7 @@ void renderWizard();
 void renderAxisMenu(const char* title, AxisMode mode, float targetValue, int menuIndex);
 void renderAxisEdit(const char* title, float value);
 void renderLauncher();
+void renderSpin();
 void renderFeeder();
 void renderTimer();
 void renderRunning();

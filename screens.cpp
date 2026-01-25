@@ -138,20 +138,40 @@ void renderLauncher() {
 
   display.setCursor(0, BODY_Y + 12);
   display.print(launcherIndex == 1 ? "> " : "  ");
-  display.print("Spin: ");
-  display.println(spinModeName(cfg.spinMode));
-
+  display.print("Spin Config");
+  
   display.setCursor(0, BODY_Y + 24);
   display.print(launcherIndex == 2 ? "> " : "  ");
+  display.println("Back");
+
+  display.display();
+}
+
+void renderSpin() {
+  display.clearDisplay();
+  drawHeader("SPIN");
+
+  display.setCursor(0, BODY_Y);
+  display.print(spinIndex == 0 ? "> " : "  ");
+  display.print("Direction: ");
+  display.println(spinModeName(cfg.spinMode));
+
+  display.setCursor(0, BODY_Y + 12);
+  display.print(spinIndex == 1 ? "> " : "  ");
+  display.print("Intensity: ");
+  display.println(cfg.spinIntensity);
+
+  display.setCursor(0, BODY_Y + 24);
+  display.print(spinIndex == 2 ? "> " : "  ");
   display.println("Back");
 
   // Visualizador de spin no canto direito
   drawSpinVisualizer(92, BODY_Y, 32, cfg.spinMode);
 
   // Mostra as potências dos motores na última linha (só se não for NONE)
-  if (cfg.spinMode != SPIN_NONE) {
+  if (cfg.spinMode != SPIN_NONE && cfg.spinIntensity > 0) {
     int speed1, speed2, speed3;
-    getLauncherMotorSpeeds(cfg.launcherPower, cfg.spinMode, speed1, speed2, speed3);
+    getLauncherMotorSpeeds(cfg.launcherPower, cfg.spinMode, cfg.spinIntensity, speed1, speed2, speed3);
     
     display.setCursor(0, 56);
     display.print("M1:");
