@@ -85,11 +85,11 @@ struct Config {
   float panAuto2Step = 0.25f;
   float tiltAuto2Step = 0.25f;
 
-  int launcherPower = 200;  // 0..255 - velocidade máxima dos motores
+  int launcherPower = 255;  // 0..255 - velocidade máxima dos motores
   SpinMode spinMode = SPIN_NONE;
   int spinIntensity = 120;  // 0..255 - valor subtraído dos motores secundários (0 = sem spin)
 
-  int feederSpeed = 80;     // 0..255
+  int feederSpeed = 160;    // 0..255 - 6V: 80 insuficiente, 160 adequado
   FeederMode feederMode = FEED_CONTINUOUS;
 
   // 0=OFF, 1=15s, 2=30s, 3=1m, 4=2m, 5=5m
