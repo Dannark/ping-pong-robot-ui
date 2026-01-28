@@ -1,5 +1,7 @@
 #include "motors.h"
+#include "config.h"
 #include <Arduino.h>
+#include <math.h>
 
 // Motores do launcher (M1, M2, M3)
 AF_DCMotor motor1(MOTOR_LAUNCHER_1);
@@ -41,61 +43,40 @@ void initMotors() {
   lastFeederRunning = false;
 }
 
-void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity) {
-  // Velocidade base para todos os motores
-  int baseSpeed = power;
+// Posições dos motores em graus: M1=12h(N), M2=4h(SE), M3=8h(SW)
+#define MOTOR_ANGLE_1  0.0
+#define MOTOR_ANGLE_2  120.0
+#define MOTOR_ANGLE_3  240.0
+#define DEG_TO_RAD    0.01745329252
 
-  // Calcula velocidades individuais baseado no modo de spin
+static float spinAlign(float motorDeg, float targetRad) {
+  float diffRad = (motorDeg * (float)DEG_TO_RAD) - targetRad;
+  float c = (float)cos((double)diffRad);
+  return (c + 1.0f) * 0.5f;  // 0..1
+}
+
+void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity) {
+  int baseSpeed = power;
   int speed1 = baseSpeed;
   int speed2 = baseSpeed;
   int speed3 = baseSpeed;
 
-  // Se spinIntensity é 0 ou SPIN_NONE, todos ficam iguais
-  if (spinMode == SPIN_NONE || spinIntensity == 0) {
+  int targetAngle = spinModeToAngleDeg(spinMode);
+  if (targetAngle < 0 || spinIntensity == 0) {
     speed1 = baseSpeed;
     speed2 = baseSpeed;
     speed3 = baseSpeed;
   } else {
-    // Intensidade subtrai dos motores secundários
-    // Power é o máximo, motores secundários recebem (power - intensity)
-    int secondarySpeed = baseSpeed - spinIntensity;
-    if (secondarySpeed < 0) secondarySpeed = 0;
+    float intensityFactor = (float)spinIntensity / 255.0f;
+    float targetRad = (float)targetAngle * (float)DEG_TO_RAD;
 
-    switch (spinMode) {
-      case SPIN_TOP:
-        // Top spin: motor superior (M1) no máximo, outros reduzidos
-        speed1 = baseSpeed;
-        speed2 = secondarySpeed;
-        speed3 = secondarySpeed;
-        break;
+    float a1 = spinAlign((float)MOTOR_ANGLE_1, targetRad);
+    float a2 = spinAlign((float)MOTOR_ANGLE_2, targetRad);
+    float a3 = spinAlign((float)MOTOR_ANGLE_3, targetRad);
 
-      case SPIN_BACK:
-        // Back spin: motores inferiores (M2, M3) no máximo, superior reduzido
-        speed1 = secondarySpeed;
-        speed2 = baseSpeed;
-        speed3 = baseSpeed;
-        break;
-
-      case SPIN_LEFT:
-        // Left spin: motor esquerdo (M3) no máximo, outros reduzidos
-        speed1 = secondarySpeed;
-        speed2 = secondarySpeed;
-        speed3 = baseSpeed;
-        break;
-
-      case SPIN_RIGHT:
-        // Right spin: motor direito (M2) no máximo, outros reduzidos
-        speed1 = secondarySpeed;
-        speed2 = baseSpeed;
-        speed3 = secondarySpeed;
-        break;
-
-      default:
-        speed1 = baseSpeed;
-        speed2 = baseSpeed;
-        speed3 = baseSpeed;
-        break;
-    }
+    speed1 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a1)) + 0.5f);
+    speed2 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a2)) + 0.5f);
+    speed3 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a3)) + 0.5f);
   }
 
   // Limita velocidades entre 0 e 255
@@ -124,60 +105,27 @@ void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity) {
 }
 
 void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int &speed1, int &speed2, int &speed3) {
-  // Velocidade base para todos os motores
   int baseSpeed = power;
-
-  // Calcula velocidades individuais baseado no modo de spin
   speed1 = baseSpeed;
   speed2 = baseSpeed;
   speed3 = baseSpeed;
 
-  // Se spinIntensity é 0 ou SPIN_NONE, todos ficam iguais
-  if (spinMode == SPIN_NONE || spinIntensity == 0) {
+  int targetAngle = spinModeToAngleDeg(spinMode);
+  if (targetAngle < 0 || spinIntensity == 0) {
     speed1 = baseSpeed;
     speed2 = baseSpeed;
     speed3 = baseSpeed;
   } else {
-    // Intensidade subtrai dos motores secundários
-    // Power é o máximo, motores secundários recebem (power - intensity)
-    int secondarySpeed = baseSpeed - spinIntensity;
-    if (secondarySpeed < 0) secondarySpeed = 0;
+    float intensityFactor = (float)spinIntensity / 255.0f;
+    float targetRad = (float)targetAngle * (float)DEG_TO_RAD;
 
-    switch (spinMode) {
-      case SPIN_TOP:
-        // Top spin: motor superior (M1) no máximo, outros reduzidos
-        speed1 = baseSpeed;
-        speed2 = secondarySpeed;
-        speed3 = secondarySpeed;
-        break;
+    float a1 = spinAlign((float)MOTOR_ANGLE_1, targetRad);
+    float a2 = spinAlign((float)MOTOR_ANGLE_2, targetRad);
+    float a3 = spinAlign((float)MOTOR_ANGLE_3, targetRad);
 
-      case SPIN_BACK:
-        // Back spin: motores inferiores (M2, M3) no máximo, superior reduzido
-        speed1 = secondarySpeed;
-        speed2 = baseSpeed;
-        speed3 = baseSpeed;
-        break;
-
-      case SPIN_LEFT:
-        // Left spin: motor esquerdo (M3) no máximo, outros reduzidos
-        speed1 = secondarySpeed;
-        speed2 = secondarySpeed;
-        speed3 = baseSpeed;
-        break;
-
-      case SPIN_RIGHT:
-        // Right spin: motor direito (M2) no máximo, outros reduzidos
-        speed1 = secondarySpeed;
-        speed2 = baseSpeed;
-        speed3 = secondarySpeed;
-        break;
-
-      default:
-        speed1 = baseSpeed;
-        speed2 = baseSpeed;
-        speed3 = baseSpeed;
-        break;
-    }
+    speed1 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a1)) + 0.5f);
+    speed2 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a2)) + 0.5f);
+    speed3 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a3)) + 0.5f);
   }
 
   // Limita velocidades entre 0 e 255

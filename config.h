@@ -60,12 +60,17 @@ enum FeederMode {
   FEED_MODE_COUNT
 };
 
+// 0°=N(12h), 90°=E(3h), 180°=S(6h), 270°=W(9h)
 enum SpinMode {
   SPIN_NONE = 0,
-  SPIN_TOP,
-  SPIN_BACK,
-  SPIN_LEFT,
-  SPIN_RIGHT,
+  SPIN_N,    // 0°
+  SPIN_NE,   // 45°
+  SPIN_E,    // 90° (3h)
+  SPIN_SE,   // 135° (4h)
+  SPIN_S,    // 180°
+  SPIN_SW,   // 225° (8h)
+  SPIN_W,    // 270° (9h)
+  SPIN_NW,   // 315°
   SPIN_MODE_COUNT
 };
 
@@ -100,6 +105,7 @@ struct Config {
 const char* axisModeName(AxisMode m);
 const char* feederModeLabel(FeederMode m);
 const char* spinModeName(SpinMode s);
+int spinModeToAngleDeg(SpinMode s);  // -1 se NONE, senão 0..315
 
 // ================= Timer helpers =================
 const char* timerNameByIndex(int idx);

@@ -22,11 +22,30 @@ const char* feederModeLabel(FeederMode m) {
 const char* spinModeName(SpinMode s) {
   switch (s) {
     case SPIN_NONE: return "NONE";
-    case SPIN_TOP:  return "TOP";
-    case SPIN_BACK: return "BACK";
-    case SPIN_LEFT: return "LEFT";
-    case SPIN_RIGHT:return "RIGHT";
+    case SPIN_N:    return "N";
+    case SPIN_NE:   return "NE";
+    case SPIN_E:    return "E";
+    case SPIN_SE:   return "SE";
+    case SPIN_S:    return "S";
+    case SPIN_SW:   return "SW";
+    case SPIN_W:    return "W";
+    case SPIN_NW:   return "NW";
     default: return "?";
+  }
+}
+
+int spinModeToAngleDeg(SpinMode s) {
+  switch (s) {
+    case SPIN_NONE: return -1;
+    case SPIN_N:    return 0;
+    case SPIN_NE:   return 45;
+    case SPIN_E:    return 90;
+    case SPIN_SE:   return 135;
+    case SPIN_S:    return 180;
+    case SPIN_SW:   return 225;
+    case SPIN_W:    return 270;
+    case SPIN_NW:   return 315;
+    default: return -1;
   }
 }
 
