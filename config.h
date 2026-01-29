@@ -93,7 +93,7 @@ struct Config {
 
   int launcherPower = 255;  // 0..255 - velocidade máxima dos motores
   SpinMode spinMode = SPIN_NONE;
-  int spinIntensity = 120;  // 0..512 - >255 permite valores "negativos" (motor em REVERSE)
+  int spinIntensity = 255;  // 0..512 - >255 permite valores "negativos" (motor em REVERSE)
 
   int feederSpeed = 160;    // 0..255 - 6V: 80 insuficiente, 160 adequado
   FeederMode feederMode = FEED_CONTINUOUS;
