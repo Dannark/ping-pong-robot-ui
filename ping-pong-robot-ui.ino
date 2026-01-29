@@ -304,8 +304,8 @@ void loop() {
       }
 
       if (spinIndex == 1) {
-        if (nav == NAV_LEFT)  cfg.spinIntensity = clampInt(cfg.spinIntensity - 10, 0, 255);
-        if (nav == NAV_RIGHT) cfg.spinIntensity = clampInt(cfg.spinIntensity + 10, 0, 255);
+        if (nav == NAV_LEFT)  cfg.spinIntensity = clampInt(cfg.spinIntensity - 10, 0, 512);
+        if (nav == NAV_RIGHT) cfg.spinIntensity = clampInt(cfg.spinIntensity + 10, 0, 512);
       }
 
       if (swPressedEvent) {

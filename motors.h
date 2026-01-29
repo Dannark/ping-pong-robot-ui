@@ -10,7 +10,7 @@
 #define MOTOR_LAUNCHER_3 3  // M3
 #define MOTOR_FEEDER     4  // M4
 
-// Spin intensity agora é controlado via Config.spinIntensity (0-255)
+// Spin intensity via Config.spinIntensity (0-512); >255 permite motor em REVERSE (preview pode mostrar negativo)
 
 void initMotors();
 void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity);

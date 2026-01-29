@@ -67,6 +67,7 @@ void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity) {
     speed2 = baseSpeed;
     speed3 = baseSpeed;
   } else {
+    // intensityFactor > 1 (intensity > 255) produz valores negativos = motor em REVERSE
     float intensityFactor = (float)spinIntensity / 255.0f;
     float targetRad = (float)targetAngle * (float)DEG_TO_RAD;
 
@@ -79,29 +80,30 @@ void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity) {
     speed3 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a3)) + 0.5f);
   }
 
-  // Limita velocidades entre 0 e 255
-  speed1 = (speed1 < 0) ? 0 : (speed1 > 255) ? 255 : speed1;
-  speed2 = (speed2 < 0) ? 0 : (speed2 > 255) ? 255 : speed2;
-  speed3 = (speed3 < 0) ? 0 : (speed3 > 255) ? 255 : speed3;
+  // Limita ao range lógico -255..255 (negativo = girar em REVERSE)
+  speed1 = (speed1 < -255) ? -255 : (speed1 > 255) ? 255 : speed1;
+  speed2 = (speed2 < -255) ? -255 : (speed2 > 255) ? 255 : speed2;
+  speed3 = (speed3 < -255) ? -255 : (speed3 > 255) ? 255 : speed3;
 
-  // Só atualiza se os valores mudaram (otimização para evitar picos de energia)
+  // Aplica: valor negativo = BACKWARD com |speed|, positivo = FORWARD
   if (speed1 != lastLauncherSpeed1) {
-    motor1.setSpeed(speed1);
+    int mag1 = (speed1 < 0) ? -speed1 : speed1;
+    motor1.setSpeed(mag1);
+    motor1.run(speed1 < 0 ? BACKWARD : FORWARD);
     lastLauncherSpeed1 = speed1;
   }
   if (speed2 != lastLauncherSpeed2) {
-    motor2.setSpeed(speed2);
+    int mag2 = (speed2 < 0) ? -speed2 : speed2;
+    motor2.setSpeed(mag2);
+    motor2.run(speed2 < 0 ? BACKWARD : FORWARD);
     lastLauncherSpeed2 = speed2;
   }
   if (speed3 != lastLauncherSpeed3) {
-    motor3.setSpeed(speed3);
+    int mag3 = (speed3 < 0) ? -speed3 : speed3;
+    motor3.setSpeed(mag3);
+    motor3.run(speed3 < 0 ? BACKWARD : FORWARD);
     lastLauncherSpeed3 = speed3;
   }
-
-  // Sempre mantém os motores rodando (mas só atualiza velocidade se mudou)
-  motor1.run(FORWARD);
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
 }
 
 void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int &speed1, int &speed2, int &speed3) {
@@ -128,10 +130,10 @@ void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int
     speed3 = (int)(baseSpeed * (1.0f - intensityFactor * (1.0f - a3)) + 0.5f);
   }
 
-  // Limita velocidades entre 0 e 255
-  speed1 = (speed1 < 0) ? 0 : (speed1 > 255) ? 255 : speed1;
-  speed2 = (speed2 < 0) ? 0 : (speed2 > 255) ? 255 : speed2;
-  speed3 = (speed3 < 0) ? 0 : (speed3 > 255) ? 255 : speed3;
+  // Limita ao range lógico -255..255 (preview pode mostrar negativo)
+  speed1 = (speed1 < -255) ? -255 : (speed1 > 255) ? 255 : speed1;
+  speed2 = (speed2 < -255) ? -255 : (speed2 > 255) ? 255 : speed2;
+  speed3 = (speed3 < -255) ? -255 : (speed3 > 255) ? 255 : speed3;
 }
 
 void updateFeederMotor(int speed, FeederMode mode) {
