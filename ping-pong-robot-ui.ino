@@ -32,8 +32,10 @@ void loop() {
       stopAllMotors();
       isRunning = false;
     }
+    if (currentScreen == SCREEN_SETTINGS_MOTOR || currentScreen == SCREEN_SETTINGS) {
+      stopAllMotors();
+    }
     currentScreen = SCREEN_HOME;
-    // Pula o resto do loop para evitar processar outros eventos
     return;
   }
 
@@ -61,27 +63,52 @@ void loop() {
     }
 
     case SCREEN_SETTINGS: {
-      if (nav == NAV_UP) settingsIndex = clampInt(settingsIndex - 1, 0, 2);
-      if (nav == NAV_DOWN) settingsIndex = clampInt(settingsIndex + 1, 0, 2);
+      if (nav == NAV_UP) settingsIndex = clampInt(settingsIndex - 1, 0, 5);
+      if (nav == NAV_DOWN) settingsIndex = clampInt(settingsIndex + 1, 0, 5);
 
       if (swPressedEvent) {
         if (settingsIndex == 0) {
-          // Servo 1
           settingsServoSelected = 0;
           settingsServoEditIndex = 0;
           currentScreen = SCREEN_SETTINGS_SERVO;
         } else if (settingsIndex == 1) {
-          // Servo 2
           settingsServoSelected = 1;
           settingsServoEditIndex = 0;
           currentScreen = SCREEN_SETTINGS_SERVO;
         } else if (settingsIndex == 2) {
-          // Back
+          settingsMotorTest = 1;
+          settingsMotorSpeed = 0;
+          currentScreen = SCREEN_SETTINGS_MOTOR;
+        } else if (settingsIndex == 3) {
+          settingsMotorTest = 2;
+          settingsMotorSpeed = 0;
+          currentScreen = SCREEN_SETTINGS_MOTOR;
+        } else if (settingsIndex == 4) {
+          settingsMotorTest = 3;
+          settingsMotorSpeed = 0;
+          currentScreen = SCREEN_SETTINGS_MOTOR;
+        } else if (settingsIndex == 5) {
+          stopAllMotors();
           currentScreen = SCREEN_HOME;
         }
       }
 
       renderSettings();
+      break;
+    }
+
+    case SCREEN_SETTINGS_MOTOR: {
+      if (nav == NAV_LEFT) settingsMotorSpeed = clampInt(settingsMotorSpeed - 10, 0, 255);
+      if (nav == NAV_RIGHT) settingsMotorSpeed = clampInt(settingsMotorSpeed + 10, 0, 255);
+
+      runSingleMotor(settingsMotorTest, settingsMotorSpeed);
+
+      if (swPressedEvent) {
+        stopAllMotors();
+        currentScreen = SCREEN_SETTINGS;
+      }
+
+      renderSettingsMotor();
       break;
     }
 

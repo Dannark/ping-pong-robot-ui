@@ -196,6 +196,26 @@ void setMotorCache(int s1, int s2, int s3) {
   lastLauncherSpeed3 = s3;
 }
 
+void runSingleMotor(int which, int speed) {
+  motor1.run(RELEASE);
+  motor2.run(RELEASE);
+  motor3.run(RELEASE);
+  if (which == 0 || speed == 0) {
+    return;
+  }
+  int s = (speed < 0) ? 0 : (speed > 255) ? 255 : speed;
+  if (which == 1) {
+    motor1.setSpeed(s);
+    motor1.run(FORWARD);
+  } else if (which == 2) {
+    motor2.setSpeed(s);
+    motor2.run(FORWARD);
+  } else if (which == 3) {
+    motor3.setSpeed(s);
+    motor3.run(FORWARD);
+  }
+}
+
 void stopAllMotors() {
   motor1.run(RELEASE);
   motor2.run(RELEASE);

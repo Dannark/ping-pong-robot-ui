@@ -16,6 +16,7 @@ void initMotors();
 void updateLauncherMotors(int power, SpinMode spinMode, int spinIntensity);
 void updateFeederMotor(int speed, FeederMode mode);
 void stopAllMotors();
+void runSingleMotor(int which, int speed);  // which 1,2,3 = M1,M2,M3; 0 ou speed=0 = para todos
 void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int &speed1, int &speed2, int &speed3);
 void resetMotorCache();
 void setMotorCache(int s1, int s2, int s3);

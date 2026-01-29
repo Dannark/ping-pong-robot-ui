@@ -15,5 +15,6 @@ void renderTimer();
 void renderRunning();
 void renderSettings();
 void renderSettingsServo();
+void renderSettingsMotor();
 
 #endif

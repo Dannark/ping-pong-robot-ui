@@ -5,6 +5,7 @@
 #include "motors.h"
 #include "servos.h"
 #include <Arduino.h>
+#include <stdio.h>
 
 void renderHome() {
   display.clearDisplay();
@@ -272,21 +273,55 @@ void renderRunning() {
   display.display();
 }
 
+// Índices: 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=Back
+#define SETTINGS_ITEMS 6
+#define SETTINGS_VISIBLE 4
+
 void renderSettings() {
   display.clearDisplay();
   drawHeader("SETTINGS");
 
+  int scrollOffset = (settingsIndex >= SETTINGS_ITEMS - SETTINGS_VISIBLE)
+    ? (SETTINGS_ITEMS - SETTINGS_VISIBLE)
+    : (settingsIndex >= 1 ? settingsIndex - 1 : 0);
+  if (scrollOffset < 0) scrollOffset = 0;
+
+  const char* labels[SETTINGS_ITEMS] = { "Servo 1", "Servo 2", "M1", "M2", "M3", "Back" };
+
+  for (int i = 0; i < SETTINGS_VISIBLE && (scrollOffset + i) < SETTINGS_ITEMS; i++) {
+    int idx = scrollOffset + i;
+    display.setCursor(0, BODY_Y + i * 12);
+    display.print(idx == settingsIndex ? "> " : "  ");
+    display.println(labels[idx]);
+  }
+
+  display.display();
+}
+
+void renderSettingsMotor() {
+  char title[12];
+  sprintf(title, "M%d Test", settingsMotorTest);
+
+  display.clearDisplay();
+  drawHeader(title);
+
   display.setCursor(0, BODY_Y);
-  display.print(settingsIndex == 0 ? "> " : "  ");
-  display.println("Servo 1");
+  display.print("Speed: ");
+  display.println(settingsMotorSpeed);
 
-  display.setCursor(0, BODY_Y + 12);
-  display.print(settingsIndex == 1 ? "> " : "  ");
-  display.println("Servo 2");
+  // Barra 0..255
+  int barX = 0;
+  int barY = BODY_Y + 14;
+  int barW = 128;
+  int barH = 8;
+  display.drawRect(barX, barY, barW, barH, SSD1306_WHITE);
+  int fillW = (settingsMotorSpeed * (barW - 2)) / 255;
+  if (fillW > 0) {
+    display.fillRect(barX + 1, barY + 1, fillW, barH - 2, SSD1306_WHITE);
+  }
 
-  display.setCursor(0, BODY_Y + 24);
-  display.print(settingsIndex == 2 ? "> " : "  ");
-  display.println("Back");
+  display.setCursor(0, BODY_Y + 28);
+  display.println("> Back");
 
   display.display();
 }
