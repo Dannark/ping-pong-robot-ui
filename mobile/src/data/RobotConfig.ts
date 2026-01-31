@@ -1,4 +1,4 @@
-export type AxisMode = 'LIVE' | 'AUTO1' | 'AUTO2' | 'AUTO3';
+export type AxisMode = 'LIVE' | 'AUTO1' | 'AUTO2' | 'RANDOM';
 
 export type SpinDirection =
   | 'NONE'
@@ -28,10 +28,10 @@ export type RobotConfig = {
   tiltAuto1Speed: number;
   tiltAuto2Step: number;
   tiltAuto2PauseMs: number;
-  panAuto3MinDist: number;
-  panAuto3PauseMs: number;
-  tiltAuto3MinDist: number;
-  tiltAuto3PauseMs: number;
+  panRandomMinDist: number;
+  panRandomPauseMs: number;
+  tiltRandomMinDist: number;
+  tiltRandomPauseMs: number;
   launcherPower: number;
   spinDirection: SpinDirection;
   spinIntensity: number;
@@ -39,6 +39,10 @@ export type RobotConfig = {
   spinRandomIntervalSec: number;
   feederMode: FeederMode;
   feederSpeed: number;
+  feederP1OnMs: number;
+  feederP1OffMs: number;
+  feederP2OnMs: number;
+  feederP2OffMs: number;
   timerIndex: number;
 };
 
@@ -57,10 +61,10 @@ export const DEFAULT_CONFIG: RobotConfig = {
   tiltAuto1Speed: 0.035,
   tiltAuto2Step: 0.25,
   tiltAuto2PauseMs: 1000,
-  panAuto3MinDist: 0.2,
-  panAuto3PauseMs: 1500,
-  tiltAuto3MinDist: 0.2,
-  tiltAuto3PauseMs: 1500,
+  panRandomMinDist: 0.2,
+  panRandomPauseMs: 1500,
+  tiltRandomMinDist: 0.2,
+  tiltRandomPauseMs: 1500,
   launcherPower: 255,
   spinDirection: 'NONE',
   spinIntensity: 255,
@@ -68,10 +72,14 @@ export const DEFAULT_CONFIG: RobotConfig = {
   spinRandomIntervalSec: 5,
   feederMode: 'CONT',
   feederSpeed: 160,
+  feederP1OnMs: 1000,
+  feederP1OffMs: 1000,
+  feederP2OnMs: 2000,
+  feederP2OffMs: 2000,
   timerIndex: 0,
 };
 
-export const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'AUTO3'];
+export const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'RANDOM'];
 export const SPIN_DIRECTIONS: SpinDirection[] = [
   'NONE',
   'N',

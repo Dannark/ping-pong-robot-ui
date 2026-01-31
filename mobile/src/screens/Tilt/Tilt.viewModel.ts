@@ -23,10 +23,10 @@ export function getTiltState() {
     tiltAuto1Speed: c.tiltAuto1Speed,
     tiltAuto2Step: c.tiltAuto2Step,
     tiltAuto2PauseMs: c.tiltAuto2PauseMs,
-    panAuto3MinDist: c.panAuto3MinDist,
-    panAuto3PauseMs: c.panAuto3PauseMs,
-    tiltAuto3MinDist: c.tiltAuto3MinDist,
-    tiltAuto3PauseMs: c.tiltAuto3PauseMs,
+    panRandomMinDist: c.panRandomMinDist,
+    panRandomPauseMs: c.panRandomPauseMs,
+    tiltRandomMinDist: c.tiltRandomMinDist,
+    tiltRandomPauseMs: c.tiltRandomPauseMs,
   };
 }
 
@@ -59,11 +59,11 @@ export function setTiltAuto2PauseMs(value: number) {
 }
 
 export function setTiltAuto3MinDist(value: number) {
-  RobotConfigRepository.setConfig({ tiltAuto3MinDist: value });
+  RobotConfigRepository.setConfig({ tiltRandomMinDist: value });
 }
 
 export function setTiltAuto3PauseMs(value: number) {
-  RobotConfigRepository.setConfig({ tiltAuto3PauseMs: value });
+  RobotConfigRepository.setConfig({ tiltRandomPauseMs: value });
 }
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
@@ -79,7 +79,7 @@ export function resetTilt() {
     tiltAuto1Speed: DEFAULT_CONFIG.tiltAuto1Speed,
     tiltAuto2Step: DEFAULT_CONFIG.tiltAuto2Step,
     tiltAuto2PauseMs: DEFAULT_CONFIG.tiltAuto2PauseMs,
-    tiltAuto3MinDist: DEFAULT_CONFIG.tiltAuto3MinDist,
-    tiltAuto3PauseMs: DEFAULT_CONFIG.tiltAuto3PauseMs,
+    tiltRandomMinDist: DEFAULT_CONFIG.tiltRandomMinDist,
+    tiltRandomPauseMs: DEFAULT_CONFIG.tiltRandomPauseMs,
   });
 }

@@ -23,10 +23,10 @@ export function getPanState() {
     tiltAuto1Speed: c.tiltAuto1Speed,
     tiltAuto2Step: c.tiltAuto2Step,
     tiltAuto2PauseMs: c.tiltAuto2PauseMs,
-    panAuto3MinDist: c.panAuto3MinDist,
-    panAuto3PauseMs: c.panAuto3PauseMs,
-    tiltAuto3MinDist: c.tiltAuto3MinDist,
-    tiltAuto3PauseMs: c.tiltAuto3PauseMs,
+    panRandomMinDist: c.panRandomMinDist,
+    panRandomPauseMs: c.panRandomPauseMs,
+    tiltRandomMinDist: c.tiltRandomMinDist,
+    tiltRandomPauseMs: c.tiltRandomPauseMs,
   };
 }
 
@@ -59,11 +59,11 @@ export function setPanAuto2PauseMs(value: number) {
 }
 
 export function setPanAuto3MinDist(value: number) {
-  RobotConfigRepository.setConfig({ panAuto3MinDist: value });
+  RobotConfigRepository.setConfig({ panRandomMinDist: value });
 }
 
 export function setPanAuto3PauseMs(value: number) {
-  RobotConfigRepository.setConfig({ panAuto3PauseMs: value });
+  RobotConfigRepository.setConfig({ panRandomPauseMs: value });
 }
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
@@ -79,7 +79,7 @@ export function resetPan() {
     panAuto1Speed: DEFAULT_CONFIG.panAuto1Speed,
     panAuto2Step: DEFAULT_CONFIG.panAuto2Step,
     panAuto2PauseMs: DEFAULT_CONFIG.panAuto2PauseMs,
-    panAuto3MinDist: DEFAULT_CONFIG.panAuto3MinDist,
-    panAuto3PauseMs: DEFAULT_CONFIG.panAuto3PauseMs,
+    panRandomMinDist: DEFAULT_CONFIG.panRandomMinDist,
+    panRandomPauseMs: DEFAULT_CONFIG.panRandomPauseMs,
   });
 }

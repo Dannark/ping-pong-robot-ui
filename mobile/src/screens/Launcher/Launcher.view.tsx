@@ -44,6 +44,12 @@ export function LauncherView({
   onReset,
 }: LauncherViewProps) {
   const spinForPreview = spinRandom ? displaySpin : spinDirection;
+  const { speed1, speed2, speed3 } = getLauncherMotorSpeeds(
+    launcherPower,
+    spinForPreview,
+    spinIntensity
+  );
+  const hasMotorReversed = speed1 < 0 || speed2 < 0 || speed3 < 0;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -134,38 +140,34 @@ export function LauncherView({
             animate={true}
           />
           <View style={styles.motorSpeeds}>
-            {(() => {
-              const { speed1, speed2, speed3 } = getLauncherMotorSpeeds(
-                launcherPower,
-                spinForPreview,
-                spinIntensity
-              );
-              return (
-                <>
-                  <View style={styles.motorRow}>
-                    <Text style={styles.motorLabel}>M1</Text>
-                    <Text style={[styles.motorValue, speed1 < 0 && styles.motorValueReverse]}>
-                      {speed1}
-                    </Text>
-                  </View>
-                  <View style={styles.motorRow}>
-                    <Text style={styles.motorLabel}>M2</Text>
-                    <Text style={[styles.motorValue, speed2 < 0 && styles.motorValueReverse]}>
-                      {speed2}
-                    </Text>
-                  </View>
-                  <View style={styles.motorRow}>
-                    <Text style={styles.motorLabel}>M3</Text>
-                    <Text style={[styles.motorValue, speed3 < 0 && styles.motorValueReverse]}>
-                      {speed3}
-                    </Text>
-                  </View>
-                </>
-              );
-            })()}
+            <View style={styles.motorRow}>
+              <Text style={styles.motorLabel}>M1</Text>
+              <Text style={[styles.motorValue, speed1 < 0 && styles.motorValueReverse]}>
+                {speed1}
+              </Text>
+            </View>
+            <View style={styles.motorRow}>
+              <Text style={styles.motorLabel}>M2</Text>
+              <Text style={[styles.motorValue, speed2 < 0 && styles.motorValueReverse]}>
+                {speed2}
+              </Text>
+            </View>
+            <View style={styles.motorRow}>
+              <Text style={styles.motorLabel}>M3</Text>
+              <Text style={[styles.motorValue, speed3 < 0 && styles.motorValueReverse]}>
+                {speed3}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
+      {hasMotorReversed && (
+        <View style={styles.spinWarning}>
+          <Text style={styles.spinWarningText}>
+            O alcance pode ficar mais curto ao reverter a rotação dos motores em troca de mais spin.
+          </Text>
+        </View>
+      )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
         <Text style={styles.resetLabel}>Reset</Text>
@@ -250,6 +252,19 @@ const styles = StyleSheet.create({
   },
   motorValueReverse: {
     color: theme.colors.warning,
+  },
+  spinWarning: {
+    marginTop: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    backgroundColor: theme.colors.primaryMuted,
+    borderRadius: theme.borderRadius.sm,
+    borderLeftWidth: 4,
+    borderLeftColor: theme.colors.warning,
+  },
+  spinWarningText: {
+    ...theme.typography.caption,
+    color: theme.colors.text,
   },
   resetButton: {
     flexDirection: 'row',

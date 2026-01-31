@@ -21,10 +21,10 @@ type TiltViewProps = {
   tiltAuto1Speed: number;
   tiltAuto2Step: number;
   tiltAuto2PauseMs: number;
-  panAuto3MinDist: number;
-  panAuto3PauseMs: number;
-  tiltAuto3MinDist: number;
-  tiltAuto3PauseMs: number;
+  panRandomMinDist: number;
+  panRandomPauseMs: number;
+  tiltRandomMinDist: number;
+  tiltRandomPauseMs: number;
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onTiltTargetChange: (value: number) => void;
@@ -55,10 +55,10 @@ export function TiltView({
   tiltAuto1Speed,
   tiltAuto2Step,
   tiltAuto2PauseMs,
-  panAuto3MinDist,
-  panAuto3PauseMs,
-  tiltAuto3MinDist,
-  tiltAuto3PauseMs,
+  panRandomMinDist,
+  panRandomPauseMs,
+  tiltRandomMinDist,
+  tiltRandomPauseMs,
   axisModes,
   onModeSelect,
   onTiltTargetChange,
@@ -71,7 +71,7 @@ export function TiltView({
   onTiltAuto3PauseMsChange,
   onReset,
 }: TiltViewProps) {
-  const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2' || tiltMode === 'AUTO3';
+  const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2' || tiltMode === 'RANDOM';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -93,28 +93,35 @@ export function TiltView({
           tiltAuto1Speed={tiltAuto1Speed}
           tiltAuto2Step={tiltAuto2Step}
           tiltAuto2PauseMs={tiltAuto2PauseMs}
-          panAuto3MinDist={panAuto3MinDist}
-          panAuto3PauseMs={panAuto3PauseMs}
-          tiltAuto3MinDist={tiltAuto3MinDist}
-          tiltAuto3PauseMs={tiltAuto3PauseMs}
+          panRandomMinDist={panRandomMinDist}
+          panRandomPauseMs={panRandomPauseMs}
+          tiltRandomMinDist={tiltRandomMinDist}
+          tiltRandomPauseMs={tiltRandomPauseMs}
         />
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Mode</Text>
-        <View style={styles.chipRow}>
-          {axisModes.map((mode) => (
-            <TouchableOpacity
-              key={mode}
-              style={[styles.chip, tiltMode === mode && styles.chipSelected]}
-              onPress={() => onModeSelect(mode)}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.chipText, tiltMode === mode && styles.chipTextSelected]}>
-                {mode}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipScrollContent}
+          style={styles.chipScroll}
+        >
+          <View style={styles.chipRow}>
+            {axisModes.map((mode) => (
+              <TouchableOpacity
+                key={mode}
+                style={[styles.chip, tiltMode === mode && styles.chipSelected]}
+                onPress={() => onModeSelect(mode)}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.chipText, tiltMode === mode && styles.chipTextSelected]}>
+                  {mode}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
       </View>
       {tiltMode === 'LIVE' && (
         <View style={styles.section}>
@@ -142,39 +149,45 @@ export function TiltView({
         return (
         <View style={styles.section}>
           <Text style={styles.label}>Angle range (Tilt)</Text>
-          <View style={styles.sliderRow}>
-            <Text style={styles.label}>Min</Text>
-            <Text style={styles.value}>{tiltMin.toFixed(1)}</Text>
+          <View style={styles.angleRangeRow}>
+            <View style={styles.angleRangeCol}>
+              <View style={styles.sliderRow}>
+                <Text style={styles.label}>Min</Text>
+                <Text style={styles.value}>{tiltMin.toFixed(1)}</Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={1}
+                step={minRange > 0 ? 0.1 / minRange : 0.01}
+                value={minSliderNorm}
+                onValueChange={(raw) => {
+                  const v = -1 + raw * minRange;
+                  onTiltMinChange(Math.round(v * 10) / 10);
+                }}
+                minimumTrackTintColor={theme.colors.primary}
+                maximumTrackTintColor={theme.colors.border}
+                thumbTintColor={theme.colors.primary}
+              />
+            </View>
+            <View style={styles.angleRangeCol}>
+              <View style={styles.sliderRow}>
+                <Text style={styles.label}>Max</Text>
+                <Text style={styles.value}>{tiltMax.toFixed(1)}</Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={Math.max(-1, tiltMin + 0.1)}
+                maximumValue={1}
+                step={0.1}
+                value={tiltMax}
+                onValueChange={onTiltMaxChange}
+                minimumTrackTintColor={theme.colors.primary}
+                maximumTrackTintColor={theme.colors.border}
+                thumbTintColor={theme.colors.primary}
+              />
+            </View>
           </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={1}
-            step={minRange > 0 ? 0.1 / minRange : 0.01}
-            value={minSliderNorm}
-            onValueChange={(raw) => {
-              const v = -1 + raw * minRange;
-              onTiltMinChange(Math.round(v * 10) / 10);
-            }}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor={theme.colors.border}
-            thumbTintColor={theme.colors.primary}
-          />
-          <View style={styles.sliderRow}>
-            <Text style={styles.label}>Max</Text>
-            <Text style={styles.value}>{tiltMax.toFixed(1)}</Text>
-          </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={Math.max(-1, tiltMin + 0.1)}
-            maximumValue={1}
-            step={0.1}
-            value={tiltMax}
-            onValueChange={onTiltMaxChange}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor={theme.colors.border}
-            thumbTintColor={theme.colors.primary}
-          />
         </View>
         );
       })()}
@@ -231,18 +244,18 @@ export function TiltView({
           />
         </View>
       )}
-      {tiltMode === 'AUTO3' && (
+      {tiltMode === 'RANDOM' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>AUTO3 Min dist.</Text>
-            <Text style={styles.value}>{tiltAuto3MinDist.toFixed(2)}</Text>
+            <Text style={styles.label}>RANDOM Min dist.</Text>
+            <Text style={styles.value}>{tiltRandomMinDist.toFixed(2)}</Text>
           </View>
           <Slider
             style={styles.slider}
             minimumValue={0.1}
             maximumValue={1}
             step={0.1}
-            value={tiltAuto3MinDist}
+            value={tiltRandomMinDist}
             onValueChange={onTiltAuto3MinDistChange}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
@@ -250,14 +263,14 @@ export function TiltView({
           />
           <View style={styles.sliderRow}>
             <Text style={styles.label}>Tempo entre posições (ms)</Text>
-            <Text style={styles.value}>{tiltAuto3PauseMs}</Text>
+            <Text style={styles.value}>{tiltRandomPauseMs}</Text>
           </View>
           <Slider
             style={styles.slider}
             minimumValue={1500}
             maximumValue={5000}
             step={100}
-            value={tiltAuto3PauseMs}
+            value={tiltRandomPauseMs}
             onValueChange={onTiltAuto3PauseMsChange}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
@@ -313,9 +326,15 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
     fontWeight: '600',
   },
+  chipScroll: {
+    marginHorizontal: -theme.spacing.lg,
+  },
+  chipScrollContent: {
+    paddingHorizontal: theme.spacing.lg,
+  },
   chipRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     gap: theme.spacing.sm,
   },
   chip: {
@@ -343,6 +362,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: theme.spacing.xs,
+  },
+  angleRangeRow: {
+    flexDirection: 'row',
+    gap: theme.spacing.md,
+  },
+  angleRangeCol: {
+    flex: 1,
+    minWidth: 0,
   },
   slider: {
     width: '100%',

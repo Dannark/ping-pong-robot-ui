@@ -36,10 +36,10 @@ export function PanScreen() {
         tiltAuto1Speed: c.tiltAuto1Speed,
         tiltAuto2Step: c.tiltAuto2Step,
         tiltAuto2PauseMs: c.tiltAuto2PauseMs,
-        panAuto3MinDist: c.panAuto3MinDist,
-        panAuto3PauseMs: c.panAuto3PauseMs,
-        tiltAuto3MinDist: c.tiltAuto3MinDist,
-        tiltAuto3PauseMs: c.tiltAuto3PauseMs,
+        panRandomMinDist: c.panRandomMinDist,
+        panRandomPauseMs: c.panRandomPauseMs,
+        tiltRandomMinDist: c.tiltRandomMinDist,
+        tiltRandomPauseMs: c.tiltRandomPauseMs,
       });
     });
   }, []);
@@ -62,10 +62,10 @@ export function PanScreen() {
       tiltAuto1Speed={state.tiltAuto1Speed}
       tiltAuto2Step={state.tiltAuto2Step}
       tiltAuto2PauseMs={state.tiltAuto2PauseMs}
-      panAuto3MinDist={state.panAuto3MinDist}
-      panAuto3PauseMs={state.panAuto3PauseMs}
-      tiltAuto3MinDist={state.tiltAuto3MinDist}
-      tiltAuto3PauseMs={state.tiltAuto3PauseMs}
+      panRandomMinDist={state.panRandomMinDist}
+      panRandomPauseMs={state.panRandomPauseMs}
+      tiltRandomMinDist={state.tiltRandomMinDist}
+      tiltRandomPauseMs={state.tiltRandomPauseMs}
       axisModes={axisModes}
       onModeSelect={setPanMode}
       onPanTargetChange={setPanTarget}

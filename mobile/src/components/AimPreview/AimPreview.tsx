@@ -91,10 +91,10 @@ type AimPreviewProps = {
   tiltAuto1Speed?: number;
   tiltAuto2Step?: number;
   tiltAuto2PauseMs?: number;
-  panAuto3MinDist?: number;
-  panAuto3PauseMs?: number;
-  tiltAuto3MinDist?: number;
-  tiltAuto3PauseMs?: number;
+  panRandomMinDist?: number;
+  panRandomPauseMs?: number;
+  tiltRandomMinDist?: number;
+  tiltRandomPauseMs?: number;
 };
 
 export function AimPreview({
@@ -113,10 +113,10 @@ export function AimPreview({
   tiltAuto1Speed = 0.035,
   tiltAuto2Step = 0.25,
   tiltAuto2PauseMs = 1000,
-  panAuto3MinDist = 0.2,
-  panAuto3PauseMs = 1500,
-  tiltAuto3MinDist = 0.2,
-  tiltAuto3PauseMs = 1500,
+  panRandomMinDist = 0.2,
+  panRandomPauseMs = 1500,
+  tiltRandomMinDist = 0.2,
+  tiltRandomPauseMs = 1500,
 }: AimPreviewProps) {
   const [simulatedPan, setSimulatedPan] = useState(pan);
   const [simulatedTilt, setSimulatedTilt] = useState(tilt);
@@ -130,11 +130,11 @@ export function AimPreview({
   useEffect(() => {
     if (panMode !== 'LIVE') setSimulatedPan(pan);
     if (tiltMode !== 'LIVE') setSimulatedTilt(tilt);
-    if (panMode === 'AUTO3') {
+    if (panMode === 'RANDOM') {
       panTargetRef.current = pan;
       panLastStepRef.current = Date.now();
     }
-    if (tiltMode === 'AUTO3') {
+    if (tiltMode === 'RANDOM') {
       tiltTargetRef.current = tilt;
       tiltLastStepRef.current = Date.now();
     }
@@ -166,15 +166,15 @@ export function AimPreview({
           panLastStepRef.current = lastStepMs;
           return value;
         }
-        if (panMode === 'AUTO3') {
+        if (panMode === 'RANDOM') {
           const { lastStepMs, pauseElapsed } = auto3CheckPause(
             panLastStepRef.current,
             now,
-            panAuto3PauseMs
+            panRandomPauseMs
           );
           panLastStepRef.current = lastStepMs;
           if (pauseElapsed) {
-            const newTarget = pickRandomTarget(panMin, panMax, prev, panAuto3MinDist);
+            const newTarget = pickRandomTarget(panMin, panMax, prev, panRandomMinDist);
             panTargetRef.current = newTarget;
             return newTarget;
           }
@@ -205,15 +205,15 @@ export function AimPreview({
           tiltLastStepRef.current = lastStepMs;
           return value;
         }
-        if (tiltMode === 'AUTO3') {
+        if (tiltMode === 'RANDOM') {
           const { lastStepMs, pauseElapsed } = auto3CheckPause(
             tiltLastStepRef.current,
             now,
-            tiltAuto3PauseMs
+            tiltRandomPauseMs
           );
           tiltLastStepRef.current = lastStepMs;
           if (pauseElapsed) {
-            const newTarget = pickRandomTarget(tiltMin, tiltMax, prev, tiltAuto3MinDist);
+            const newTarget = pickRandomTarget(tiltMin, tiltMax, prev, tiltRandomMinDist);
             tiltTargetRef.current = newTarget;
             return newTarget;
           }
@@ -236,10 +236,10 @@ export function AimPreview({
     tiltAuto1Speed,
     tiltAuto2Step,
     tiltAuto2PauseMs,
-    panAuto3MinDist,
-    panAuto3PauseMs,
-    tiltAuto3MinDist,
-    tiltAuto3PauseMs,
+    panRandomMinDist,
+    panRandomPauseMs,
+    tiltRandomMinDist,
+    tiltRandomPauseMs,
   ]);
 
   const displayPan = panMode === 'LIVE' ? pan : simulatedPan;

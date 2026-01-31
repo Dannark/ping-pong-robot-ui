@@ -107,10 +107,10 @@ export function RunningView({
               tiltAuto1Speed={runConfig.tiltAuto1Speed}
               tiltAuto2Step={runConfig.tiltAuto2Step}
               tiltAuto2PauseMs={runConfig.tiltAuto2PauseMs}
-              panAuto3MinDist={runConfig.panAuto3MinDist}
-              panAuto3PauseMs={runConfig.panAuto3PauseMs}
-              tiltAuto3MinDist={runConfig.tiltAuto3MinDist}
-              tiltAuto3PauseMs={runConfig.tiltAuto3PauseMs}
+              panRandomMinDist={runConfig.panRandomMinDist}
+              panRandomPauseMs={runConfig.panRandomPauseMs}
+              tiltRandomMinDist={runConfig.tiltRandomMinDist}
+              tiltRandomPauseMs={runConfig.tiltRandomPauseMs}
             />
           </View>
           <View style={styles.aimSpinBlock}>
