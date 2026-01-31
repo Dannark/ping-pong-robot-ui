@@ -66,14 +66,23 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
         </View>
 
         <View style={styles.list}>
-          {items.map(({ label, value, screen }) => (
+          {items.map(({ label, value, screen, icon }) => (
             <TouchableOpacity
               key={screen}
               style={styles.row}
               onPress={() => onItemPress(screen)}
               activeOpacity={0.8}
             >
-              <Text style={styles.rowLabel}>{label}</Text>
+              <View style={styles.rowLeft}>
+                <View style={styles.rowIconWrap}>
+                  <MaterialCommunityIcons
+                    name={icon as any}
+                    size={24}
+                    color={theme.colors.primary}
+                  />
+                </View>
+                <Text style={styles.rowLabel}>{label}</Text>
+              </View>
               <View style={styles.rowRight}>
                 <Text style={styles.rowValue}>{value}</Text>
                 <MaterialCommunityIcons
@@ -151,6 +160,20 @@ const styles = StyleSheet.create({
     minHeight: theme.touchableMinHeight,
     borderWidth: 1,
     borderColor: theme.colors.border,
+  },
+  rowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  rowIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.primaryMuted,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: theme.spacing.md,
   },
   rowLabel: {
     ...theme.typography.body,

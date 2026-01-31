@@ -7,6 +7,7 @@ export type WizardItem = {
   label: string;
   value: string;
   screen: keyof RootStackParamList;
+  icon: string;
 };
 
 export function getWizardItems(config: RobotConfig): WizardItem[] {
@@ -14,11 +15,11 @@ export function getWizardItems(config: RobotConfig): WizardItem[] {
     ? `${config.launcherPower} Random`
     : String(config.launcherPower);
   return [
-    { label: 'Pan', value: config.panMode, screen: 'Pan' },
-    { label: 'Tilt', value: config.tiltMode, screen: 'Tilt' },
-    { label: 'Launcher', value: launcherValue, screen: 'Launcher' },
-    { label: 'Feeder', value: `${config.feederMode} ${config.feederSpeed}`, screen: 'Feeder' },
-    { label: 'Timer', value: TIMER_OPTIONS[config.timerIndex], screen: 'Timer' },
+    { label: 'Pan', value: config.panMode, screen: 'Pan', icon: 'compass' },
+    { label: 'Tilt', value: config.tiltMode, screen: 'Tilt', icon: 'angle-acute' },
+    { label: 'Launcher', value: launcherValue, screen: 'Launcher', icon: 'rocket-launch' },
+    { label: 'Feeder', value: `${config.feederMode} ${config.feederSpeed}`, screen: 'Feeder', icon: 'fan' },
+    { label: 'Timer', value: TIMER_OPTIONS[config.timerIndex], screen: 'Timer', icon: 'timer-outline' },
   ];
 }
 
