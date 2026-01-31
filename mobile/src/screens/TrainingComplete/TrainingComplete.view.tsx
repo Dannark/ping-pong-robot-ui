@@ -73,9 +73,7 @@ export function TrainingCompleteView({
           </View>
           <View style={[styles.statsRow, styles.statsRowLast]}>
             <Text style={styles.statsLabel}>Feeder</Text>
-            <Text style={styles.statsValue}>
-              {runConfig.feederMode} {runConfig.feederSpeed}
-            </Text>
+            <Text style={styles.statsValue}>{runConfig.feederMode}</Text>
           </View>
         </View>
       )}

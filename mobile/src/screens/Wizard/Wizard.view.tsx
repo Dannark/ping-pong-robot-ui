@@ -10,6 +10,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
+import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
 import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import type { WizardItem } from './Wizard.viewModel';
 import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
@@ -22,8 +23,8 @@ type WizardViewProps = {
   onStartPress: () => void;
 };
 
-const PREVIEW_SIZE = 100;
-const SPIN_PREVIEW_SIZE = 100;
+const PREVIEW_SIZE = 90;
+const SPIN_PREVIEW_SIZE = 90;
 
 export function WizardView({ items, config, displaySpin, onItemPress, onStartPress }: WizardViewProps) {
   const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
@@ -60,6 +61,19 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
                 panRandomPauseMs={config.panRandomPauseMs}
                 tiltRandomMinDist={config.tiltRandomMinDist}
                 tiltRandomPauseMs={config.tiltRandomPauseMs}
+              />
+            </View>
+            <View style={styles.previewBlock}>
+              <Text style={styles.previewLabel}>Feeder</Text>
+              <FeederVisualization
+                size={PREVIEW_SIZE}
+                feederMode={config.feederMode}
+                feederSpeed={config.feederSpeed}
+                feederP1OnMs={config.feederP1OnMs}
+                feederP1OffMs={config.feederP1OffMs}
+                feederP2OnMs={config.feederP2OnMs}
+                feederP2OffMs={config.feederP2OffMs}
+                animate={true}
               />
             </View>
             <View style={styles.previewBlock}>

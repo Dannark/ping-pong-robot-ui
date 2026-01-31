@@ -76,12 +76,9 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
     runState.runConfig != null ? TIMER_OPTIONS[runState.runConfig.timerIndex] ?? 'OFF' : 'OFF';
 
   const handleStop = useCallback(async () => {
-    timerEndFiredRef.current = true;
-    const elapsed = getElapsedSeconds(runState.runStartTime);
-    const config = runState.runConfig;
     await stopRun();
-    navigation.replace('TrainingComplete', { elapsedSeconds: elapsed, runConfig: config });
-  }, [navigation, runState.runStartTime, runState.runConfig]);
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <RunningView

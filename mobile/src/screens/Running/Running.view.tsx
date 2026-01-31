@@ -95,9 +95,7 @@ export function RunningView({
           </View>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>Feeder</Text>
-            <Text style={styles.detailValue}>
-              {runConfig.feederMode} {runConfig.feederSpeed}
-            </Text>
+            <Text style={styles.detailValue}>{runConfig.feederMode}</Text>
           </View>
         </View>
 
