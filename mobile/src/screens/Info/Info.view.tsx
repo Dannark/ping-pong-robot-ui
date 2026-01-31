@@ -1,23 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { theme } from '../theme';
-import type { RootStackParamList } from '../navigation/RootStack';
+import { theme } from '../../theme';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Info'>;
+type InfoViewProps = {
+  version: string;
+  caption: string;
 };
 
-export function InfoScreen({ navigation }: Props) {
+export function InfoView({ version, caption }: InfoViewProps) {
   return (
     <View style={styles.container}>
       <View style={styles.iconWrap}>
         <MaterialCommunityIcons name="information-outline" size={48} color={theme.colors.primary} />
       </View>
       <Text style={styles.title}>Ping Pong Robot</Text>
-      <Text style={styles.version}>App v1</Text>
-      <Text style={styles.caption}>Controle via Bluetooth (em breve)</Text>
+      <Text style={styles.version}>{version}</Text>
+      <Text style={styles.caption}>{caption}</Text>
     </View>
   );
 }

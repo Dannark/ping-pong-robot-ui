@@ -7,22 +7,16 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { theme } from '../theme';
-import type { RootStackParamList } from '../navigation/RootStack';
+import { theme } from '../../theme';
+import type { HomeCard } from './Home.viewModel';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
+type HomeViewProps = {
+  cards: HomeCard[];
+  onCardPress: (screen: HomeCard['screen']) => void;
 };
 
-const CARDS: { label: string; subtitle: string; screen: keyof RootStackParamList; icon: string; primary?: boolean }[] = [
-  { label: 'Iniciar', subtitle: 'Configurar e lançar', screen: 'Wizard', icon: 'rocket-launch', primary: true },
-  { label: 'Info', subtitle: 'Versão e estatísticas', screen: 'Info', icon: 'information-outline' },
-  { label: 'Configurações', subtitle: 'Servos e motores', screen: 'Settings', icon: 'cog-outline' },
-];
-
-export function HomeScreen({ navigation }: Props) {
+export function HomeView({ cards, onCardPress }: HomeViewProps) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
@@ -34,11 +28,11 @@ export function HomeScreen({ navigation }: Props) {
         <Text style={styles.heroSubtitle}>Controle pelo app</Text>
       </View>
       <View style={styles.cards}>
-        {CARDS.map(({ label, subtitle, screen, icon, primary }) => (
+        {cards.map(({ label, subtitle, screen, icon, primary }) => (
           <TouchableOpacity
             key={screen}
             style={[styles.card, primary && styles.cardPrimary]}
-            onPress={() => navigation.navigate(screen)}
+            onPress={() => onCardPress(screen)}
             activeOpacity={0.85}
           >
             <View style={[styles.cardIconWrap, primary && styles.cardIconWrapPrimary]}>
@@ -50,7 +44,9 @@ export function HomeScreen({ navigation }: Props) {
             </View>
             <View style={styles.cardText}>
               <Text style={[styles.cardLabel, primary && styles.cardLabelPrimary]}>{label}</Text>
-              <Text style={[styles.cardSubtitle, primary && styles.cardSubtitlePrimary]}>{subtitle}</Text>
+              <Text style={[styles.cardSubtitle, primary && styles.cardSubtitlePrimary]}>
+                {subtitle}
+              </Text>
             </View>
             <MaterialCommunityIcons
               name="chevron-right"

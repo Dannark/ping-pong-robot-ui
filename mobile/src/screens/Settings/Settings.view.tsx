@@ -1,22 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { theme } from '../theme';
-import type { RootStackParamList } from '../navigation/RootStack';
+import { theme } from '../../theme';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Settings'>;
+type SettingsViewProps = {
+  caption: string;
 };
 
-export function SettingsScreen({ navigation }: Props) {
+export function SettingsView({ caption }: SettingsViewProps) {
   return (
     <View style={styles.container}>
       <View style={styles.iconWrap}>
         <MaterialCommunityIcons name="cog-outline" size={48} color={theme.colors.primary} />
       </View>
       <Text style={styles.title}>Configurações</Text>
-      <Text style={styles.subtitle}>Servos e motores (em breve)</Text>
+      <Text style={styles.subtitle}>{caption}</Text>
     </View>
   );
 }

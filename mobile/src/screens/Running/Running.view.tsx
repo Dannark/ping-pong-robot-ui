@@ -1,15 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { theme } from '../theme';
-import type { RootStackParamList } from '../navigation/RootStack';
+import { theme } from '../../theme';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Running'>;
+type RunningViewProps = {
+  elapsedSeconds: number;
+  onStop: () => void;
 };
 
-export function RunningScreen({ navigation }: Props) {
+export function RunningView({ elapsedSeconds, onStop }: RunningViewProps) {
   return (
     <View style={styles.container}>
       <View style={styles.statusWrap}>
@@ -17,13 +16,9 @@ export function RunningScreen({ navigation }: Props) {
         <MaterialCommunityIcons name="motion-play-outline" size={56} color={theme.colors.success} />
       </View>
       <Text style={styles.title}>Em execução</Text>
-      <Text style={styles.elapsed}>0s</Text>
+      <Text style={styles.elapsed}>{elapsedSeconds}s</Text>
       <Text style={styles.caption}>Controle ao vivo (em breve)</Text>
-      <TouchableOpacity
-        style={styles.stopButton}
-        onPress={() => navigation.goBack()}
-        activeOpacity={0.85}
-      >
+      <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
         <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
         <Text style={styles.stopLabel}>Parar</Text>
       </TouchableOpacity>

@@ -2,12 +2,16 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { theme } from '../theme';
-import { HomeScreen } from '../screens/HomeScreen';
-import { SetupScreen } from '../screens/SetupScreen';
-import { InfoScreen } from '../screens/InfoScreen';
-import { SettingsScreen } from '../screens/SettingsScreen';
-import { PlaceholderScreen } from '../screens/PlaceholderScreen';
-import { RunningScreen } from '../screens/RunningScreen';
+import { HomeScreen } from '../screens/Home';
+import { WizardScreen } from '../screens/Wizard';
+import { InfoScreen } from '../screens/Info';
+import { SettingsScreen } from '../screens/Settings';
+import { PanScreen } from '../screens/Pan';
+import { TiltScreen } from '../screens/Tilt';
+import { LauncherScreen } from '../screens/Launcher';
+import { FeederScreen } from '../screens/Feeder';
+import { TimerScreen } from '../screens/Timer';
+import { RunningScreen } from '../screens/Running';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -48,7 +52,7 @@ export function RootStack() {
         />
         <Stack.Screen
           name="Wizard"
-          component={SetupScreen}
+          component={WizardScreen}
           options={{ title: 'Configurar e iniciar' }}
         />
         <Stack.Screen
@@ -63,27 +67,27 @@ export function RootStack() {
         />
         <Stack.Screen
           name="Pan"
-          component={PlaceholderScreen}
+          component={PanScreen}
           options={{ title: 'Pan' }}
         />
         <Stack.Screen
           name="Tilt"
-          component={PlaceholderScreen}
+          component={TiltScreen}
           options={{ title: 'Tilt' }}
         />
         <Stack.Screen
           name="Launcher"
-          component={PlaceholderScreen}
+          component={LauncherScreen}
           options={{ title: 'Launcher' }}
         />
         <Stack.Screen
           name="Feeder"
-          component={PlaceholderScreen}
+          component={FeederScreen}
           options={{ title: 'Feeder' }}
         />
         <Stack.Screen
           name="Timer"
-          component={PlaceholderScreen}
+          component={TimerScreen}
           options={{ title: 'Timer' }}
         />
         <Stack.Screen
