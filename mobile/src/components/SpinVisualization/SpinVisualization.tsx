@@ -124,8 +124,8 @@ export function SpinVisualization({
                   width: ringRadius * 2,
                   height: ringRadius * 2,
                   borderRadius: ringRadius,
-                  left: center - ringRadius,
-                  top: center - ringRadius,
+                  left: center - ringRadius - 2,
+                  top: center - ringRadius - 2,
                   borderWidth: 2,
                   borderColor: theme.colors.primaryMuted,
                   transform: [{ rotate: rotation }],
@@ -147,8 +147,8 @@ export function SpinVisualization({
                     width: motorDotSize,
                     height: motorDotSize,
                     borderRadius: motorDotSize / 2,
-                    left: pos.x - dotHalf,
-                    top: pos.y - dotHalf,
+                    left: pos.x - dotHalf - 2,
+                    top: pos.y - dotHalf - 2,
                     backgroundColor: isReverse
                       ? theme.colors.warning
                       : theme.colors.primary,
@@ -162,8 +162,8 @@ export function SpinVisualization({
             style={[
               styles.centerArrow,
               {
-                left: center - arrowBoxHalf,
-                top: center - arrowBoxHalf,
+                left: center - arrowBoxHalf - 2,
+                top: center - arrowBoxHalf - 2,
                 width: arrowBoxSize,
                 height: arrowBoxSize,
                 transform: [{ rotate: arrowRotate }],
