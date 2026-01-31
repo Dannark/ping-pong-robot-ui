@@ -52,8 +52,14 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
                 tiltMax={config.tiltMax}
                 panAuto1Speed={config.panAuto1Speed}
                 panAuto2Step={config.panAuto2Step}
+                panAuto2PauseMs={config.panAuto2PauseMs}
                 tiltAuto1Speed={config.tiltAuto1Speed}
                 tiltAuto2Step={config.tiltAuto2Step}
+                tiltAuto2PauseMs={config.tiltAuto2PauseMs}
+                panAuto3MinDist={config.panAuto3MinDist}
+                panAuto3PauseMs={config.panAuto3PauseMs}
+                tiltAuto3MinDist={config.tiltAuto3MinDist}
+                tiltAuto3PauseMs={config.tiltAuto3PauseMs}
               />
             </View>
             <View style={styles.previewBlock}>

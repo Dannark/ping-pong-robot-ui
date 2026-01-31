@@ -19,8 +19,14 @@ export function getTiltState() {
     tiltMax: c.tiltMax,
     panAuto1Speed: c.panAuto1Speed,
     panAuto2Step: c.panAuto2Step,
+    panAuto2PauseMs: c.panAuto2PauseMs,
     tiltAuto1Speed: c.tiltAuto1Speed,
     tiltAuto2Step: c.tiltAuto2Step,
+    tiltAuto2PauseMs: c.tiltAuto2PauseMs,
+    panAuto3MinDist: c.panAuto3MinDist,
+    panAuto3PauseMs: c.panAuto3PauseMs,
+    tiltAuto3MinDist: c.tiltAuto3MinDist,
+    tiltAuto3PauseMs: c.tiltAuto3PauseMs,
   };
 }
 
@@ -44,6 +50,22 @@ export function setTiltAuto2Step(value: number) {
   RobotConfigRepository.setConfig({ tiltAuto2Step: value });
 }
 
+export function setTiltAuto1Speed(value: number) {
+  RobotConfigRepository.setConfig({ tiltAuto1Speed: value });
+}
+
+export function setTiltAuto2PauseMs(value: number) {
+  RobotConfigRepository.setConfig({ tiltAuto2PauseMs: value });
+}
+
+export function setTiltAuto3MinDist(value: number) {
+  RobotConfigRepository.setConfig({ tiltAuto3MinDist: value });
+}
+
+export function setTiltAuto3PauseMs(value: number) {
+  RobotConfigRepository.setConfig({ tiltAuto3PauseMs: value });
+}
+
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
 }
@@ -56,5 +78,8 @@ export function resetTilt() {
     tiltMax: DEFAULT_CONFIG.tiltMax,
     tiltAuto1Speed: DEFAULT_CONFIG.tiltAuto1Speed,
     tiltAuto2Step: DEFAULT_CONFIG.tiltAuto2Step,
+    tiltAuto2PauseMs: DEFAULT_CONFIG.tiltAuto2PauseMs,
+    tiltAuto3MinDist: DEFAULT_CONFIG.tiltAuto3MinDist,
+    tiltAuto3PauseMs: DEFAULT_CONFIG.tiltAuto3PauseMs,
   });
 }

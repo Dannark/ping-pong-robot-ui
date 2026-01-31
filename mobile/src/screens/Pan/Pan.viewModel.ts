@@ -19,8 +19,14 @@ export function getPanState() {
     tiltMax: c.tiltMax,
     panAuto1Speed: c.panAuto1Speed,
     panAuto2Step: c.panAuto2Step,
+    panAuto2PauseMs: c.panAuto2PauseMs,
     tiltAuto1Speed: c.tiltAuto1Speed,
     tiltAuto2Step: c.tiltAuto2Step,
+    tiltAuto2PauseMs: c.tiltAuto2PauseMs,
+    panAuto3MinDist: c.panAuto3MinDist,
+    panAuto3PauseMs: c.panAuto3PauseMs,
+    tiltAuto3MinDist: c.tiltAuto3MinDist,
+    tiltAuto3PauseMs: c.tiltAuto3PauseMs,
   };
 }
 
@@ -44,6 +50,22 @@ export function setPanAuto2Step(value: number) {
   RobotConfigRepository.setConfig({ panAuto2Step: value });
 }
 
+export function setPanAuto1Speed(value: number) {
+  RobotConfigRepository.setConfig({ panAuto1Speed: value });
+}
+
+export function setPanAuto2PauseMs(value: number) {
+  RobotConfigRepository.setConfig({ panAuto2PauseMs: value });
+}
+
+export function setPanAuto3MinDist(value: number) {
+  RobotConfigRepository.setConfig({ panAuto3MinDist: value });
+}
+
+export function setPanAuto3PauseMs(value: number) {
+  RobotConfigRepository.setConfig({ panAuto3PauseMs: value });
+}
+
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
 }
@@ -56,5 +78,8 @@ export function resetPan() {
     panMax: DEFAULT_CONFIG.panMax,
     panAuto1Speed: DEFAULT_CONFIG.panAuto1Speed,
     panAuto2Step: DEFAULT_CONFIG.panAuto2Step,
+    panAuto2PauseMs: DEFAULT_CONFIG.panAuto2PauseMs,
+    panAuto3MinDist: DEFAULT_CONFIG.panAuto3MinDist,
+    panAuto3PauseMs: DEFAULT_CONFIG.panAuto3PauseMs,
   });
 }

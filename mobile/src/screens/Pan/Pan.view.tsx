@@ -17,14 +17,24 @@ type PanViewProps = {
   tiltMax: number;
   panAuto1Speed: number;
   panAuto2Step: number;
+  panAuto2PauseMs: number;
   tiltAuto1Speed: number;
   tiltAuto2Step: number;
+  tiltAuto2PauseMs: number;
+  panAuto3MinDist: number;
+  panAuto3PauseMs: number;
+  tiltAuto3MinDist: number;
+  tiltAuto3PauseMs: number;
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onPanTargetChange: (value: number) => void;
   onPanMinChange: (value: number) => void;
   onPanMaxChange: (value: number) => void;
+  onPanAuto1SpeedChange: (value: number) => void;
   onPanAuto2StepChange: (value: number) => void;
+  onPanAuto2PauseMsChange: (value: number) => void;
+  onPanAuto3MinDistChange: (value: number) => void;
+  onPanAuto3PauseMsChange: (value: number) => void;
   onReset: () => void;
 };
 
@@ -41,17 +51,27 @@ export function PanView({
   tiltMax,
   panAuto1Speed,
   panAuto2Step,
+  panAuto2PauseMs,
   tiltAuto1Speed,
   tiltAuto2Step,
+  tiltAuto2PauseMs,
+  panAuto3MinDist,
+  panAuto3PauseMs,
+  tiltAuto3MinDist,
+  tiltAuto3PauseMs,
   axisModes,
   onModeSelect,
   onPanTargetChange,
   onPanMinChange,
   onPanMaxChange,
+  onPanAuto1SpeedChange,
   onPanAuto2StepChange,
+  onPanAuto2PauseMsChange,
+  onPanAuto3MinDistChange,
+  onPanAuto3PauseMsChange,
   onReset,
 }: PanViewProps) {
-  const isAuto = panMode === 'AUTO1' || panMode === 'AUTO2';
+  const isAuto = panMode === 'AUTO1' || panMode === 'AUTO2' || panMode === 'AUTO3';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -69,8 +89,14 @@ export function PanView({
           tiltMax={tiltMax}
           panAuto1Speed={panAuto1Speed}
           panAuto2Step={panAuto2Step}
+          panAuto2PauseMs={panAuto2PauseMs}
           tiltAuto1Speed={tiltAuto1Speed}
           tiltAuto2Step={tiltAuto2Step}
+          tiltAuto2PauseMs={tiltAuto2PauseMs}
+          panAuto3MinDist={panAuto3MinDist}
+          panAuto3PauseMs={panAuto3PauseMs}
+          tiltAuto3MinDist={tiltAuto3MinDist}
+          tiltAuto3PauseMs={tiltAuto3PauseMs}
         />
       </View>
       <View style={styles.section}>
@@ -152,6 +178,25 @@ export function PanView({
         </View>
         );
       })()}
+      {panMode === 'AUTO1' && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>AUTO1 Speed</Text>
+            <Text style={styles.value}>{panAuto1Speed.toFixed(3)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={0.01}
+            maximumValue={0.1}
+            step={0.005}
+            value={panAuto1Speed}
+            onValueChange={onPanAuto1SpeedChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+        </View>
+      )}
       {panMode === 'AUTO2' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
@@ -165,6 +210,55 @@ export function PanView({
             step={0.05}
             value={panAuto2Step}
             onValueChange={onPanAuto2StepChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.value}>{panAuto2PauseMs}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={200}
+            maximumValue={3000}
+            step={100}
+            value={panAuto2PauseMs}
+            onValueChange={onPanAuto2PauseMsChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+        </View>
+      )}
+      {panMode === 'AUTO3' && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>AUTO3 Min dist.</Text>
+            <Text style={styles.value}>{panAuto3MinDist.toFixed(2)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={0.1}
+            maximumValue={1}
+            step={0.1}
+            value={panAuto3MinDist}
+            onValueChange={onPanAuto3MinDistChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.value}>{panAuto3PauseMs}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={1500}
+            maximumValue={5000}
+            step={100}
+            value={panAuto3PauseMs}
+            onValueChange={onPanAuto3PauseMsChange}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary}

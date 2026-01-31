@@ -1,4 +1,4 @@
-export type AxisMode = 'LIVE' | 'AUTO1' | 'AUTO2';
+export type AxisMode = 'LIVE' | 'AUTO1' | 'AUTO2' | 'AUTO3';
 
 export type SpinDirection =
   | 'NONE'
@@ -24,8 +24,14 @@ export type RobotConfig = {
   tiltMax: number;
   panAuto1Speed: number;
   panAuto2Step: number;
+  panAuto2PauseMs: number;
   tiltAuto1Speed: number;
   tiltAuto2Step: number;
+  tiltAuto2PauseMs: number;
+  panAuto3MinDist: number;
+  panAuto3PauseMs: number;
+  tiltAuto3MinDist: number;
+  tiltAuto3PauseMs: number;
   launcherPower: number;
   spinDirection: SpinDirection;
   spinIntensity: number;
@@ -47,8 +53,14 @@ export const DEFAULT_CONFIG: RobotConfig = {
   tiltMax: 1,
   panAuto1Speed: 0.035,
   panAuto2Step: 0.25,
+  panAuto2PauseMs: 1000,
   tiltAuto1Speed: 0.035,
   tiltAuto2Step: 0.25,
+  tiltAuto2PauseMs: 1000,
+  panAuto3MinDist: 0.2,
+  panAuto3PauseMs: 1500,
+  tiltAuto3MinDist: 0.2,
+  tiltAuto3PauseMs: 1500,
   launcherPower: 255,
   spinDirection: 'NONE',
   spinIntensity: 255,
@@ -59,7 +71,7 @@ export const DEFAULT_CONFIG: RobotConfig = {
   timerIndex: 0,
 };
 
-export const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2'];
+export const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'AUTO3'];
 export const SPIN_DIRECTIONS: SpinDirection[] = [
   'NONE',
   'N',
