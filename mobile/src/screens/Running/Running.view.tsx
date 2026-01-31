@@ -3,19 +3,25 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
-import type { RobotConfig } from '../../data/RobotConfig';
-import { spinDirectionLabel } from '../../data/RobotConfig';
+import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
 
 type RunningViewProps = {
   elapsedSeconds: number;
   leftSeconds: number | null;
   runConfig: RobotConfig | null;
+  displaySpin: SpinDirection;
   onStop: () => void;
 };
 
-const PREVIEW_SIZE = 80;
+const PREVIEW_SIZE = 88;
 
-export function RunningView({ elapsedSeconds, leftSeconds, runConfig, onStop }: RunningViewProps) {
+export function RunningView({
+  elapsedSeconds,
+  leftSeconds,
+  runConfig,
+  displaySpin,
+  onStop,
+}: RunningViewProps) {
   const [blink, setBlink] = useState(true);
 
   useEffect(() => {
@@ -26,56 +32,69 @@ export function RunningView({ elapsedSeconds, leftSeconds, runConfig, onStop }: 
   if (!runConfig) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Em execução</Text>
-        <Text style={styles.caption}>Nenhuma sessão ativa</Text>
+        <View style={styles.emptyCard}>
+          <MaterialCommunityIcons name="motion-play-outline" size={48} color={theme.colors.textSecondary} />
+          <Text style={styles.emptyTitle}>Nenhuma sessão ativa</Text>
+          <Text style={styles.emptyCaption}>Inicie pelo Wizard para ver a execução</Text>
+        </View>
         <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
-          <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
+          <MaterialCommunityIcons name="arrow-left" size={22} color={theme.colors.text} />
           <Text style={styles.stopLabel}>Voltar</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
-  const spinLabel = spinDirectionLabel(runConfig.spinDirection, runConfig.spinRandom);
+  const spinRandom = runConfig.spinRandom;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <View style={[styles.statusDot, blink && styles.statusDotOn]} />
         <Text style={[styles.runningTitle, !blink && styles.runningTitleDim]}>
           {blink ? 'RUNNING' : '       '}
         </Text>
       </View>
 
-      <View style={styles.body}>
-        <View style={styles.timeRow}>
-          <Text style={styles.label}>
-            {leftSeconds !== null ? 'Left: ' : 'Elapsed: '}
-          </Text>
-          <Text style={styles.value}>
-            {leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`}
-          </Text>
-        </View>
+      <View style={styles.timeCard}>
+        <Text style={styles.timeLabel}>
+          {leftSeconds !== null ? 'Tempo restante' : 'Decorrido'}
+        </Text>
+        <Text style={styles.timeValue}>
+          {leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`}
+        </Text>
+      </View>
 
-        <View style={styles.detailList}>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Pan:</Text>
+      <View style={styles.body}>
+        <View style={styles.detailGrid}>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Pan</Text>
             <Text style={styles.detailValue}>{runConfig.panMode}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Tilt:</Text>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Tilt</Text>
             <Text style={styles.detailValue}>{runConfig.tiltMode}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Power:</Text>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Power</Text>
             <Text style={styles.detailValue}>{runConfig.launcherPower}</Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Spin:</Text>
-            <Text style={styles.detailValue}>{spinLabel}</Text>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Spin</Text>
+            <View style={styles.spinValueRow}>
+              <Text style={styles.detailValue}>{displaySpin}</Text>
+              {spinRandom && (
+                <View style={styles.randomBadge}>
+                  <MaterialCommunityIcons name="shuffle-variant" size={12} color={theme.colors.primary} />
+                  <Text style={styles.randomBadgeText}>random</Text>
+                </View>
+              )}
+            </View>
           </View>
         </View>
 
-        <View style={styles.radarRow}>
+        <View style={styles.radarSection}>
+          <Text style={styles.radarLabel}>Aim</Text>
           <AimPreview
             size={PREVIEW_SIZE}
             pan={runConfig.panTarget}
@@ -107,18 +126,50 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: theme.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    paddingBottom: theme.spacing.sm,
+    gap: theme.spacing.sm,
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: theme.colors.border,
+  },
+  statusDotOn: {
+    backgroundColor: theme.colors.success,
+    ...theme.shadow.sm,
   },
   runningTitle: {
     ...theme.typography.hero,
     color: theme.colors.success,
-    fontSize: 24,
+    fontSize: 22,
+    letterSpacing: 1,
   },
   runningTitleDim: {
     color: 'transparent',
+  },
+  timeCard: {
+    backgroundColor: theme.colors.surfaceElevated,
+    borderRadius: theme.borderRadius.md,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    alignItems: 'center',
+  },
+  timeLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.xs,
+    textTransform: 'uppercase',
+  },
+  timeValue: {
+    ...theme.typography.hero,
+    color: theme.colors.primary,
+    fontSize: 32,
   },
   body: {
     flex: 1,
@@ -127,47 +178,79 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.lg,
+    ...theme.shadow.sm,
   },
-  timeRow: {
+  detailGrid: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing.md,
-  },
-  label: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-    marginRight: theme.spacing.sm,
-  },
-  value: {
-    ...theme.typography.title,
-    color: theme.colors.primary,
-  },
-  detailList: {
+    flexWrap: 'wrap',
+    gap: theme.spacing.sm,
     marginBottom: theme.spacing.lg,
   },
-  detailRow: {
+  detailItem: {
+    minWidth: '45%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.xs,
+    justifyContent: 'space-between',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.sm,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.sm,
   },
   detailLabel: {
     ...theme.typography.label,
     color: theme.colors.textSecondary,
-    width: 56,
+    textTransform: 'uppercase',
   },
   detailValue: {
     ...theme.typography.body,
     color: theme.colors.text,
-    fontWeight: '600',
+    fontWeight: '700',
   },
-  radarRow: {
+  spinValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  randomBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    backgroundColor: theme.colors.primaryMuted,
+    borderRadius: theme.borderRadius.full,
+  },
+  randomBadgeText: {
+    ...theme.typography.label,
+    fontSize: 10,
+    color: theme.colors.primary,
+    textTransform: 'lowercase',
+  },
+  radarSection: {
     alignItems: 'center',
   },
-  caption: {
+  radarLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.sm,
+    textTransform: 'uppercase',
+  },
+  emptyCard: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.xl,
+  },
+  emptyTitle: {
+    ...theme.typography.header,
+    color: theme.colors.text,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+  },
+  emptyCaption: {
     ...theme.typography.caption,
     color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xl,
   },
   stopButton: {
     flexDirection: 'row',
