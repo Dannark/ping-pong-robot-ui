@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { theme } from '../theme';
 import { HomeScreen } from '../screens/HomeScreen';
-import { WizardScreen } from '../screens/WizardScreen';
+import { SetupScreen } from '../screens/SetupScreen';
 import { InfoScreen } from '../screens/InfoScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { PlaceholderScreen } from '../screens/PlaceholderScreen';
@@ -26,9 +26,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const screenOptions = {
   headerStyle: { backgroundColor: theme.colors.surface },
-  headerTintColor: theme.colors.text,
-  headerTitleStyle: { fontSize: 18, fontWeight: '600' as const },
+  headerTintColor: theme.colors.primary,
+  headerTitleStyle: { fontSize: 18, fontWeight: '600' as const, color: theme.colors.text },
   headerShadowVisible: false,
+  headerBackTitleVisible: false,
   contentStyle: { backgroundColor: theme.colors.background },
   animation: 'slide_from_right' as const,
 };
@@ -47,8 +48,8 @@ export function RootStack() {
         />
         <Stack.Screen
           name="Wizard"
-          component={WizardScreen}
-          options={{ title: 'Wizard' }}
+          component={SetupScreen}
+          options={{ title: 'Configurar e iniciar' }}
         />
         <Stack.Screen
           name="Info"

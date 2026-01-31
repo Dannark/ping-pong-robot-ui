@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme } from '../theme';
 import type { RootStackParamList } from '../navigation/RootStack';
@@ -11,13 +12,12 @@ type Props = {
 export function InfoScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Info</Text>
+      <View style={styles.iconWrap}>
+        <MaterialCommunityIcons name="information-outline" size={48} color={theme.colors.primary} />
       </View>
-      <View style={styles.body}>
-        <Text style={styles.version}>Ping Pong Bot UI v1</Text>
-        <Text style={styles.caption}>App – controle via Bluetooth (em breve)</Text>
-      </View>
+      <Text style={styles.title}>Ping Pong Robot</Text>
+      <Text style={styles.version}>App v1</Text>
+      <Text style={styles.caption}>Controle via Bluetooth (em breve)</Text>
     </View>
   );
 }
@@ -26,22 +26,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: Platform.OS === 'ios' ? theme.spacing.xxl : theme.spacing.xl,
+    alignItems: 'center',
   },
-  header: {
+  iconWrap: {
+    width: 88,
+    height: 88,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing.lg,
+    ...theme.shadow.md,
   },
   title: {
-    ...theme.typography.title,
+    ...theme.typography.hero,
     color: theme.colors.text,
-  },
-  body: {
-    flex: 1,
+    marginBottom: theme.spacing.xs,
   },
   version: {
     ...theme.typography.body,
-    color: theme.colors.text,
+    color: theme.colors.textSecondary,
     marginBottom: theme.spacing.sm,
   },
   caption: {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme } from '../theme';
 import type { RootStackParamList } from '../navigation/RootStack';
@@ -11,19 +12,20 @@ type Props = {
 export function RunningScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.runningLabel}>RUNNING</Text>
+      <View style={styles.statusWrap}>
+        <View style={styles.pulse} />
+        <MaterialCommunityIcons name="motion-play-outline" size={56} color={theme.colors.success} />
       </View>
-      <View style={styles.body}>
-        <Text style={styles.elapsed}>Elapsed: 0s</Text>
-        <Text style={styles.caption}>Controle ao vivo (em breve)</Text>
-      </View>
+      <Text style={styles.title}>Em execução</Text>
+      <Text style={styles.elapsed}>0s</Text>
+      <Text style={styles.caption}>Controle ao vivo (em breve)</Text>
       <TouchableOpacity
         style={styles.stopButton}
         onPress={() => navigation.goBack()}
-        activeOpacity={0.8}
+        activeOpacity={0.85}
       >
-        <Text style={styles.stopLabel}>Stop</Text>
+        <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
+        <Text style={styles.stopLabel}>Parar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -33,39 +35,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: Platform.OS === 'ios' ? theme.spacing.xxl : theme.spacing.xl,
+    alignItems: 'center',
   },
-  header: {
+  statusWrap: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    paddingBottom: theme.spacing.sm,
+    ...theme.shadow.md,
   },
-  runningLabel: {
-    ...theme.typography.header,
-    color: theme.colors.success,
+  pulse: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: theme.colors.success,
+    opacity: 0.3,
   },
-  body: {
-    flex: 1,
+  title: {
+    ...theme.typography.hero,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
   },
   elapsed: {
-    ...theme.typography.body,
-    color: theme.colors.text,
+    ...theme.typography.title,
+    color: theme.colors.primary,
     marginBottom: theme.spacing.sm,
   },
   caption: {
     ...theme.typography.caption,
     color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.xl,
   },
   stopButton: {
-    marginBottom: theme.spacing.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
     backgroundColor: theme.colors.danger,
     paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    alignItems: 'center',
+    paddingHorizontal: theme.spacing.xl,
+    borderRadius: theme.borderRadius.lg,
     minHeight: theme.touchableMinHeight,
-    justifyContent: 'center',
+    ...theme.shadow.sm,
   },
   stopLabel: {
     ...theme.typography.header,

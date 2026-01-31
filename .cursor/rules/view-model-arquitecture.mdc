@@ -1,0 +1,37 @@
+---
+alwaysApply: true
+---
+Quando for criar ou modificar as telas, sempre use a arquitetura MVVM do nosso projeto.
+Isso é, cada tela é composta pelo menos pelos seguintes arquivos conforme essa extrutura:
+
+
+screens/example/
+- index.tsx
+- Example.viewModel.ts
+- Example.view.tsx
+- components/ (se necessario)
+
+OBS: Criar um arquivo de estilo separado é OPICIONAL
+
+## Explicação detalhada
+1. A index sera responsavel por importar os outros arquivos como a viewModel e a view
+2. A view deve conter apenas coisas relacionadas a view e não deve conter logica, a unica excessão é se for um hook de estilos, como por exemplo o `import { useThemeColors } from '@/theme';`
+3. A viewModel contem toda a logica daquela tela e não deve possuir componentes jsx nem nada do tipo, por isso que a viewModel deve sempre terimar com .ts
+
+## Camada de dados
+Nos usaremos o pattern do repositorio, logo todas as viewModel que precisam de chamadas para api, usam  dado de algum repositorio, ao invez de implementar o request diretamente na viewModel.
+
+Repositorio usam o padrão singleton para poder chamar eles de qualquer lugar que por sua vez, armazenar os valores temporariamente (memoria ram) e/ou permanentemente. 
+
+Cada repositorio deve receber por parametro o seu respectivo local-data-source e remote-data-source que fara a chamada para api de fato, no caso do remote.
+
+## Services
+Os services serão arquivos que apenas configuram o network tipo uma api pro axios que dispara logs em caso de erros.
+Os storages não guardam informações, isso é responsabilidade do service
+
+OBS: Não crie arquivos mds, não encha o código de comentários.
+
+Também quero que escreva o código em INGLES, mas pode me responder em portugues
+
+
+OBS: A palavra HOOK nao deve ser usadas quando criarmos viewModels
