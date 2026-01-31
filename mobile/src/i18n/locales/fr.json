@@ -44,7 +44,13 @@
     "power": "Puissance",
     "spin": "Effet",
     "timer": "Chronomètre",
-    "feeder": "Alimentation"
+    "feeder": "Alimentation",
+    "feederSpeed": "Vit. aliment.",
+    "spinIntensity": "Int. effet",
+    "soundAlert": "Alerte sonore",
+    "soundOn": "Oui",
+    "soundOff": "Non",
+    "spinInterval": "Intervalle effet"
   },
   "trainingComplete": {
     "title": "Entraînement terminé",

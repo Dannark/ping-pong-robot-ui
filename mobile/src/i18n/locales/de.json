@@ -44,7 +44,13 @@
     "power": "Leistung",
     "spin": "Drall",
     "timer": "Timer",
-    "feeder": "Zubringer"
+    "feeder": "Zubringer",
+    "feederSpeed": "Zubringer-Tempo",
+    "spinIntensity": "Drall-Stärke",
+    "soundAlert": "Ton-Alert",
+    "soundOn": "An",
+    "soundOff": "Aus",
+    "spinInterval": "Drall-Intervall"
   },
   "trainingComplete": {
     "title": "Training abgeschlossen",

@@ -44,7 +44,13 @@
     "power": "Power",
     "spin": "Spin",
     "timer": "Cronômetro",
-    "feeder": "Feeder"
+    "feeder": "Feeder",
+    "feederSpeed": "Vel. feeder",
+    "spinIntensity": "Int. spin",
+    "soundAlert": "Aviso sonoro",
+    "soundOn": "Ligado",
+    "soundOff": "Desligado",
+    "spinInterval": "Intervalo spin"
   },
   "trainingComplete": {
     "title": "Treino concluído",

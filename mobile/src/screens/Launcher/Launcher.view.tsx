@@ -114,23 +114,25 @@ export function LauncherView({
           </View>
         </View>
       )}
-      <View style={styles.section}>
-        <View style={styles.sliderRow}>
-          <Text style={styles.label}>{t('launcher.spinIntensity')}</Text>
-          <Text style={styles.value}>{spinIntensity}</Text>
+      {spinDirection !== 'NONE' && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>{t('launcher.spinIntensity')}</Text>
+            <Text style={styles.value}>{spinIntensity}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={512}
+            step={1}
+            value={spinIntensity}
+            onValueChange={onSpinIntensityChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
         </View>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={512}
-          step={1}
-          value={spinIntensity}
-          onValueChange={onSpinIntensityChange}
-          minimumTrackTintColor={theme.colors.primary}
-          maximumTrackTintColor={theme.colors.border}
-          thumbTintColor={theme.colors.primary}
-        />
-      </View>
+      )}
       <View style={styles.section}>
         <Text style={styles.label}>{t('launcher.previewMotors')}</Text>
         <View style={styles.previewRow}>

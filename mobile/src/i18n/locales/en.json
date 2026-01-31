@@ -44,7 +44,13 @@
     "power": "Power",
     "spin": "Spin",
     "timer": "Timer",
-    "feeder": "Feeder"
+    "feeder": "Feeder",
+    "feederSpeed": "Feeder speed",
+    "spinIntensity": "Spin int.",
+    "soundAlert": "Sound alert",
+    "soundOn": "On",
+    "soundOff": "Off",
+    "spinInterval": "Spin interval"
   },
   "trainingComplete": {
     "title": "Training complete",

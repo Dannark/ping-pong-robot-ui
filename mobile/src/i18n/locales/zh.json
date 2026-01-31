@@ -44,7 +44,13 @@
     "power": "功率",
     "spin": "旋转",
     "timer": "计时器",
-    "feeder": "供球"
+    "feeder": "供球",
+    "feederSpeed": "供球速度",
+    "spinIntensity": "旋转强度",
+    "soundAlert": "声音提醒",
+    "soundOn": "开",
+    "soundOff": "关",
+    "spinInterval": "旋转间隔"
   },
   "trainingComplete": {
     "title": "训练完成",

@@ -99,6 +99,22 @@ export function RunningView({
             <Text style={styles.detailLabel}>{t('running.feeder')}</Text>
             <Text style={styles.detailValue}>{runConfig.feederMode}</Text>
           </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>{t('running.feederSpeed')}</Text>
+            <Text style={styles.detailValue}>{runConfig.feederSpeed}</Text>
+          </View>
+          {runConfig.spinDirection !== 'NONE' && (
+            <View style={styles.detailItem}>
+              <Text style={styles.detailLabel}>{t('running.spinIntensity')}</Text>
+              <Text style={styles.detailValue}>{runConfig.spinIntensity}</Text>
+            </View>
+          )}
+          {spinRandom && (
+            <View style={styles.detailItem}>
+              <Text style={styles.detailLabel}>{t('running.spinInterval')}</Text>
+              <Text style={styles.detailValue}>{runConfig.spinRandomIntervalSec}s</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.aimSpinRow}>

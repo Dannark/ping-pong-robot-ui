@@ -44,7 +44,13 @@
     "power": "Potencia",
     "spin": "Efecto",
     "timer": "Temporizador",
-    "feeder": "Alimentador"
+    "feeder": "Alimentador",
+    "feederSpeed": "Vel. alimentador",
+    "spinIntensity": "Int. efecto",
+    "soundAlert": "Alerta sonora",
+    "soundOn": "Sí",
+    "soundOff": "No",
+    "spinInterval": "Intervalo efecto"
   },
   "trainingComplete": {
     "title": "Entrenamiento completado",
