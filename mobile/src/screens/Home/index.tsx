@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import { getHomeCards } from './Home.viewModel';
@@ -9,7 +10,8 @@ type HomeScreenProps = {
 };
 
 export function HomeScreen({ navigation }: HomeScreenProps) {
-  const cards = getHomeCards();
+  const { t } = useTranslation();
+  const cards = getHomeCards(t);
 
   const handleCardPress = (screen: keyof RootStackParamList) => {
     navigation.navigate(screen);

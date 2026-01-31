@@ -7,6 +7,7 @@ import {
   Platform,
   Switch,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 
@@ -27,12 +28,13 @@ export function TimerView({
   onTimerSoundAlertChange,
   onReset,
 }: TimerViewProps) {
+  const { t } = useTranslation();
   const timerEnabled = timerIndex !== 0;
 
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.label}>Timer</Text>
+        <Text style={styles.label}>{t('timer.label')}</Text>
         <View style={styles.chipRow}>
           {options.map((opt, i) => (
             <TouchableOpacity
@@ -51,7 +53,7 @@ export function TimerView({
       {timerEnabled && (
         <View style={styles.section}>
           <View style={styles.toggleRow}>
-            <Text style={styles.label}>Aviso sonoro ao terminar</Text>
+            <Text style={styles.label}>{t('timer.soundAlert')}</Text>
             <Switch
               value={timerSoundAlert}
               onValueChange={onTimerSoundAlertChange}
@@ -63,7 +65,7 @@ export function TimerView({
       )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
-        <Text style={styles.resetLabel}>Reset</Text>
+        <Text style={styles.resetLabel}>{t('timer.reset')}</Text>
       </TouchableOpacity>
     </View>
   );

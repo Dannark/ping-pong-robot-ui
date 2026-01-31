@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
@@ -48,10 +49,11 @@ export function FeederView({
   onP2OffMsChange,
   onReset,
 }: FeederViewProps) {
+  const { t } = useTranslation();
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.visualizerSection}>
-        <Text style={styles.previewLabel}>Feeder</Text>
+        <Text style={styles.previewLabel}>{t('wizard.feeder')}</Text>
         <FeederVisualization
           size={VISUALIZER_SIZE}
           feederMode={feederMode}
@@ -64,7 +66,7 @@ export function FeederView({
         />
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Mode</Text>
+        <Text style={styles.label}>{t('feeder.mode')}</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -89,7 +91,7 @@ export function FeederView({
       </View>
       <View style={styles.section}>
         <View style={styles.sliderRow}>
-          <Text style={styles.label}>Speed</Text>
+          <Text style={styles.label}>{t('feeder.speed')}</Text>
           <Text style={styles.value}>{feederSpeed}</Text>
         </View>
         <Slider
@@ -106,9 +108,9 @@ export function FeederView({
       </View>
       {feederMode === 'P1/1' && (
         <View style={styles.section}>
-          <Text style={styles.label}>P1/1 — Ligado / Desligado (ms)</Text>
+          <Text style={styles.label}>{t('feeder.p1Label')}</Text>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Ligado</Text>
+            <Text style={styles.label}>{t('feeder.on')}</Text>
             <Text style={styles.value}>{feederP1OnMs}</Text>
           </View>
           <Slider
@@ -123,7 +125,7 @@ export function FeederView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Desligado</Text>
+            <Text style={styles.label}>{t('feeder.off')}</Text>
             <Text style={styles.value}>{feederP1OffMs}</Text>
           </View>
           <Slider
@@ -141,9 +143,9 @@ export function FeederView({
       )}
       {feederMode === 'P2/2' && (
         <View style={styles.section}>
-          <Text style={styles.label}>P2/2 — Ligado / Desligado (ms)</Text>
+          <Text style={styles.label}>{t('feeder.p2Label')}</Text>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Ligado</Text>
+            <Text style={styles.label}>{t('feeder.on')}</Text>
             <Text style={styles.value}>{feederP2OnMs}</Text>
           </View>
           <Slider
@@ -158,7 +160,7 @@ export function FeederView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Desligado</Text>
+            <Text style={styles.label}>{t('feeder.off')}</Text>
             <Text style={styles.value}>{feederP2OffMs}</Text>
           </View>
           <Slider
@@ -176,7 +178,7 @@ export function FeederView({
       )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
-        <Text style={styles.resetLabel}>Reset</Text>
+        <Text style={styles.resetLabel}>{t('feeder.reset')}</Text>
       </TouchableOpacity>
       <View style={{ height: theme.spacing.xl }} />
     </ScrollView>

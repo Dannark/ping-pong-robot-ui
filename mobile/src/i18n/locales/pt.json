@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "home": "Ping Pong Robot",
+    "wizard": "Configurar e iniciar",
+    "info": "Info",
+    "settings": "Configurações",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "launcher": "Launcher",
+    "feeder": "Feeder",
+    "timer": "Timer",
+    "running": "Running",
+    "trainingComplete": "Treino concluído"
+  },
+  "home": {
+    "heroTitle": "Ping Pong Robot",
+    "heroSubtitle": "Controle pelo app",
+    "cardStart": "Iniciar",
+    "cardStartSubtitle": "Configurar e lançar",
+    "cardInfo": "Info",
+    "cardInfoSubtitle": "Versão e estatísticas",
+    "cardSettings": "Configurações",
+    "cardSettingsSubtitle": "Servos e motores"
+  },
+  "wizard": {
+    "preview": "Preview",
+    "aim": "Aim",
+    "feeder": "Feeder",
+    "spin": "Spin",
+    "start": "Iniciar"
+  },
+  "running": {
+    "emptyTitle": "Nenhuma sessão ativa",
+    "emptyCaption": "Inicie pelo Wizard para ver a execução",
+    "back": "Voltar",
+    "stop": "Parar",
+    "timeRemaining": "Tempo restante",
+    "elapsed": "Decorrido",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Power",
+    "spin": "Spin",
+    "timer": "Timer",
+    "feeder": "Feeder"
+  },
+  "trainingComplete": {
+    "title": "Treino concluído",
+    "subtitle": "Parabéns por completar esta sessão",
+    "statsTitle": "Resumo da sessão",
+    "time": "Tempo",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Power",
+    "spin": "Spin",
+    "timer": "Timer",
+    "feeder": "Feeder",
+    "ratingQuestion": "Como foi este treino?",
+    "ratingHint": "Toque para avaliar (1–5)",
+    "ratingStars": "{{count}} de 5 estrelas",
+    "backToWizard": "Voltar ao Wizard"
+  },
+  "feeder": {
+    "mode": "Mode",
+    "speed": "Speed",
+    "p1Label": "P1/1 — Ligado / Desligado (ms)",
+    "p2Label": "P2/2 — Ligado / Desligado (ms)",
+    "on": "Ligado",
+    "off": "Desligado",
+    "reset": "Reset"
+  },
+  "pan": {
+    "previewLabel": "Aim (Pan + Tilt)",
+    "mode": "Mode",
+    "initialPanTarget": "Initial Pan target",
+    "angleRangePan": "Angle range (Pan)",
+    "min": "Min",
+    "max": "Max",
+    "auto1Speed": "AUTO1 Speed",
+    "auto2Step": "AUTO2 Step",
+    "timeBetweenPositions": "Tempo entre posições (ms)",
+    "randomMinDist": "RANDOM Min dist.",
+    "reset": "Reset"
+  },
+  "tilt": {
+    "previewLabel": "Aim (Pan + Tilt)",
+    "mode": "Mode",
+    "initialTiltTarget": "Initial Tilt target",
+    "angleRangeTilt": "Angle range (Tilt)",
+    "min": "Min",
+    "max": "Max",
+    "auto1Speed": "AUTO1 Speed",
+    "auto2Step": "AUTO2 Step",
+    "timeBetweenPositions": "Tempo entre posições (ms)",
+    "randomMinDist": "RANDOM Min dist.",
+    "reset": "Reset"
+  },
+  "launcher": {
+    "maxPower": "MAX POWER",
+    "spinRandom": "Spin random",
+    "randomInterval": "Random interval",
+    "spinDirection": "Spin direction",
+    "spinIntensity": "Spin intensity",
+    "previewMotors": "Preview (M1, M2, M3)",
+    "motorReversedWarning": "O alcance pode ficar mais curto ao reverter a rotação dos motores em troca de mais spin.",
+    "reset": "Reset"
+  },
+  "timer": {
+    "label": "Timer",
+    "soundAlert": "Aviso sonoro ao terminar",
+    "reset": "Reset"
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Servos e motores (em breve)"
+  },
+  "info": {
+    "title": "Ping Pong Robot",
+    "caption": "Controle via Bluetooth (em breve)"
+  }
+}

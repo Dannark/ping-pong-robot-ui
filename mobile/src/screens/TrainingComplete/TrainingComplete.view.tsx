@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import type { RobotConfig } from '../../data/RobotConfig';
@@ -18,6 +19,7 @@ export function TrainingCompleteView({
   runConfig,
   onBackToWizard,
 }: TrainingCompleteViewProps) {
+  const { t } = useTranslation();
   const [rating, setRating] = useState<number>(0);
 
   const formatTime = (sec: number) => {
@@ -36,50 +38,50 @@ export function TrainingCompleteView({
         <View style={styles.iconWrap}>
           <MaterialCommunityIcons name="check-circle" size={56} color={theme.colors.success} />
         </View>
-        <Text style={styles.title}>Treino concluído</Text>
-        <Text style={styles.subtitle}>Parabéns por completar esta sessão</Text>
+        <Text style={styles.title}>{t('trainingComplete.title')}</Text>
+        <Text style={styles.subtitle}>{t('trainingComplete.subtitle')}</Text>
       </View>
 
       {runConfig && (
         <View style={styles.statsCard}>
-          <Text style={styles.statsTitle}>Resumo da sessão</Text>
+          <Text style={styles.statsTitle}>{t('trainingComplete.statsTitle')}</Text>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Tempo</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.time')}</Text>
             <Text style={styles.statsValue}>{formatTime(elapsedSeconds)}</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Pan</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.pan')}</Text>
             <Text style={styles.statsValue}>{runConfig.panMode}</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Tilt</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.tilt')}</Text>
             <Text style={styles.statsValue}>{runConfig.tiltMode}</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Power</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.power')}</Text>
             <Text style={styles.statsValue}>{runConfig.launcherPower}</Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Spin</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.spin')}</Text>
             <Text style={styles.statsValue}>
               {runConfig.spinRandom ? 'Random' : runConfig.spinDirection}
             </Text>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.statsLabel}>Timer</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.timer')}</Text>
             <Text style={styles.statsValue}>
               {TIMER_OPTIONS[runConfig.timerIndex] ?? 'OFF'}
             </Text>
           </View>
           <View style={[styles.statsRow, styles.statsRowLast]}>
-            <Text style={styles.statsLabel}>Feeder</Text>
+            <Text style={styles.statsLabel}>{t('trainingComplete.feeder')}</Text>
             <Text style={styles.statsValue}>{runConfig.feederMode}</Text>
           </View>
         </View>
       )}
 
       <View style={styles.ratingCard}>
-        <Text style={styles.ratingQuestion}>Como foi este treino?</Text>
+        <Text style={styles.ratingQuestion}>{t('trainingComplete.ratingQuestion')}</Text>
         <View style={styles.starsRow}>
           {Array.from({ length: STAR_COUNT }, (_, i) => i + 1).map((value) => (
             <TouchableOpacity
@@ -97,13 +99,13 @@ export function TrainingCompleteView({
           ))}
         </View>
         <Text style={styles.ratingHint}>
-          {rating === 0 ? 'Toque para avaliar (1–5)' : `${rating} de 5 estrelas`}
+          {rating === 0 ? t('trainingComplete.ratingHint') : t('trainingComplete.ratingStars', { count: rating })}
         </Text>
       </View>
 
       <TouchableOpacity style={styles.backButton} onPress={onBackToWizard} activeOpacity={0.85}>
         <MaterialCommunityIcons name="wizard-hat" size={22} color={theme.colors.text} />
-        <Text style={styles.backLabel}>Voltar ao Wizard</Text>
+        <Text style={styles.backLabel}>{t('trainingComplete.backToWizard')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { theme } from '../theme';
@@ -41,68 +42,35 @@ const screenOptions = {
   presentation: 'modal' as const,
 };
 
+function navTitleKey(name: string): string {
+  return name.charAt(0).toLowerCase() + name.slice(1);
+}
+
 export function RootStack() {
+  const { t } = useTranslation();
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={screenOptions}
+        screenOptions={({ route }) => ({
+          ...screenOptions,
+          title: t(`nav.${navTitleKey(route.name)}`),
+          headerLargeTitle: route.name === 'Home' ? false : undefined,
+          headerBackVisible: route.name === 'Running' ? true : route.name === 'TrainingComplete' ? false : undefined,
+        })}
       >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: 'Ping Pong Robot', headerLargeTitle: false }}
-        />
-        <Stack.Screen
-          name="Wizard"
-          component={WizardScreen}
-          options={{ title: 'Configurar e iniciar' }}
-        />
-        <Stack.Screen
-          name="Info"
-          component={InfoScreen}
-          options={{ title: 'Info' }}
-        />
-        <Stack.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{ title: 'Settings' }}
-        />
-        <Stack.Screen
-          name="Pan"
-          component={PanScreen}
-          options={{ title: 'Pan' }}
-        />
-        <Stack.Screen
-          name="Tilt"
-          component={TiltScreen}
-          options={{ title: 'Tilt' }}
-        />
-        <Stack.Screen
-          name="Launcher"
-          component={LauncherScreen}
-          options={{ title: 'Launcher' }}
-        />
-        <Stack.Screen
-          name="Feeder"
-          component={FeederScreen}
-          options={{ title: 'Feeder' }}
-        />
-        <Stack.Screen
-          name="Timer"
-          component={TimerScreen}
-          options={{ title: 'Timer' }}
-        />
-        <Stack.Screen
-          name="Running"
-          component={RunningScreen}
-          options={{ title: 'Running', headerBackVisible: true }}
-        />
-        <Stack.Screen
-          name="TrainingComplete"
-          component={TrainingCompleteScreen}
-          options={{ title: 'Treino concluído', headerBackVisible: false }}
-        />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Wizard" component={WizardScreen} />
+        <Stack.Screen name="Info" component={InfoScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Pan" component={PanScreen} />
+        <Stack.Screen name="Tilt" component={TiltScreen} />
+        <Stack.Screen name="Launcher" component={LauncherScreen} />
+        <Stack.Screen name="Feeder" component={FeederScreen} />
+        <Stack.Screen name="Timer" component={TimerScreen} />
+        <Stack.Screen name="Running" component={RunningScreen} />
+        <Stack.Screen name="TrainingComplete" component={TrainingCompleteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

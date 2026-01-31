@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
@@ -71,12 +72,13 @@ export function TiltView({
   onTiltAuto3PauseMsChange,
   onReset,
 }: TiltViewProps) {
+  const { t } = useTranslation();
   const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2' || tiltMode === 'RANDOM';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
-        <Text style={styles.previewLabel}>Aim (Pan + Tilt)</Text>
+        <Text style={styles.previewLabel}>{t('tilt.previewLabel')}</Text>
         <AimPreview
           size={PREVIEW_SIZE}
           pan={panTarget}
@@ -100,7 +102,7 @@ export function TiltView({
         />
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Mode</Text>
+        <Text style={styles.label}>{t('tilt.mode')}</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -126,7 +128,7 @@ export function TiltView({
       {tiltMode === 'LIVE' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Initial Tilt target</Text>
+            <Text style={styles.label}>{t('tilt.initialTiltTarget')}</Text>
             <Text style={styles.value}>{tiltTarget.toFixed(2)}</Text>
           </View>
           <Slider
@@ -148,11 +150,11 @@ export function TiltView({
         const minSliderNorm = minRange > 0 ? (tiltMin - (-1)) / minRange : 0;
         return (
         <View style={styles.section}>
-          <Text style={styles.label}>Angle range (Tilt)</Text>
+          <Text style={styles.label}>{t('tilt.angleRangeTilt')}</Text>
           <View style={styles.angleRangeRow}>
             <View style={styles.angleRangeCol}>
               <View style={styles.sliderRow}>
-                <Text style={styles.label}>Min</Text>
+                <Text style={styles.label}>{t('tilt.min')}</Text>
                 <Text style={styles.value}>{tiltMin.toFixed(1)}</Text>
               </View>
               <Slider
@@ -172,7 +174,7 @@ export function TiltView({
             </View>
             <View style={styles.angleRangeCol}>
               <View style={styles.sliderRow}>
-                <Text style={styles.label}>Max</Text>
+                <Text style={styles.label}>{t('tilt.max')}</Text>
                 <Text style={styles.value}>{tiltMax.toFixed(1)}</Text>
               </View>
               <Slider
@@ -194,7 +196,7 @@ export function TiltView({
       {tiltMode === 'AUTO1' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>AUTO1 Speed</Text>
+            <Text style={styles.label}>{t('tilt.auto1Speed')}</Text>
             <Text style={styles.value}>{tiltAuto1Speed.toFixed(3)}</Text>
           </View>
           <Slider
@@ -213,7 +215,7 @@ export function TiltView({
       {tiltMode === 'AUTO2' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>AUTO2 Step</Text>
+            <Text style={styles.label}>{t('tilt.auto2Step')}</Text>
             <Text style={styles.value}>{tiltAuto2Step.toFixed(2)}</Text>
           </View>
           <Slider
@@ -228,7 +230,7 @@ export function TiltView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.label}>{t('tilt.timeBetweenPositions')}</Text>
             <Text style={styles.value}>{tiltAuto2PauseMs}</Text>
           </View>
           <Slider
@@ -247,7 +249,7 @@ export function TiltView({
       {tiltMode === 'RANDOM' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>RANDOM Min dist.</Text>
+            <Text style={styles.label}>{t('tilt.randomMinDist')}</Text>
             <Text style={styles.value}>{tiltRandomMinDist.toFixed(2)}</Text>
           </View>
           <Slider
@@ -262,7 +264,7 @@ export function TiltView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.label}>{t('tilt.timeBetweenPositions')}</Text>
             <Text style={styles.value}>{tiltRandomPauseMs}</Text>
           </View>
           <Slider
@@ -280,7 +282,7 @@ export function TiltView({
       )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
-        <Text style={styles.resetLabel}>Reset</Text>
+        <Text style={styles.resetLabel}>{t('tilt.reset')}</Text>
       </TouchableOpacity>
       <View style={{ height: theme.spacing.xl }} />
     </ScrollView>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
@@ -71,12 +72,13 @@ export function PanView({
   onPanAuto3PauseMsChange,
   onReset,
 }: PanViewProps) {
+  const { t } = useTranslation();
   const isAuto = panMode === 'AUTO1' || panMode === 'AUTO2' || panMode === 'RANDOM';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
-        <Text style={styles.previewLabel}>Aim (Pan + Tilt)</Text>
+        <Text style={styles.previewLabel}>{t('pan.previewLabel')}</Text>
         <AimPreview
           size={PREVIEW_SIZE}
           pan={panTarget}
@@ -100,7 +102,7 @@ export function PanView({
         />
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Mode</Text>
+        <Text style={styles.label}>{t('pan.mode')}</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -126,7 +128,7 @@ export function PanView({
       {panMode === 'LIVE' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Initial Pan target</Text>
+            <Text style={styles.label}>{t('pan.initialPanTarget')}</Text>
             <Text style={styles.value}>{panTarget.toFixed(2)}</Text>
           </View>
           <Slider
@@ -148,11 +150,11 @@ export function PanView({
         const minSliderNorm = minRange > 0 ? (panMin - (-1)) / minRange : 0;
         return (
         <View style={styles.section}>
-          <Text style={styles.label}>Angle range (Pan)</Text>
+          <Text style={styles.label}>{t('pan.angleRangePan')}</Text>
           <View style={styles.angleRangeRow}>
             <View style={styles.angleRangeCol}>
               <View style={styles.sliderRow}>
-                <Text style={styles.label}>Min</Text>
+                <Text style={styles.label}>{t('pan.min')}</Text>
                 <Text style={styles.value}>{panMin.toFixed(1)}</Text>
               </View>
               <Slider
@@ -172,7 +174,7 @@ export function PanView({
             </View>
             <View style={styles.angleRangeCol}>
               <View style={styles.sliderRow}>
-                <Text style={styles.label}>Max</Text>
+                <Text style={styles.label}>{t('pan.max')}</Text>
                 <Text style={styles.value}>{panMax.toFixed(1)}</Text>
               </View>
               <Slider
@@ -194,7 +196,7 @@ export function PanView({
       {panMode === 'AUTO1' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>AUTO1 Speed</Text>
+            <Text style={styles.label}>{t('pan.auto1Speed')}</Text>
             <Text style={styles.value}>{panAuto1Speed.toFixed(3)}</Text>
           </View>
           <Slider
@@ -213,7 +215,7 @@ export function PanView({
       {panMode === 'AUTO2' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>AUTO2 Step</Text>
+            <Text style={styles.label}>{t('pan.auto2Step')}</Text>
             <Text style={styles.value}>{panAuto2Step.toFixed(2)}</Text>
           </View>
           <Slider
@@ -228,7 +230,7 @@ export function PanView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.label}>{t('pan.timeBetweenPositions')}</Text>
             <Text style={styles.value}>{panAuto2PauseMs}</Text>
           </View>
           <Slider
@@ -247,7 +249,7 @@ export function PanView({
       {panMode === 'RANDOM' && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>RANDOM Min dist.</Text>
+            <Text style={styles.label}>{t('pan.randomMinDist')}</Text>
             <Text style={styles.value}>{panRandomMinDist.toFixed(2)}</Text>
           </View>
           <Slider
@@ -262,7 +264,7 @@ export function PanView({
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Tempo entre posições (ms)</Text>
+            <Text style={styles.label}>{t('pan.timeBetweenPositions')}</Text>
             <Text style={styles.value}>{panRandomPauseMs}</Text>
           </View>
           <Slider
@@ -280,7 +282,7 @@ export function PanView({
       )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
-        <Text style={styles.resetLabel}>Reset</Text>
+        <Text style={styles.resetLabel}>{t('pan.reset')}</Text>
       </TouchableOpacity>
       <View style={{ height: theme.spacing.xl }} />
     </ScrollView>

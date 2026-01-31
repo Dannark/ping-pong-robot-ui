@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import { SPIN_DIRECTIONS } from '../../data/RobotConfig';
@@ -18,17 +19,18 @@ type WizardScreenProps = {
 };
 
 export function WizardScreen({ navigation }: WizardScreenProps) {
+  const { t } = useTranslation();
   const [config, setConfig] = useState(() => getConfig());
-  const [items, setItems] = useState(() => getWizardItems(getConfig()));
+  const [items, setItems] = useState(() => getWizardItems(getConfig(), t));
   const [currentRandomSpin, setCurrentRandomSpin] = useState<SpinDirection>(() => pickRandomSpin());
 
   useEffect(() => {
     const unsub = subscribeConfig((c) => {
       setConfig(c);
-      setItems(getWizardItems(c));
+      setItems(getWizardItems(c, t));
     });
     return unsub;
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (config.spinRandom !== true) return;

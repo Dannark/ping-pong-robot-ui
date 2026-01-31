@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
@@ -43,6 +44,7 @@ export function LauncherView({
   onSpinRandomIntervalSecChange,
   onReset,
 }: LauncherViewProps) {
+  const { t } = useTranslation();
   const spinForPreview = spinRandom ? displaySpin : spinDirection;
   const { speed1, speed2, speed3 } = getLauncherMotorSpeeds(
     launcherPower,
@@ -55,7 +57,7 @@ export function LauncherView({
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.section}>
         <View style={styles.sliderRow}>
-          <Text style={styles.label}>MAX POWER</Text>
+          <Text style={styles.label}>{t('launcher.maxPower')}</Text>
           <Text style={styles.value}>{launcherPower}</Text>
         </View>
         <Slider
@@ -72,7 +74,7 @@ export function LauncherView({
       </View>
       <View style={styles.section}>
         <View style={styles.randomRow}>
-          <Text style={styles.label}>Spin random</Text>
+          <Text style={styles.label}>{t('launcher.spinRandom')}</Text>
           <Switch
             value={spinRandom}
             onValueChange={onSpinRandomChange}
@@ -84,7 +86,7 @@ export function LauncherView({
       {spinRandom && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
-            <Text style={styles.label}>Random interval</Text>
+            <Text style={styles.label}>{t('launcher.randomInterval')}</Text>
             <Text style={styles.value}>{spinRandomIntervalSec}s</Text>
           </View>
           <Slider
@@ -102,7 +104,7 @@ export function LauncherView({
       )}
       {!spinRandom && (
         <View style={styles.section}>
-          <Text style={styles.label}>Spin direction</Text>
+          <Text style={styles.label}>{t('launcher.spinDirection')}</Text>
           <View style={styles.clockWrap}>
             <SpinClockPicker
               size={CLOCK_SIZE}
@@ -114,7 +116,7 @@ export function LauncherView({
       )}
       <View style={styles.section}>
         <View style={styles.sliderRow}>
-          <Text style={styles.label}>Spin intensity</Text>
+          <Text style={styles.label}>{t('launcher.spinIntensity')}</Text>
           <Text style={styles.value}>{spinIntensity}</Text>
         </View>
         <Slider
@@ -130,7 +132,7 @@ export function LauncherView({
         />
       </View>
       <View style={styles.section}>
-        <Text style={styles.label}>Preview (M1, M2, M3)</Text>
+        <Text style={styles.label}>{t('launcher.previewMotors')}</Text>
         <View style={styles.previewRow}>
           <SpinVisualization
             size={SPIN_PREVIEW_SIZE}
@@ -164,13 +166,13 @@ export function LauncherView({
       {hasMotorReversed && (
         <View style={styles.spinWarning}>
           <Text style={styles.spinWarningText}>
-            O alcance pode ficar mais curto ao reverter a rotação dos motores em troca de mais spin.
+            {t('launcher.motorReversedWarning')}
           </Text>
         </View>
       )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
-        <Text style={styles.resetLabel}>Reset</Text>
+        <Text style={styles.resetLabel}>{t('launcher.reset')}</Text>
       </TouchableOpacity>
       <View style={{ height: theme.spacing.xl }} />
     </ScrollView>

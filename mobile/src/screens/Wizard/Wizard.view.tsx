@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
@@ -27,6 +28,7 @@ const PREVIEW_SIZE = 90;
 const SPIN_PREVIEW_SIZE = 90;
 
 export function WizardView({ items, config, displaySpin, onItemPress, onStartPress }: WizardViewProps) {
+  const { t } = useTranslation();
   const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
 
   return (
@@ -37,10 +39,10 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.previewSection}>
-          <Text style={styles.previewTitle}>Preview</Text>
+          <Text style={styles.previewTitle}>{t('wizard.preview')}</Text>
           <View style={styles.previewRow}>
             <View style={styles.previewBlock}>
-              <Text style={styles.previewLabel}>Aim</Text>
+              <Text style={styles.previewLabel}>{t('wizard.aim')}</Text>
               <AimPreview
                 size={PREVIEW_SIZE}
                 pan={config.panTarget}
@@ -64,7 +66,7 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
               />
             </View>
             <View style={styles.previewBlock}>
-              <Text style={styles.previewLabel}>Feeder</Text>
+              <Text style={styles.previewLabel}>{t('wizard.feeder')}</Text>
               <FeederVisualization
                 size={PREVIEW_SIZE}
                 feederMode={config.feederMode}
@@ -77,7 +79,7 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
               />
             </View>
             <View style={styles.previewBlock}>
-              <Text style={styles.previewLabel}>Spin</Text>
+              <Text style={styles.previewLabel}>{t('wizard.spin')}</Text>
               <SpinVisualization
                 size={SPIN_PREVIEW_SIZE}
                 spinDirection={spinForPreview}
@@ -121,7 +123,7 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
 
         <TouchableOpacity style={styles.startButton} onPress={onStartPress} activeOpacity={0.85}>
           <MaterialCommunityIcons name="play" size={28} color={theme.colors.background} />
-          <Text style={styles.startLabel}>Iniciar</Text>
+          <Text style={styles.startLabel}>{t('wizard.start')}</Text>
         </TouchableOpacity>
 
         <View style={{ height: theme.spacing.xxl }} />

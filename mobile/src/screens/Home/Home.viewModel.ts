@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import type { RootStackParamList } from '../../navigation/RootStack';
 
 export type HomeCard = {
@@ -8,28 +9,10 @@ export type HomeCard = {
   primary?: boolean;
 };
 
-export const HOME_CARDS: HomeCard[] = [
-  {
-    label: 'Iniciar',
-    subtitle: 'Configurar e lançar',
-    screen: 'Wizard',
-    icon: 'rocket-launch',
-    primary: true,
-  },
-  {
-    label: 'Info',
-    subtitle: 'Versão e estatísticas',
-    screen: 'Info',
-    icon: 'information-outline',
-  },
-  {
-    label: 'Configurações',
-    subtitle: 'Servos e motores',
-    screen: 'Settings',
-    icon: 'cog-outline',
-  },
-];
-
-export function getHomeCards(): HomeCard[] {
-  return HOME_CARDS;
+export function getHomeCards(t: TFunction): HomeCard[] {
+  return [
+    { label: t('home.cardStart'), subtitle: t('home.cardStartSubtitle'), screen: 'Wizard', icon: 'rocket-launch', primary: true },
+    { label: t('home.cardInfo'), subtitle: t('home.cardInfoSubtitle'), screen: 'Info', icon: 'information-outline' },
+    { label: t('home.cardSettings'), subtitle: t('home.cardSettingsSubtitle'), screen: 'Settings', icon: 'cog-outline' },
+  ];
 }

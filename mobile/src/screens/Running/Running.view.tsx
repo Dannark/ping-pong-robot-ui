@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
@@ -28,6 +29,7 @@ export function RunningView({
   timerLabel,
   onStop,
 }: RunningViewProps) {
+  const { t } = useTranslation();
   const [blink, setBlink] = useState(true);
 
   useEffect(() => {
@@ -40,12 +42,12 @@ export function RunningView({
       <View style={styles.container}>
         <View style={styles.emptyCard}>
           <MaterialCommunityIcons name="motion-play-outline" size={48} color={theme.colors.textSecondary} />
-          <Text style={styles.emptyTitle}>Nenhuma sessão ativa</Text>
-          <Text style={styles.emptyCaption}>Inicie pelo Wizard para ver a execução</Text>
+          <Text style={styles.emptyTitle}>{t('running.emptyTitle')}</Text>
+          <Text style={styles.emptyCaption}>{t('running.emptyCaption')}</Text>
         </View>
         <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
           <MaterialCommunityIcons name="arrow-left" size={22} color={theme.colors.text} />
-          <Text style={styles.stopLabel}>Voltar</Text>
+          <Text style={styles.stopLabel}>{t('running.back')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -62,7 +64,7 @@ export function RunningView({
 
       <View style={styles.timeCard}>
         <Text style={styles.timeLabel}>
-          {leftSeconds !== null ? 'Tempo restante' : 'Decorrido'}
+          {leftSeconds !== null ? t('running.timeRemaining') : t('running.elapsed')}
         </Text>
         <Text style={styles.timeValue}>
           {leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`}
@@ -72,36 +74,36 @@ export function RunningView({
       <View style={styles.body}>
         <View style={styles.detailGrid}>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Pan</Text>
+            <Text style={styles.detailLabel}>{t('running.pan')}</Text>
             <Text style={styles.detailValue}>{runConfig.panMode}</Text>
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Tilt</Text>
+            <Text style={styles.detailLabel}>{t('running.tilt')}</Text>
             <Text style={styles.detailValue}>{runConfig.tiltMode}</Text>
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Power</Text>
+            <Text style={styles.detailLabel}>{t('running.power')}</Text>
             <Text style={styles.detailValue}>{runConfig.launcherPower}</Text>
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Spin</Text>
+            <Text style={styles.detailLabel}>{t('running.spin')}</Text>
             <Text style={styles.detailValue}>
               {spinRandom ? 'Random' : displaySpin}
             </Text>
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Timer</Text>
+            <Text style={styles.detailLabel}>{t('running.timer')}</Text>
             <Text style={styles.detailValue}>{timerLabel}</Text>
           </View>
           <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Feeder</Text>
+            <Text style={styles.detailLabel}>{t('running.feeder')}</Text>
             <Text style={styles.detailValue}>{runConfig.feederMode}</Text>
           </View>
         </View>
 
         <View style={styles.aimSpinRow}>
           <View style={styles.aimSpinBlock}>
-            <Text style={styles.radarLabel}>Aim</Text>
+            <Text style={styles.radarLabel}>{t('wizard.aim')}</Text>
             <AimPreview
               size={PREVIEW_SIZE}
               pan={runConfig.panTarget}
@@ -125,7 +127,7 @@ export function RunningView({
             />
           </View>
           <View style={styles.aimSpinBlock}>
-            <Text style={styles.radarLabel}>Feeder</Text>
+            <Text style={styles.radarLabel}>{t('wizard.feeder')}</Text>
             <FeederVisualization
               size={PREVIEW_SIZE}
               feederMode={runConfig.feederMode}
@@ -138,7 +140,7 @@ export function RunningView({
             />
           </View>
           <View style={styles.aimSpinBlock}>
-            <Text style={styles.radarLabel}>Spin</Text>
+            <Text style={styles.radarLabel}>{t('wizard.spin')}</Text>
             <SpinVisualization
               size={PREVIEW_SIZE}
               spinDirection={displaySpin}
@@ -152,7 +154,7 @@ export function RunningView({
 
       <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
         <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
-        <Text style={styles.stopLabel}>Parar</Text>
+        <Text style={styles.stopLabel}>{t('running.stop')}</Text>
       </TouchableOpacity>
     </View>
   );

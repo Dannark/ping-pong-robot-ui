@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 
@@ -9,12 +10,13 @@ type InfoViewProps = {
 };
 
 export function InfoView({ version, caption }: InfoViewProps) {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <View style={styles.iconWrap}>
         <MaterialCommunityIcons name="information-outline" size={48} color={theme.colors.primary} />
       </View>
-      <Text style={styles.title}>Ping Pong Robot</Text>
+      <Text style={styles.title}>{t('info.title')}</Text>
       <Text style={styles.version}>{version}</Text>
       <Text style={styles.caption}>{caption}</Text>
     </View>

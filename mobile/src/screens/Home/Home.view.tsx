@@ -7,6 +7,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import type { HomeCard } from './Home.viewModel';
@@ -17,6 +18,7 @@ type HomeViewProps = {
 };
 
 export function HomeView({ cards, onCardPress }: HomeViewProps) {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
@@ -24,8 +26,8 @@ export function HomeView({ cards, onCardPress }: HomeViewProps) {
         <View style={styles.logoWrap}>
           <MaterialCommunityIcons name="table-tennis" size={40} color={theme.colors.primary} />
         </View>
-        <Text style={styles.heroTitle}>Ping Pong Robot</Text>
-        <Text style={styles.heroSubtitle}>Controle pelo app</Text>
+        <Text style={styles.heroTitle}>{t('home.heroTitle')}</Text>
+        <Text style={styles.heroSubtitle}>{t('home.heroSubtitle')}</Text>
       </View>
       <View style={styles.cards}>
         {cards.map(({ label, subtitle, screen, icon, primary }) => (

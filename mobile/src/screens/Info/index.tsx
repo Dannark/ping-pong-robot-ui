@@ -1,7 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/RootStack';
-import { APP_VERSION, APP_CAPTION } from './Info.viewModel';
+import { APP_VERSION } from './Info.viewModel';
 import { InfoView } from './Info.view';
 
 type InfoScreenProps = {
@@ -9,5 +10,6 @@ type InfoScreenProps = {
 };
 
 export function InfoScreen({ navigation }: InfoScreenProps) {
-  return <InfoView version={APP_VERSION} caption={APP_CAPTION} />;
+  const { t } = useTranslation();
+  return <InfoView version={APP_VERSION} caption={t('info.caption')} />;
 }

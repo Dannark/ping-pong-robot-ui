@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import type { RobotConfig } from '../../data/RobotConfig';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
@@ -10,16 +11,16 @@ export type WizardItem = {
   icon: string;
 };
 
-export function getWizardItems(config: RobotConfig): WizardItem[] {
+export function getWizardItems(config: RobotConfig, t: TFunction): WizardItem[] {
   const launcherValue = config.spinRandom
     ? `${config.launcherPower} Random`
     : String(config.launcherPower);
   return [
-    { label: 'Pan', value: config.panMode, screen: 'Pan', icon: 'compass' },
-    { label: 'Tilt', value: config.tiltMode, screen: 'Tilt', icon: 'angle-acute' },
-    { label: 'Launcher', value: launcherValue, screen: 'Launcher', icon: 'rocket-launch' },
-    { label: 'Feeder', value: config.feederMode, screen: 'Feeder', icon: 'fan' },
-    { label: 'Timer', value: TIMER_OPTIONS[config.timerIndex], screen: 'Timer', icon: 'timer-outline' },
+    { label: t('nav.pan'), value: config.panMode, screen: 'Pan', icon: 'compass' },
+    { label: t('nav.tilt'), value: config.tiltMode, screen: 'Tilt', icon: 'angle-acute' },
+    { label: t('nav.launcher'), value: launcherValue, screen: 'Launcher', icon: 'rocket-launch' },
+    { label: t('nav.feeder'), value: config.feederMode, screen: 'Feeder', icon: 'fan' },
+    { label: t('nav.timer'), value: TIMER_OPTIONS[config.timerIndex], screen: 'Timer', icon: 'timer-outline' },
   ];
 }
 
