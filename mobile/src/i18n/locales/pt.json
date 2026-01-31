@@ -8,7 +8,7 @@
     "tilt": "Tilt",
     "launcher": "Launcher",
     "feeder": "Feeder",
-    "timer": "Timer",
+    "timer": "Cronômetro",
     "running": "Running",
     "trainingComplete": "Treino concluído"
   },
@@ -40,7 +40,7 @@
     "tilt": "Tilt",
     "power": "Power",
     "spin": "Spin",
-    "timer": "Timer",
+    "timer": "Cronômetro",
     "feeder": "Feeder"
   },
   "trainingComplete": {
@@ -52,7 +52,7 @@
     "tilt": "Tilt",
     "power": "Power",
     "spin": "Spin",
-    "timer": "Timer",
+    "timer": "Cronômetro",
     "feeder": "Feeder",
     "ratingQuestion": "Como foi este treino?",
     "ratingHint": "Toque para avaliar (1–5)",
@@ -105,13 +105,29 @@
     "reset": "Reset"
   },
   "timer": {
-    "label": "Timer",
+    "label": "Cronômetro",
     "soundAlert": "Aviso sonoro ao terminar",
     "reset": "Reset"
   },
   "settings": {
     "title": "Configurações",
-    "subtitle": "Servos e motores (em breve)"
+    "subtitle": "Servos e motores (em breve)",
+    "language": "Idioma",
+    "languageSystem": "Sistema",
+    "configSection": "Configuração (TFT)",
+    "hardwareSection": "Servos e motores",
+    "servo1": "Servo 1 (Tilt)",
+    "servo2": "Servo 2 (Pan)",
+    "m1Test": "M1 Teste",
+    "m2Test": "M2 Teste",
+    "m3Test": "M3 Teste",
+    "comingSoon": "Em breve",
+    "langEn": "English",
+    "langPt": "Português",
+    "langEs": "Español",
+    "langDe": "Deutsch",
+    "langFr": "Français",
+    "langZh": "中文"
   },
   "info": {
     "title": "Ping Pong Robot",

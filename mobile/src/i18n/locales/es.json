@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "home": "Ping Pong Robot",
+    "wizard": "Configurar y empezar",
+    "info": "Info",
+    "settings": "Ajustes",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "launcher": "Lanzador",
+    "feeder": "Alimentador",
+    "timer": "Temporizador",
+    "running": "En ejecución",
+    "trainingComplete": "Entrenamiento completado"
+  },
+  "home": {
+    "heroTitle": "Ping Pong Robot",
+    "heroSubtitle": "Control desde la app",
+    "cardStart": "Iniciar",
+    "cardStartSubtitle": "Configurar y lanzar",
+    "cardInfo": "Info",
+    "cardInfoSubtitle": "Versión y estadísticas",
+    "cardSettings": "Ajustes",
+    "cardSettingsSubtitle": "Servos y motores"
+  },
+  "wizard": {
+    "preview": "Vista previa",
+    "aim": "Apuntar",
+    "feeder": "Alimentador",
+    "spin": "Efecto",
+    "start": "Iniciar"
+  },
+  "running": {
+    "emptyTitle": "Ninguna sesión activa",
+    "emptyCaption": "Inicia desde el asistente para ver la ejecución",
+    "back": "Volver",
+    "stop": "Parar",
+    "timeRemaining": "Tiempo restante",
+    "elapsed": "Transcurrido",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Potencia",
+    "spin": "Efecto",
+    "timer": "Temporizador",
+    "feeder": "Alimentador"
+  },
+  "trainingComplete": {
+    "title": "Entrenamiento completado",
+    "subtitle": "Enhorabuena por completar esta sesión",
+    "statsTitle": "Resumen de la sesión",
+    "time": "Tiempo",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Potencia",
+    "spin": "Efecto",
+    "timer": "Temporizador",
+    "feeder": "Alimentador",
+    "ratingQuestion": "¿Cómo fue este entrenamiento?",
+    "ratingHint": "Toca para valorar (1–5)",
+    "ratingStars": "{{count}} de 5 estrellas",
+    "backToWizard": "Volver al asistente"
+  },
+  "feeder": {
+    "mode": "Modo",
+    "speed": "Velocidad",
+    "p1Label": "P1/1 — Encendido / Apagado (ms)",
+    "p2Label": "P2/2 — Encendido / Apagado (ms)",
+    "on": "Encendido",
+    "off": "Apagado",
+    "reset": "Restablecer"
+  },
+  "pan": {
+    "previewLabel": "Apuntar (Pan + Tilt)",
+    "mode": "Modo",
+    "initialPanTarget": "Objetivo Pan inicial",
+    "angleRangePan": "Rango de ángulo (Pan)",
+    "min": "Mín",
+    "max": "Máx",
+    "auto1Speed": "Velocidad AUTO1",
+    "auto2Step": "Paso AUTO2",
+    "timeBetweenPositions": "Tiempo entre posiciones (ms)",
+    "randomMinDist": "Dist. mín. RANDOM",
+    "reset": "Restablecer"
+  },
+  "tilt": {
+    "previewLabel": "Apuntar (Pan + Tilt)",
+    "mode": "Modo",
+    "initialTiltTarget": "Objetivo Tilt inicial",
+    "angleRangeTilt": "Rango de ángulo (Tilt)",
+    "min": "Mín",
+    "max": "Máx",
+    "auto1Speed": "Velocidad AUTO1",
+    "auto2Step": "Paso AUTO2",
+    "timeBetweenPositions": "Tiempo entre posiciones (ms)",
+    "randomMinDist": "Dist. mín. RANDOM",
+    "reset": "Restablecer"
+  },
+  "launcher": {
+    "maxPower": "POTENCIA MÁX",
+    "spinRandom": "Efecto aleatorio",
+    "randomInterval": "Intervalo aleatorio",
+    "spinDirection": "Dirección del efecto",
+    "spinIntensity": "Intensidad del efecto",
+    "previewMotors": "Vista previa (M1, M2, M3)",
+    "motorReversedWarning": "El alcance puede acortarse al invertir la rotación de los motores a cambio de más efecto.",
+    "reset": "Restablecer"
+  },
+  "timer": {
+    "label": "Temporizador",
+    "soundAlert": "Alerta sonora al terminar",
+    "reset": "Restablecer"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Servos y motores (próximamente)",
+    "language": "Idioma",
+    "languageSystem": "Sistema",
+    "configSection": "Configuración (TFT)",
+    "hardwareSection": "Servos y motores",
+    "servo1": "Servo 1 (Tilt)",
+    "servo2": "Servo 2 (Pan)",
+    "m1Test": "M1 Prueba",
+    "m2Test": "M2 Prueba",
+    "m3Test": "M3 Prueba",
+    "comingSoon": "Próximamente",
+    "langEn": "English",
+    "langPt": "Português",
+    "langEs": "Español",
+    "langDe": "Deutsch",
+    "langFr": "Français",
+    "langZh": "中文"
+  },
+  "info": {
+    "title": "Ping Pong Robot",
+    "caption": "Control vía Bluetooth (próximamente)"
+  }
+}

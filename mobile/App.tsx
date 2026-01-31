@@ -5,13 +5,18 @@
 
 import './src/i18n';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { initStoredLanguage } from './src/i18n';
 import { RootStack } from './src/navigation/RootStack';
 import { theme } from './src/theme';
 
 function App() {
+  useEffect(() => {
+    initStoredLanguage();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <StatusBar

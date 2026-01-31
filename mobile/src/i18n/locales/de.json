@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "home": "Ping Pong Robot",
+    "wizard": "Konfigurieren und starten",
+    "info": "Info",
+    "settings": "Einstellungen",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "launcher": "Werfer",
+    "feeder": "Zubringer",
+    "timer": "Timer",
+    "running": "Läuft",
+    "trainingComplete": "Training abgeschlossen"
+  },
+  "home": {
+    "heroTitle": "Ping Pong Robot",
+    "heroSubtitle": "Steuerung per App",
+    "cardStart": "Starten",
+    "cardStartSubtitle": "Konfigurieren und starten",
+    "cardInfo": "Info",
+    "cardInfoSubtitle": "Version und Statistiken",
+    "cardSettings": "Einstellungen",
+    "cardSettingsSubtitle": "Servos und Motoren"
+  },
+  "wizard": {
+    "preview": "Vorschau",
+    "aim": "Ziel",
+    "feeder": "Zubringer",
+    "spin": "Drall",
+    "start": "Starten"
+  },
+  "running": {
+    "emptyTitle": "Keine aktive Sitzung",
+    "emptyCaption": "Starte über den Assistenten, um die Ausführung zu sehen",
+    "back": "Zurück",
+    "stop": "Stopp",
+    "timeRemaining": "Verbleibende Zeit",
+    "elapsed": "Verstrichen",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Leistung",
+    "spin": "Drall",
+    "timer": "Timer",
+    "feeder": "Zubringer"
+  },
+  "trainingComplete": {
+    "title": "Training abgeschlossen",
+    "subtitle": "Glückwunsch zum Abschluss dieser Sitzung",
+    "statsTitle": "Sitzungszusammenfassung",
+    "time": "Zeit",
+    "pan": "Pan",
+    "tilt": "Tilt",
+    "power": "Leistung",
+    "spin": "Drall",
+    "timer": "Timer",
+    "feeder": "Zubringer",
+    "ratingQuestion": "Wie war dieses Training?",
+    "ratingHint": "Tippen zum Bewerten (1–5)",
+    "ratingStars": "{{count}} von 5 Sternen",
+    "backToWizard": "Zurück zum Assistenten"
+  },
+  "feeder": {
+    "mode": "Modus",
+    "speed": "Geschwindigkeit",
+    "p1Label": "P1/1 — Ein / Aus (ms)",
+    "p2Label": "P2/2 — Ein / Aus (ms)",
+    "on": "Ein",
+    "off": "Aus",
+    "reset": "Zurücksetzen"
+  },
+  "pan": {
+    "previewLabel": "Ziel (Pan + Tilt)",
+    "mode": "Modus",
+    "initialPanTarget": "Anfängliches Pan-Ziel",
+    "angleRangePan": "Winkelbereich (Pan)",
+    "min": "Min",
+    "max": "Max",
+    "auto1Speed": "AUTO1 Geschwindigkeit",
+    "auto2Step": "AUTO2 Schritt",
+    "timeBetweenPositions": "Zeit zwischen Positionen (ms)",
+    "randomMinDist": "RANDOM Min. Abstand",
+    "reset": "Zurücksetzen"
+  },
+  "tilt": {
+    "previewLabel": "Ziel (Pan + Tilt)",
+    "mode": "Modus",
+    "initialTiltTarget": "Anfängliches Tilt-Ziel",
+    "angleRangeTilt": "Winkelbereich (Tilt)",
+    "min": "Min",
+    "max": "Max",
+    "auto1Speed": "AUTO1 Geschwindigkeit",
+    "auto2Step": "AUTO2 Schritt",
+    "timeBetweenPositions": "Zeit zwischen Positionen (ms)",
+    "randomMinDist": "RANDOM Min. Abstand",
+    "reset": "Zurücksetzen"
+  },
+  "launcher": {
+    "maxPower": "MAX. LEISTUNG",
+    "spinRandom": "Zufälliger Drall",
+    "randomInterval": "Zufallsintervall",
+    "spinDirection": "Drallrichtung",
+    "spinIntensity": "Drallstärke",
+    "previewMotors": "Vorschau (M1, M2, M3)",
+    "motorReversedWarning": "Die Reichweite kann kürzer werden, wenn die Motorrotation für mehr Drall umgekehrt wird.",
+    "reset": "Zurücksetzen"
+  },
+  "timer": {
+    "label": "Timer",
+    "soundAlert": "Ton beim Beenden",
+    "reset": "Zurücksetzen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Servos und Motoren (demnächst)",
+    "language": "Sprache",
+    "languageSystem": "System",
+    "configSection": "Konfiguration (TFT)",
+    "hardwareSection": "Servos & Motoren",
+    "servo1": "Servo 1 (Tilt)",
+    "servo2": "Servo 2 (Pan)",
+    "m1Test": "M1 Test",
+    "m2Test": "M2 Test",
+    "m3Test": "M3 Test",
+    "comingSoon": "Demnächst",
+    "langEn": "English",
+    "langPt": "Português",
+    "langEs": "Español",
+    "langDe": "Deutsch",
+    "langFr": "Français",
+    "langZh": "中文"
+  },
+  "info": {
+    "title": "Ping Pong Robot",
+    "caption": "Steuerung per Bluetooth (demnächst)"
+  }
+}

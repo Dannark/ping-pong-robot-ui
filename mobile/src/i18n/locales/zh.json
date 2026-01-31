@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "home": "乒乓机器人",
+    "wizard": "配置并开始",
+    "info": "信息",
+    "settings": "设置",
+    "pan": "水平",
+    "tilt": "垂直",
+    "launcher": "发球器",
+    "feeder": "供球",
+    "timer": "计时器",
+    "running": "运行中",
+    "trainingComplete": "训练完成"
+  },
+  "home": {
+    "heroTitle": "乒乓机器人",
+    "heroSubtitle": "用应用控制",
+    "cardStart": "开始",
+    "cardStartSubtitle": "配置并发射",
+    "cardInfo": "信息",
+    "cardInfoSubtitle": "版本与统计",
+    "cardSettings": "设置",
+    "cardSettingsSubtitle": "舵机与电机"
+  },
+  "wizard": {
+    "preview": "预览",
+    "aim": "瞄准",
+    "feeder": "供球",
+    "spin": "旋转",
+    "start": "开始"
+  },
+  "running": {
+    "emptyTitle": "无进行中的会话",
+    "emptyCaption": "从向导开始以查看运行",
+    "back": "返回",
+    "stop": "停止",
+    "timeRemaining": "剩余时间",
+    "elapsed": "已用时间",
+    "pan": "水平",
+    "tilt": "垂直",
+    "power": "功率",
+    "spin": "旋转",
+    "timer": "计时器",
+    "feeder": "供球"
+  },
+  "trainingComplete": {
+    "title": "训练完成",
+    "subtitle": "恭喜完成本次训练",
+    "statsTitle": "会话摘要",
+    "time": "时间",
+    "pan": "水平",
+    "tilt": "垂直",
+    "power": "功率",
+    "spin": "旋转",
+    "timer": "计时器",
+    "feeder": "供球",
+    "ratingQuestion": "这次训练怎么样？",
+    "ratingHint": "点击评分（1–5）",
+    "ratingStars": "{{count}} / 5 星",
+    "backToWizard": "返回向导"
+  },
+  "feeder": {
+    "mode": "模式",
+    "speed": "速度",
+    "p1Label": "P1/1 — 开 / 关（毫秒）",
+    "p2Label": "P2/2 — 开 / 关（毫秒）",
+    "on": "开",
+    "off": "关",
+    "reset": "重置"
+  },
+  "pan": {
+    "previewLabel": "瞄准（水平 + 垂直）",
+    "mode": "模式",
+    "initialPanTarget": "初始水平目标",
+    "angleRangePan": "角度范围（水平）",
+    "min": "最小",
+    "max": "最大",
+    "auto1Speed": "AUTO1 速度",
+    "auto2Step": "AUTO2 步进",
+    "timeBetweenPositions": "位置间隔时间（毫秒）",
+    "randomMinDist": "RANDOM 最小距离",
+    "reset": "重置"
+  },
+  "tilt": {
+    "previewLabel": "瞄准（水平 + 垂直）",
+    "mode": "模式",
+    "initialTiltTarget": "初始垂直目标",
+    "angleRangeTilt": "角度范围（垂直）",
+    "min": "最小",
+    "max": "最大",
+    "auto1Speed": "AUTO1 速度",
+    "auto2Step": "AUTO2 步进",
+    "timeBetweenPositions": "位置间隔时间（毫秒）",
+    "randomMinDist": "RANDOM 最小距离",
+    "reset": "重置"
+  },
+  "launcher": {
+    "maxPower": "最大功率",
+    "spinRandom": "随机旋转",
+    "randomInterval": "随机间隔",
+    "spinDirection": "旋转方向",
+    "spinIntensity": "旋转强度",
+    "previewMotors": "预览（M1, M2, M3）",
+    "motorReversedWarning": "反转电机以增加旋转时，射程可能变短。",
+    "reset": "重置"
+  },
+  "timer": {
+    "label": "计时器",
+    "soundAlert": "结束时声音提醒",
+    "reset": "重置"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "舵机与电机（即将推出）",
+    "language": "语言",
+    "languageSystem": "系统",
+    "configSection": "配置（TFT）",
+    "hardwareSection": "舵机与电机",
+    "servo1": "舵机 1 (Tilt)",
+    "servo2": "舵机 2 (Pan)",
+    "m1Test": "M1 测试",
+    "m2Test": "M2 测试",
+    "m3Test": "M3 测试",
+    "comingSoon": "即将推出",
+    "langEn": "English",
+    "langPt": "Português",
+    "langEs": "Español",
+    "langDe": "Deutsch",
+    "langFr": "Français",
+    "langZh": "中文"
+  },
+  "info": {
+    "title": "乒乓机器人",
+    "caption": "蓝牙控制（即将推出）"
+  }
+}

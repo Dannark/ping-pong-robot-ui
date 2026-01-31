@@ -111,7 +111,23 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Servos and motors (coming soon)"
+    "subtitle": "Servos and motors (coming soon)",
+    "language": "Language",
+    "languageSystem": "System",
+    "configSection": "Configuration (TFT)",
+    "hardwareSection": "Servos & motors",
+    "servo1": "Servo 1 (Tilt)",
+    "servo2": "Servo 2 (Pan)",
+    "m1Test": "M1 Test",
+    "m2Test": "M2 Test",
+    "m3Test": "M3 Test",
+    "comingSoon": "Coming soon",
+    "langEn": "English",
+    "langPt": "Português",
+    "langEs": "Español",
+    "langDe": "Deutsch",
+    "langFr": "Français",
+    "langZh": "中文"
   },
   "info": {
     "title": "Ping Pong Robot",
