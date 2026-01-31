@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import type { FeederMode } from '../../data/RobotConfig';
@@ -10,6 +11,7 @@ type FeederViewProps = {
   feederModes: FeederMode[];
   onModeSelect: (mode: FeederMode) => void;
   onSpeedChange: (value: number) => void;
+  onReset: () => void;
 };
 
 export function FeederView({
@@ -18,6 +20,7 @@ export function FeederView({
   feederModes,
   onModeSelect,
   onSpeedChange,
+  onReset,
 }: FeederViewProps) {
   return (
     <View style={styles.container}>
@@ -55,6 +58,10 @@ export function FeederView({
           thumbTintColor={theme.colors.primary}
         />
       </View>
+      <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
+        <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
+        <Text style={styles.resetLabel}>Reset</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -114,5 +121,21 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 40,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  resetLabel: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
   },
 });

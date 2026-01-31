@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import type { SpinDirection } from '../../data/RobotConfig';
 import { SPIN_DIRECTIONS, spinDirectionToAngleDeg } from '../../data/RobotConfig';
-
 
 type SpinClockPickerProps = {
   size: number;
@@ -13,6 +13,17 @@ type SpinClockPickerProps = {
 
 const DEG = Math.PI / 180;
 
+const SPIN_ARROW_ICONS: Record<Exclude<SpinDirection, 'NONE'>, string> = {
+  N: 'arrow-up',
+  NE: 'arrow-top-right',
+  E: 'arrow-right',
+  SE: 'arrow-bottom-right',
+  S: 'arrow-down',
+  SW: 'arrow-bottom-left',
+  W: 'arrow-left',
+  NW: 'arrow-top-left',
+};
+
 function positionForAngle(angleDeg: number, radius: number, center: number) {
   const rad = (angleDeg - 90) * DEG;
   return {
@@ -20,6 +31,9 @@ function positionForAngle(angleDeg: number, radius: number, center: number) {
     y: center + radius * Math.sin(rad),
   };
 }
+
+const TOUCH_SIZE = 36;
+const ICON_SIZE = 22;
 
 export function SpinClockPicker({ size, value, onSelect }: SpinClockPickerProps) {
   const center = size / 2;
@@ -32,18 +46,19 @@ export function SpinClockPicker({ size, value, onSelect }: SpinClockPickerProps)
       <View style={[styles.clock, { width: size, height: size }]}>
         {directionsToShow.map((dir) => {
           const angle = spinDirectionToAngleDeg(dir);
-                    const pos = positionForAngle(angle, labelRadius, center);
+          const pos = positionForAngle(angle, labelRadius, center);
           const isSelected = value === dir;
+          const iconName = SPIN_ARROW_ICONS[dir];
           return (
             <TouchableOpacity
               key={dir}
               style={[
                 styles.labelTouch,
                 {
-                  left: pos.x - 18,
-                  top: pos.y - 14,
-                  width: 36,
-                  height: 28,
+                  left: pos.x - TOUCH_SIZE / 2,
+                  top: pos.y - TOUCH_SIZE / 2,
+                  width: TOUCH_SIZE,
+                  height: TOUCH_SIZE,
                   borderRadius: theme.borderRadius.sm,
                   backgroundColor: isSelected ? theme.colors.primary : theme.colors.surfaceElevated,
                   borderWidth: 1,
@@ -53,14 +68,11 @@ export function SpinClockPicker({ size, value, onSelect }: SpinClockPickerProps)
               onPress={() => onSelect(dir)}
               activeOpacity={0.8}
             >
-              <Text
-                style={[
-                  styles.labelText,
-                  { color: isSelected ? theme.colors.background : theme.colors.text },
-                ]}
-              >
-                {dir}
-              </Text>
+              <MaterialCommunityIcons
+                name={iconName as any}
+                size={ICON_SIZE}
+                color={isSelected ? theme.colors.background : theme.colors.text}
+              />
             </TouchableOpacity>
           );
         })}
@@ -81,14 +93,11 @@ export function SpinClockPicker({ size, value, onSelect }: SpinClockPickerProps)
           onPress={() => onSelect('NONE')}
           activeOpacity={0.8}
         >
-          <Text
-            style={[
-              styles.labelText,
-              { color: value === 'NONE' ? theme.colors.background : theme.colors.text },
-            ]}
-          >
-            NONE
-          </Text>
+          <MaterialCommunityIcons
+            name="circle-outline"
+            size={16}
+            color={value === 'NONE' ? theme.colors.background : theme.colors.text}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -116,9 +125,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  labelText: {
-    ...theme.typography.label,
-    fontSize: 11,
   },
 });

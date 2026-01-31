@@ -1,5 +1,5 @@
 import type { FeederMode } from '../../data/RobotConfig';
-import { FEEDER_MODES } from '../../data/RobotConfig';
+import { DEFAULT_CONFIG, FEEDER_MODES } from '../../data/RobotConfig';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
 
 export function getFeederModes(): FeederMode[] {
@@ -21,4 +21,11 @@ export function setFeederSpeed(value: number) {
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
+}
+
+export function resetFeeder() {
+  RobotConfigRepository.setConfig({
+    feederMode: DEFAULT_CONFIG.feederMode,
+    feederSpeed: DEFAULT_CONFIG.feederSpeed,
+  });
 }

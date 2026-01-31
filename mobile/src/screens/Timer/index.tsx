@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTimerOptions, getTimerState, setTimerIndex, subscribeConfig } from './Timer.viewModel';
+import { getTimerOptions, getTimerState, resetTimer, setTimerIndex, subscribeConfig } from './Timer.viewModel';
 import { TimerView } from './Timer.view';
 
 export function TimerScreen() {
@@ -18,6 +18,7 @@ export function TimerScreen() {
       timerIndex={state.timerIndex}
       options={options}
       onSelect={setTimerIndex}
+      onReset={resetTimer}
     />
   );
 }

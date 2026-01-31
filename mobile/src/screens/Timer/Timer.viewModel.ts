@@ -1,4 +1,4 @@
-import { TIMER_OPTIONS } from '../../data/RobotConfig';
+import { DEFAULT_CONFIG, TIMER_OPTIONS } from '../../data/RobotConfig';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
 
 export function getTimerOptions(): readonly string[] {
@@ -16,4 +16,8 @@ export function setTimerIndex(value: number) {
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
+}
+
+export function resetTimer() {
+  RobotConfigRepository.setConfig({ timerIndex: DEFAULT_CONFIG.timerIndex });
 }

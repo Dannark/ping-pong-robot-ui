@@ -1,5 +1,5 @@
 import type { AxisMode } from '../../data/RobotConfig';
-import { AXIS_MODES } from '../../data/RobotConfig';
+import { AXIS_MODES, DEFAULT_CONFIG } from '../../data/RobotConfig';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
 
 export function getAxisModes(): AxisMode[] {
@@ -21,4 +21,11 @@ export function setTiltTarget(value: number) {
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
+}
+
+export function resetTilt() {
+  RobotConfigRepository.setConfig({
+    tiltMode: DEFAULT_CONFIG.tiltMode,
+    tiltTarget: DEFAULT_CONFIG.tiltTarget,
+  });
 }

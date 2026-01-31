@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAxisModes, getPanState, setPanMode, setPanTarget, subscribeConfig } from './Pan.viewModel';
+import { getAxisModes, getPanState, resetPan, setPanMode, setPanTarget, subscribeConfig } from './Pan.viewModel';
 import { PanView } from './Pan.view';
 
 export function PanScreen() {
@@ -21,6 +21,7 @@ export function PanScreen() {
       axisModes={axisModes}
       onModeSelect={setPanMode}
       onPanTargetChange={setPanTarget}
+      onReset={resetPan}
     />
   );
 }

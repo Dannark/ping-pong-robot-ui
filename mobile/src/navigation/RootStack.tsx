@@ -83,12 +83,12 @@ export function RootStack() {
         <Stack.Screen
           name="Feeder"
           component={FeederScreen}
-          options={{ title: 'Feeder' }}
+          options={{ title: 'Feeder', presentation: 'modal' }}
         />
         <Stack.Screen
           name="Timer"
           component={TimerScreen}
-          options={{ title: 'Timer' }}
+          options={{ title: 'Timer', presentation: 'modal' }}
         />
         <Stack.Screen
           name="Running"

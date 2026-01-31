@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   getLauncherState,
+  resetLauncher,
   setLauncherPower,
   setSpinDirection,
   setSpinIntensity,
@@ -29,6 +30,7 @@ export function LauncherScreen() {
       onPowerChange={setLauncherPower}
       onSpinDirectionChange={setSpinDirection}
       onSpinIntensityChange={setSpinIntensity}
+      onReset={resetLauncher}
     />
   );
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { SpinClockPicker } from '../../components/SpinClockPicker/SpinClockPicker';
@@ -12,6 +13,7 @@ type LauncherViewProps = {
   onPowerChange: (value: number) => void;
   onSpinDirectionChange: (value: SpinDirection) => void;
   onSpinIntensityChange: (value: number) => void;
+  onReset: () => void;
 };
 
 const CLOCK_SIZE = 200;
@@ -23,9 +25,10 @@ export function LauncherView({
   onPowerChange,
   onSpinDirectionChange,
   onSpinIntensityChange,
+  onReset,
 }: LauncherViewProps) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.section}>
         <View style={styles.sliderRow}>
           <Text style={styles.label}>Power</Text>
@@ -70,7 +73,12 @@ export function LauncherView({
           thumbTintColor={theme.colors.primary}
         />
       </View>
-    </View>
+      <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
+        <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
+        <Text style={styles.resetLabel}>Reset</Text>
+      </TouchableOpacity>
+      <View style={{ height: theme.spacing.xl }} />
+    </ScrollView>
   );
 }
 
@@ -78,8 +86,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  content: {
     paddingHorizontal: theme.spacing.lg,
     paddingTop: Platform.OS === 'ios' ? theme.spacing.lg : theme.spacing.md,
+    paddingBottom: theme.spacing.xl,
   },
   section: {
     marginBottom: theme.spacing.lg,
@@ -108,5 +119,21 @@ const styles = StyleSheet.create({
   clockWrap: {
     alignItems: 'center',
     marginTop: theme.spacing.sm,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  resetLabel: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
   },
 });

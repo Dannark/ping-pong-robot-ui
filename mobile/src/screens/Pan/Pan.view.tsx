@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
@@ -12,6 +13,7 @@ type PanViewProps = {
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onPanTargetChange: (value: number) => void;
+  onReset: () => void;
 };
 
 const PREVIEW_SIZE = 140;
@@ -23,9 +25,10 @@ export function PanView({
   axisModes,
   onModeSelect,
   onPanTargetChange,
+  onReset,
 }: PanViewProps) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
         <Text style={styles.previewLabel}>Aim (Pan + Tilt)</Text>
         <AimPreview size={PREVIEW_SIZE} pan={panTarget} tilt={tiltTarget} />
@@ -64,7 +67,12 @@ export function PanView({
           thumbTintColor={theme.colors.primary}
         />
       </View>
-    </View>
+      <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
+        <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
+        <Text style={styles.resetLabel}>Reset</Text>
+      </TouchableOpacity>
+      <View style={{ height: theme.spacing.xl }} />
+    </ScrollView>
   );
 }
 
@@ -72,8 +80,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  content: {
+    flexGrow: 1,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: Platform.OS === 'ios' ? theme.spacing.lg : theme.spacing.md,
+    paddingBottom: theme.spacing.xl,
+    backgroundColor: theme.colors.background,
   },
   previewSection: {
     alignItems: 'center',
@@ -138,5 +151,21 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 40,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  resetLabel: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
   },
 });

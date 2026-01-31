@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAxisModes, getTiltState, setTiltMode, setTiltTarget, subscribeConfig } from './Tilt.viewModel';
+import { getAxisModes, getTiltState, resetTilt, setTiltMode, setTiltTarget, subscribeConfig } from './Tilt.viewModel';
 import { TiltView } from './Tilt.view';
 
 export function TiltScreen() {
@@ -21,6 +21,7 @@ export function TiltScreen() {
       axisModes={axisModes}
       onModeSelect={setTiltMode}
       onTiltTargetChange={setTiltTarget}
+      onReset={resetTilt}
     />
   );
 }

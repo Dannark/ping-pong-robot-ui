@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 
 type TimerViewProps = {
   timerIndex: number;
   options: readonly string[];
   onSelect: (index: number) => void;
+  onReset: () => void;
 };
 
-export function TimerView({ timerIndex, options, onSelect }: TimerViewProps) {
+export function TimerView({ timerIndex, options, onSelect, onReset }: TimerViewProps) {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
@@ -28,6 +30,10 @@ export function TimerView({ timerIndex, options, onSelect }: TimerViewProps) {
           ))}
         </View>
       </View>
+      <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
+        <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
+        <Text style={styles.resetLabel}>Reset</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -72,5 +78,21 @@ const styles = StyleSheet.create({
   chipTextSelected: {
     color: theme.colors.background,
     fontWeight: '600',
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  resetLabel: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
   },
 });

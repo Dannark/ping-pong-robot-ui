@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   getFeederModes,
   getFeederState,
+  resetFeeder,
   setFeederMode,
   setFeederSpeed,
   subscribeConfig,
@@ -26,6 +27,7 @@ export function FeederScreen() {
       feederModes={feederModes}
       onModeSelect={setFeederMode}
       onSpeedChange={setFeederSpeed}
+      onReset={resetFeeder}
     />
   );
 }
