@@ -7,11 +7,15 @@ export function getTimerOptions(): readonly string[] {
 
 export function getTimerState() {
   const c = RobotConfigRepository.getConfig();
-  return { timerIndex: c.timerIndex };
+  return { timerIndex: c.timerIndex, timerSoundAlert: c.timerSoundAlert };
 }
 
 export function setTimerIndex(value: number) {
   RobotConfigRepository.setConfig({ timerIndex: value });
+}
+
+export function setTimerSoundAlert(value: boolean) {
+  RobotConfigRepository.setConfig({ timerSoundAlert: value });
 }
 
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
@@ -19,5 +23,8 @@ export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotCo
 }
 
 export function resetTimer() {
-  RobotConfigRepository.setConfig({ timerIndex: DEFAULT_CONFIG.timerIndex });
+  RobotConfigRepository.setConfig({
+    timerIndex: DEFAULT_CONFIG.timerIndex,
+    timerSoundAlert: DEFAULT_CONFIG.timerSoundAlert,
+  });
 }

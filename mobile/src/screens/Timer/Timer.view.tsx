@@ -1,16 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  Switch,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 
 type TimerViewProps = {
   timerIndex: number;
+  timerSoundAlert: boolean;
   options: readonly string[];
   onSelect: (index: number) => void;
+  onTimerSoundAlertChange: (value: boolean) => void;
   onReset: () => void;
 };
 
-export function TimerView({ timerIndex, options, onSelect, onReset }: TimerViewProps) {
+export function TimerView({
+  timerIndex,
+  timerSoundAlert,
+  options,
+  onSelect,
+  onTimerSoundAlertChange,
+  onReset,
+}: TimerViewProps) {
+  const timerEnabled = timerIndex !== 0;
+
   return (
     <View style={styles.container}>
       <View style={styles.section}>
@@ -30,6 +48,19 @@ export function TimerView({ timerIndex, options, onSelect, onReset }: TimerViewP
           ))}
         </View>
       </View>
+      {timerEnabled && (
+        <View style={styles.section}>
+          <View style={styles.toggleRow}>
+            <Text style={styles.label}>Aviso sonoro ao terminar</Text>
+            <Switch
+              value={timerSoundAlert}
+              onValueChange={onTimerSoundAlertChange}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primaryMuted }}
+              thumbColor={timerSoundAlert ? theme.colors.primary : theme.colors.textSecondary}
+            />
+          </View>
+        </View>
+      )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
         <Text style={styles.resetLabel}>Reset</Text>
@@ -78,6 +109,11 @@ const styles = StyleSheet.create({
   chipTextSelected: {
     color: theme.colors.background,
     fontWeight: '600',
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   resetButton: {
     flexDirection: 'row',

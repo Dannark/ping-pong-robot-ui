@@ -12,6 +12,8 @@ import { LauncherScreen } from '../screens/Launcher';
 import { FeederScreen } from '../screens/Feeder';
 import { TimerScreen } from '../screens/Timer';
 import { RunningScreen } from '../screens/Running';
+import { TrainingCompleteScreen } from '../screens/TrainingComplete';
+import type { RobotConfig } from '../data/RobotConfig';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -24,6 +26,7 @@ export type RootStackParamList = {
   Feeder: undefined;
   Timer: undefined;
   Running: undefined;
+  TrainingComplete: { elapsedSeconds: number; runConfig: RobotConfig | null };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -94,6 +97,11 @@ export function RootStack() {
           name="Running"
           component={RunningScreen}
           options={{ title: 'Running', headerBackVisible: true }}
+        />
+        <Stack.Screen
+          name="TrainingComplete"
+          component={TrainingCompleteScreen}
+          options={{ title: 'Treino concluído', headerBackVisible: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Vibration } from 'react-native';
 import type { RootStackParamList } from '../../navigation/RootStack';
-import { SPIN_DIRECTIONS } from '../../data/RobotConfig';
+import { SPIN_DIRECTIONS, TIMER_OPTIONS } from '../../data/RobotConfig';
 import type { SpinDirection } from '../../data/RobotConfig';
 import {
   getRunState,
@@ -52,13 +53,35 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
       ? getLeftSeconds(runState.runStartTime, runState.runConfig.timerIndex)
       : null;
 
+  const timerEndFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (leftSeconds !== 0 || runState.runConfig == null || runState.runStartTime == null) return;
+    if (runState.runConfig.timerIndex === 0) return;
+    if (timerEndFiredRef.current) return;
+    timerEndFiredRef.current = true;
+    if (runState.runConfig.timerSoundAlert) {
+      Vibration.vibrate([0, 500, 200, 500]);
+    }
+    const elapsed = getElapsedSeconds(runState.runStartTime);
+    stopRun().then(() =>
+      navigation.replace('TrainingComplete', { elapsedSeconds: elapsed, runConfig: runState.runConfig })
+    );
+  }, [leftSeconds, runState.runConfig, runState.runStartTime, navigation]);
+
   const displaySpin =
     runState.runConfig?.spinRandom === true ? currentRandomSpin : runState.runConfig?.spinDirection ?? 'NONE';
 
+  const timerLabel =
+    runState.runConfig != null ? TIMER_OPTIONS[runState.runConfig.timerIndex] ?? 'OFF' : 'OFF';
+
   const handleStop = useCallback(async () => {
+    timerEndFiredRef.current = true;
+    const elapsed = getElapsedSeconds(runState.runStartTime);
+    const config = runState.runConfig;
     await stopRun();
-    navigation.goBack();
-  }, [navigation]);
+    navigation.replace('TrainingComplete', { elapsedSeconds: elapsed, runConfig: config });
+  }, [navigation, runState.runStartTime, runState.runConfig]);
 
   return (
     <RunningView
@@ -67,6 +90,7 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
       runConfig={runState.runConfig}
       displaySpin={displaySpin}
       spinRandom={runState.runConfig?.spinRandom ?? false}
+      timerLabel={timerLabel}
       onStop={handleStop}
     />
   );

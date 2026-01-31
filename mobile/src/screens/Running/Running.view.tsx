@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
 import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
+import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
 import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
 
 type RunningViewProps = {
@@ -12,10 +13,11 @@ type RunningViewProps = {
   runConfig: RobotConfig | null;
   displaySpin: SpinDirection;
   spinRandom: boolean;
+  timerLabel: string;
   onStop: () => void;
 };
 
-const PREVIEW_SIZE = 80;
+const PREVIEW_SIZE = 72;
 
 export function RunningView({
   elapsedSeconds,
@@ -23,6 +25,7 @@ export function RunningView({
   runConfig,
   displaySpin,
   spinRandom,
+  timerLabel,
   onStop,
 }: RunningViewProps) {
   const [blink, setBlink] = useState(true);
@@ -86,6 +89,16 @@ export function RunningView({
               {spinRandom ? 'Random' : displaySpin}
             </Text>
           </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Timer</Text>
+            <Text style={styles.detailValue}>{timerLabel}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Feeder</Text>
+            <Text style={styles.detailValue}>
+              {runConfig.feederMode} {runConfig.feederSpeed}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.aimSpinRow}>
@@ -111,6 +124,19 @@ export function RunningView({
               panRandomPauseMs={runConfig.panRandomPauseMs}
               tiltRandomMinDist={runConfig.tiltRandomMinDist}
               tiltRandomPauseMs={runConfig.tiltRandomPauseMs}
+            />
+          </View>
+          <View style={styles.aimSpinBlock}>
+            <Text style={styles.radarLabel}>Feeder</Text>
+            <FeederVisualization
+              size={PREVIEW_SIZE}
+              feederMode={runConfig.feederMode}
+              feederSpeed={runConfig.feederSpeed}
+              feederP1OnMs={runConfig.feederP1OnMs}
+              feederP1OffMs={runConfig.feederP1OffMs}
+              feederP2OnMs={runConfig.feederP2OnMs}
+              feederP2OffMs={runConfig.feederP2OffMs}
+              animate={true}
             />
           </View>
           <View style={styles.aimSpinBlock}>

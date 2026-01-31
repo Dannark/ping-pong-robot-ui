@@ -44,6 +44,7 @@ export type RobotConfig = {
   feederP2OnMs: number;
   feederP2OffMs: number;
   timerIndex: number;
+  timerSoundAlert: boolean;
 };
 
 export const DEFAULT_CONFIG: RobotConfig = {
@@ -77,6 +78,7 @@ export const DEFAULT_CONFIG: RobotConfig = {
   feederP2OnMs: 2000,
   feederP2OffMs: 2000,
   timerIndex: 0,
+  timerSoundAlert: false,
 };
 
 export const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'RANDOM'];

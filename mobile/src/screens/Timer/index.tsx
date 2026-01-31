@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getTimerOptions, getTimerState, resetTimer, setTimerIndex, subscribeConfig } from './Timer.viewModel';
+import {
+  getTimerOptions,
+  getTimerState,
+  resetTimer,
+  setTimerIndex,
+  setTimerSoundAlert,
+  subscribeConfig,
+} from './Timer.viewModel';
 import { TimerView } from './Timer.view';
 
 export function TimerScreen() {
@@ -7,7 +14,7 @@ export function TimerScreen() {
 
   useEffect(() => {
     return subscribeConfig((c) => {
-      setState({ timerIndex: c.timerIndex });
+      setState({ timerIndex: c.timerIndex, timerSoundAlert: c.timerSoundAlert });
     });
   }, []);
 
@@ -16,8 +23,10 @@ export function TimerScreen() {
   return (
     <TimerView
       timerIndex={state.timerIndex}
+      timerSoundAlert={state.timerSoundAlert}
       options={options}
       onSelect={setTimerIndex}
+      onTimerSoundAlertChange={setTimerSoundAlert}
       onReset={resetTimer}
     />
   );
