@@ -10,6 +10,11 @@ type TiltViewProps = {
   tiltMode: AxisMode;
   panTarget: number;
   tiltTarget: number;
+  panMode: AxisMode;
+  panAuto1Speed: number;
+  panAuto2Step: number;
+  tiltAuto1Speed: number;
+  tiltAuto2Step: number;
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onTiltTargetChange: (value: number) => void;
@@ -22,6 +27,11 @@ export function TiltView({
   tiltMode,
   panTarget,
   tiltTarget,
+  panMode,
+  panAuto1Speed,
+  panAuto2Step,
+  tiltAuto1Speed,
+  tiltAuto2Step,
   axisModes,
   onModeSelect,
   onTiltTargetChange,
@@ -31,7 +41,17 @@ export function TiltView({
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
         <Text style={styles.previewLabel}>Aim (Pan + Tilt)</Text>
-        <AimPreview size={PREVIEW_SIZE} pan={panTarget} tilt={tiltTarget} />
+        <AimPreview
+          size={PREVIEW_SIZE}
+          pan={panTarget}
+          tilt={tiltTarget}
+          panMode={panMode}
+          tiltMode={tiltMode}
+          panAuto1Speed={panAuto1Speed}
+          panAuto2Step={panAuto2Step}
+          tiltAuto1Speed={tiltAuto1Speed}
+          tiltAuto2Step={tiltAuto2Step}
+        />
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Mode</Text>

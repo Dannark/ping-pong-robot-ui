@@ -18,6 +18,10 @@ export type RobotConfig = {
   tiltMode: AxisMode;
   panTarget: number;
   tiltTarget: number;
+  panAuto1Speed: number;
+  panAuto2Step: number;
+  tiltAuto1Speed: number;
+  tiltAuto2Step: number;
   launcherPower: number;
   spinDirection: SpinDirection;
   spinIntensity: number;
@@ -31,6 +35,10 @@ export const DEFAULT_CONFIG: RobotConfig = {
   tiltMode: 'LIVE',
   panTarget: 0,
   tiltTarget: 0,
+  panAuto1Speed: 0.035,
+  panAuto2Step: 0.25,
+  tiltAuto1Speed: 0.035,
+  tiltAuto2Step: 0.25,
   launcherPower: 255,
   spinDirection: 'NONE',
   spinIntensity: 255,

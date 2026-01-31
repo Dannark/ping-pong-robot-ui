@@ -10,6 +10,11 @@ type PanViewProps = {
   panMode: AxisMode;
   panTarget: number;
   tiltTarget: number;
+  tiltMode: AxisMode;
+  panAuto1Speed: number;
+  panAuto2Step: number;
+  tiltAuto1Speed: number;
+  tiltAuto2Step: number;
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onPanTargetChange: (value: number) => void;
@@ -22,6 +27,11 @@ export function PanView({
   panMode,
   panTarget,
   tiltTarget,
+  tiltMode,
+  panAuto1Speed,
+  panAuto2Step,
+  tiltAuto1Speed,
+  tiltAuto2Step,
   axisModes,
   onModeSelect,
   onPanTargetChange,
@@ -31,7 +41,17 @@ export function PanView({
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
         <Text style={styles.previewLabel}>Aim (Pan + Tilt)</Text>
-        <AimPreview size={PREVIEW_SIZE} pan={panTarget} tilt={tiltTarget} />
+        <AimPreview
+          size={PREVIEW_SIZE}
+          pan={panTarget}
+          tilt={tiltTarget}
+          panMode={panMode}
+          tiltMode={tiltMode}
+          panAuto1Speed={panAuto1Speed}
+          panAuto2Step={panAuto2Step}
+          tiltAuto1Speed={tiltAuto1Speed}
+          tiltAuto2Step={tiltAuto2Step}
+        />
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>Mode</Text>

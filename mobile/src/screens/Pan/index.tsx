@@ -7,7 +7,16 @@ export function PanScreen() {
 
   useEffect(() => {
     return subscribeConfig((c) => {
-      setState({ panMode: c.panMode, panTarget: c.panTarget, tiltTarget: c.tiltTarget });
+      setState({
+        panMode: c.panMode,
+        panTarget: c.panTarget,
+        tiltTarget: c.tiltTarget,
+        tiltMode: c.tiltMode,
+        panAuto1Speed: c.panAuto1Speed,
+        panAuto2Step: c.panAuto2Step,
+        tiltAuto1Speed: c.tiltAuto1Speed,
+        tiltAuto2Step: c.tiltAuto2Step,
+      });
     });
   }, []);
 
@@ -18,6 +27,11 @@ export function PanScreen() {
       panMode={state.panMode}
       panTarget={state.panTarget}
       tiltTarget={state.tiltTarget}
+      tiltMode={state.tiltMode}
+      panAuto1Speed={state.panAuto1Speed}
+      panAuto2Step={state.panAuto2Step}
+      tiltAuto1Speed={state.tiltAuto1Speed}
+      tiltAuto2Step={state.tiltAuto2Step}
       axisModes={axisModes}
       onModeSelect={setPanMode}
       onPanTargetChange={setPanTarget}

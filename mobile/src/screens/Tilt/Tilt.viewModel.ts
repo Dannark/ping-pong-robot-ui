@@ -8,7 +8,16 @@ export function getAxisModes(): AxisMode[] {
 
 export function getTiltState() {
   const c = RobotConfigRepository.getConfig();
-  return { tiltMode: c.tiltMode, panTarget: c.panTarget, tiltTarget: c.tiltTarget };
+  return {
+    tiltMode: c.tiltMode,
+    panTarget: c.panTarget,
+    tiltTarget: c.tiltTarget,
+    panMode: c.panMode,
+    panAuto1Speed: c.panAuto1Speed,
+    panAuto2Step: c.panAuto2Step,
+    tiltAuto1Speed: c.tiltAuto1Speed,
+    tiltAuto2Step: c.tiltAuto2Step,
+  };
 }
 
 export function setTiltMode(mode: AxisMode) {
@@ -27,5 +36,7 @@ export function resetTilt() {
   RobotConfigRepository.setConfig({
     tiltMode: DEFAULT_CONFIG.tiltMode,
     tiltTarget: DEFAULT_CONFIG.tiltTarget,
+    tiltAuto1Speed: DEFAULT_CONFIG.tiltAuto1Speed,
+    tiltAuto2Step: DEFAULT_CONFIG.tiltAuto2Step,
   });
 }

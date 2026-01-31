@@ -8,7 +8,16 @@ export function getAxisModes(): AxisMode[] {
 
 export function getPanState() {
   const c = RobotConfigRepository.getConfig();
-  return { panMode: c.panMode, panTarget: c.panTarget, tiltTarget: c.tiltTarget };
+  return {
+    panMode: c.panMode,
+    panTarget: c.panTarget,
+    tiltTarget: c.tiltTarget,
+    tiltMode: c.tiltMode,
+    panAuto1Speed: c.panAuto1Speed,
+    panAuto2Step: c.panAuto2Step,
+    tiltAuto1Speed: c.tiltAuto1Speed,
+    tiltAuto2Step: c.tiltAuto2Step,
+  };
 }
 
 export function setPanMode(mode: AxisMode) {
@@ -27,5 +36,7 @@ export function resetPan() {
   RobotConfigRepository.setConfig({
     panMode: DEFAULT_CONFIG.panMode,
     panTarget: DEFAULT_CONFIG.panTarget,
+    panAuto1Speed: DEFAULT_CONFIG.panAuto1Speed,
+    panAuto2Step: DEFAULT_CONFIG.panAuto2Step,
   });
 }

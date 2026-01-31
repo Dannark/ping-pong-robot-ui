@@ -37,7 +37,17 @@ export function WizardView({ items, config, onItemPress, onStartPress }: WizardV
           <View style={styles.previewRow}>
             <View style={styles.previewBlock}>
               <Text style={styles.previewLabel}>Aim</Text>
-              <AimPreview size={PREVIEW_SIZE} pan={config.panTarget} tilt={config.tiltTarget} />
+              <AimPreview
+                size={PREVIEW_SIZE}
+                pan={config.panTarget}
+                tilt={config.tiltTarget}
+                panMode={config.panMode}
+                tiltMode={config.tiltMode}
+                panAuto1Speed={config.panAuto1Speed}
+                panAuto2Step={config.panAuto2Step}
+                tiltAuto1Speed={config.tiltAuto1Speed}
+                tiltAuto2Step={config.tiltAuto2Step}
+              />
             </View>
             <View style={styles.previewBlock}>
               <Text style={styles.previewLabel}>Spin</Text>
