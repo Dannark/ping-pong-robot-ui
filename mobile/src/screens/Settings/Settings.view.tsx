@@ -13,15 +13,24 @@ import { theme } from '../../theme';
 import i18n, { getDeviceLanguage } from '../../i18n';
 import { getStoredLanguage, setStoredLanguage, SUPPORTED_LANGUAGES } from '../../i18n/languageStorage';
 
-const HARDWARE_ITEMS: { labelKey: string; icon: string }[] = [
-  { labelKey: 'settings.servo1', icon: 'axis-z-rotate-counterclockwise' },
-  { labelKey: 'settings.servo2', icon: 'axis-z-rotate-clockwise' },
-  { labelKey: 'settings.m1Test', icon: 'engine-outline' },
-  { labelKey: 'settings.m2Test', icon: 'engine-outline' },
-  { labelKey: 'settings.m3Test', icon: 'engine-outline' },
+export type HardwareItem =
+  | { labelKey: string; icon: string; screen: 'SettingsServoTilt' }
+  | { labelKey: string; icon: string; screen: 'SettingsServoPan' }
+  | { labelKey: string; icon: string; screen: 'SettingsMotorTest'; motorIndex: 1 | 2 | 3 };
+
+const HARDWARE_ITEMS: HardwareItem[] = [
+  { labelKey: 'settings.servo1', icon: 'axis-z-rotate-counterclockwise', screen: 'SettingsServoTilt' },
+  { labelKey: 'settings.servo2', icon: 'axis-z-rotate-clockwise', screen: 'SettingsServoPan' },
+  { labelKey: 'settings.m1Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 1 },
+  { labelKey: 'settings.m2Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 2 },
+  { labelKey: 'settings.m3Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 3 },
 ];
 
-export function SettingsView() {
+type SettingsViewProps = {
+  onHardwareItemPress: (item: HardwareItem) => void;
+};
+
+export function SettingsView({ onHardwareItemPress }: SettingsViewProps) {
   const { t } = useTranslation();
   const [storedLng, setStoredLng] = useState<string | null>(null);
   const currentLng = i18n.language?.slice(0, 2) ?? 'en';
@@ -99,22 +108,31 @@ export function SettingsView() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('settings.hardwareSection')}</Text>
         <View style={styles.list}>
-          {HARDWARE_ITEMS.map(({ labelKey, icon }) => (
-            <View key={labelKey} style={styles.row}>
+          {HARDWARE_ITEMS.map((item) => (
+            <TouchableOpacity
+              key={item.labelKey}
+              style={styles.row}
+              onPress={() => onHardwareItemPress(item)}
+              activeOpacity={0.8}
+            >
               <View style={styles.rowLeft}>
                 <View style={styles.rowIconWrap}>
                   <MaterialCommunityIcons
-                    name={icon as any}
+                    name={item.icon as any}
                     size={24}
                     color={theme.colors.primary}
                   />
                 </View>
-                <Text style={styles.rowLabel}>{t(labelKey)}</Text>
+                <Text style={styles.rowLabel}>{t(item.labelKey)}</Text>
               </View>
               <View style={styles.rowRight}>
-                <Text style={styles.rowValue}>{t('settings.comingSoon')}</Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={24}
+                  color={theme.colors.textSecondary}
+                />
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </View>

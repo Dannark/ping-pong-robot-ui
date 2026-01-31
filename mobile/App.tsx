@@ -7,6 +7,7 @@ import './src/i18n';
 
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
+import KeepAwake from 'react-native-keep-awake';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { initStoredLanguage } from './src/i18n';
 import { RootStack } from './src/navigation/RootStack';
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <SafeAreaProvider>
+      <KeepAwake />
       <StatusBar
         barStyle="light-content"
         backgroundColor={theme.colors.background}

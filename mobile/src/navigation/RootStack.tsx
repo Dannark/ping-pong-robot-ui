@@ -14,6 +14,9 @@ import { FeederScreen } from '../screens/Feeder';
 import { TimerScreen } from '../screens/Timer';
 import { RunningScreen } from '../screens/Running';
 import { TrainingCompleteScreen } from '../screens/TrainingComplete';
+import { SettingsServoTiltScreen } from '../screens/SettingsServoTilt';
+import { SettingsServoPanScreen } from '../screens/SettingsServoPan';
+import { SettingsMotorTestScreen } from '../screens/SettingsMotorTest';
 import type { RobotConfig } from '../data/RobotConfig';
 
 export type RootStackParamList = {
@@ -21,6 +24,9 @@ export type RootStackParamList = {
   Wizard: undefined;
   Info: undefined;
   Settings: undefined;
+  SettingsServoTilt: undefined;
+  SettingsServoPan: undefined;
+  SettingsMotorTest: { motorIndex: 1 | 2 | 3 };
   Pan: undefined;
   Tilt: undefined;
   Launcher: undefined;
@@ -53,17 +59,27 @@ export function RootStack() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={({ route }) => ({
-          ...screenOptions,
-          title: t(`nav.${navTitleKey(route.name)}`),
-          headerLargeTitle: route.name === 'Home' ? false : undefined,
-          headerBackVisible: route.name === 'Running' ? true : route.name === 'TrainingComplete' ? false : undefined,
-        })}
+        screenOptions={({ route }) => {
+          const params = route.params as { motorIndex?: 1 | 2 | 3 } | undefined;
+          const title =
+            route.name === 'SettingsMotorTest' && params?.motorIndex
+              ? t(`settings.m${params.motorIndex}Test`)
+              : t(`nav.${navTitleKey(route.name)}`);
+          return {
+            ...screenOptions,
+            title,
+            headerLargeTitle: route.name === 'Home' ? false : undefined,
+            headerBackVisible: route.name === 'Running' ? true : route.name === 'TrainingComplete' ? false : undefined,
+          };
+        }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Wizard" component={WizardScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="SettingsServoTilt" component={SettingsServoTiltScreen} />
+        <Stack.Screen name="SettingsServoPan" component={SettingsServoPanScreen} />
+        <Stack.Screen name="SettingsMotorTest" component={SettingsMotorTestScreen} />
         <Stack.Screen name="Pan" component={PanScreen} />
         <Stack.Screen name="Tilt" component={TiltScreen} />
         <Stack.Screen name="Launcher" component={LauncherScreen} />

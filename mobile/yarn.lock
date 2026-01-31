@@ -2815,6 +2815,7 @@ __metadata:
     react: 19.2.0
     react-i18next: ^16.5.4
     react-native: 0.83.1
+    react-native-keep-awake: ^4.0.0
     react-native-safe-area-context: ^5.5.2
     react-native-screens: ^4.20.0
     react-native-vector-icons: ^10.3.0
@@ -7621,6 +7622,13 @@ __metadata:
   version: 19.2.4
   resolution: "react-is@npm:19.2.4"
   checksum: 646d4f0f11b50131f3f7ac5b50d12b79de35be20fa84bce33fd3fc91557589e388562cb6203b5237098fd983cd1cdf12c5fb952b7f9903ac014de9a5a6cc7e28
+  languageName: node
+  linkType: hard
+
+"react-native-keep-awake@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "react-native-keep-awake@npm:4.0.0"
+  checksum: b041c5c7c27e2ed7d97aafbea7e05b2676dd1ae712df6de4bb6076946d4ae76e65aa2e666748bfacc8959667ae9704787466d17d348cf79bb0b8c1b327c6a110
   languageName: node
   linkType: hard
 
