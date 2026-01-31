@@ -4,7 +4,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { SpinClockPicker } from '../../components/SpinClockPicker/SpinClockPicker';
+import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import type { SpinDirection } from '../../data/RobotConfig';
+import { getLauncherMotorSpeeds } from '../../data/RobotConfig';
 
 type LauncherViewProps = {
   launcherPower: number;
@@ -19,6 +21,7 @@ type LauncherViewProps = {
 };
 
 const CLOCK_SIZE = 200;
+const SPIN_PREVIEW_SIZE = 100;
 
 export function LauncherView({
   launcherPower,
@@ -95,6 +98,49 @@ export function LauncherView({
           thumbTintColor={theme.colors.primary}
         />
       </View>
+      <View style={styles.section}>
+        <Text style={styles.label}>Preview (M1, M2, M3)</Text>
+        <View style={styles.previewRow}>
+          <SpinVisualization
+            size={SPIN_PREVIEW_SIZE}
+            spinDirection={spinDirection}
+            spinIntensity={spinIntensity}
+            launcherPower={launcherPower}
+            animate={true}
+          />
+          <View style={styles.motorSpeeds}>
+            {(() => {
+              const { speed1, speed2, speed3 } = getLauncherMotorSpeeds(
+                launcherPower,
+                spinDirection,
+                spinIntensity
+              );
+              return (
+                <>
+                  <View style={styles.motorRow}>
+                    <Text style={styles.motorLabel}>M1</Text>
+                    <Text style={[styles.motorValue, speed1 < 0 && styles.motorValueReverse]}>
+                      {speed1}
+                    </Text>
+                  </View>
+                  <View style={styles.motorRow}>
+                    <Text style={styles.motorLabel}>M2</Text>
+                    <Text style={[styles.motorValue, speed2 < 0 && styles.motorValueReverse]}>
+                      {speed2}
+                    </Text>
+                  </View>
+                  <View style={styles.motorRow}>
+                    <Text style={styles.motorLabel}>M3</Text>
+                    <Text style={[styles.motorValue, speed3 < 0 && styles.motorValueReverse]}>
+                      {speed3}
+                    </Text>
+                  </View>
+                </>
+              );
+            })()}
+          </View>
+        </View>
+      </View>
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
         <Text style={styles.resetLabel}>Reset</Text>
@@ -162,6 +208,39 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     marginTop: theme.spacing.sm,
     textTransform: 'uppercase',
+  },
+  previewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.lg,
+    marginTop: theme.spacing.sm,
+  },
+  motorSpeeds: {
+    gap: theme.spacing.xs,
+  },
+  motorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minWidth: 64,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.sm,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.sm,
+  },
+  motorLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    marginRight: theme.spacing.sm,
+  },
+  motorValue: {
+    ...theme.typography.body,
+    color: theme.colors.primary,
+    fontWeight: '700',
+  },
+  motorValueReverse: {
+    color: theme.colors.warning,
   },
   resetButton: {
     flexDirection: 'row',

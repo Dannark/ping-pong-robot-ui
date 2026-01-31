@@ -98,3 +98,44 @@ export function axisModeName(mode: AxisMode): string {
 export function spinDirectionLabel(dir: SpinDirection, random: boolean): string {
   return random ? 'Random' : dir;
 }
+
+const MOTOR_ANGLE_1 = 0;
+const MOTOR_ANGLE_2 = 120;
+const MOTOR_ANGLE_3 = 240;
+const DEG_TO_RAD = Math.PI / 180;
+
+function spinAlign(motorDeg: number, targetRad: number): number {
+  const diffRad = motorDeg * DEG_TO_RAD - targetRad;
+  const c = Math.cos(diffRad);
+  return (c + 1) * 0.5;
+}
+
+export function getLauncherMotorSpeeds(
+  power: number,
+  spinDirection: SpinDirection,
+  spinIntensity: number
+): { speed1: number; speed2: number; speed3: number } {
+  const baseSpeed = power;
+  let speed1 = baseSpeed;
+  let speed2 = baseSpeed;
+  let speed3 = baseSpeed;
+
+  const targetAngle = spinDirectionToAngleDeg(spinDirection);
+  if (targetAngle >= 0 && spinIntensity > 0) {
+    const intensityFactor = spinIntensity / 255;
+    const targetRad = targetAngle * DEG_TO_RAD;
+    const a1 = spinAlign(MOTOR_ANGLE_1, targetRad);
+    const a2 = spinAlign(MOTOR_ANGLE_2, targetRad);
+    const a3 = spinAlign(MOTOR_ANGLE_3, targetRad);
+    speed1 = Math.round(baseSpeed * (1 - intensityFactor * (1 - a1)));
+    speed2 = Math.round(baseSpeed * (1 - intensityFactor * (1 - a2)));
+    speed3 = Math.round(baseSpeed * (1 - intensityFactor * (1 - a3)));
+  }
+
+  const clamp = (v: number) => Math.max(-255, Math.min(255, v));
+  return {
+    speed1: clamp(speed1),
+    speed2: clamp(speed2),
+    speed3: clamp(speed3),
+  };
+}

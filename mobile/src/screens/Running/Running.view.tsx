@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
+import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
 
 type RunningViewProps = {
@@ -13,7 +14,7 @@ type RunningViewProps = {
   onStop: () => void;
 };
 
-const PREVIEW_SIZE = 88;
+const PREVIEW_SIZE = 80;
 
 export function RunningView({
   elapsedSeconds,
@@ -44,8 +45,6 @@ export function RunningView({
       </View>
     );
   }
-
-  const spinRandom = runConfig.spinRandom;
 
   return (
     <View style={styles.container}>
@@ -79,33 +78,33 @@ export function RunningView({
             <Text style={styles.detailLabel}>Power</Text>
             <Text style={styles.detailValue}>{runConfig.launcherPower}</Text>
           </View>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Spin</Text>
-            <View style={styles.spinValueRow}>
-              <Text style={styles.detailValue}>{displaySpin}</Text>
-              {spinRandom && (
-                <View style={styles.randomBadge}>
-                  <MaterialCommunityIcons name="shuffle-variant" size={12} color={theme.colors.primary} />
-                  <Text style={styles.randomBadgeText}>random</Text>
-                </View>
-              )}
-            </View>
-          </View>
         </View>
 
-        <View style={styles.radarSection}>
-          <Text style={styles.radarLabel}>Aim</Text>
-          <AimPreview
-            size={PREVIEW_SIZE}
-            pan={runConfig.panTarget}
-            tilt={runConfig.tiltTarget}
-            panMode={runConfig.panMode}
-            tiltMode={runConfig.tiltMode}
-            panAuto1Speed={runConfig.panAuto1Speed}
-            panAuto2Step={runConfig.panAuto2Step}
-            tiltAuto1Speed={runConfig.tiltAuto1Speed}
-            tiltAuto2Step={runConfig.tiltAuto2Step}
-          />
+        <View style={styles.aimSpinRow}>
+          <View style={styles.aimSpinBlock}>
+            <Text style={styles.radarLabel}>Aim</Text>
+            <AimPreview
+              size={PREVIEW_SIZE}
+              pan={runConfig.panTarget}
+              tilt={runConfig.tiltTarget}
+              panMode={runConfig.panMode}
+              tiltMode={runConfig.tiltMode}
+              panAuto1Speed={runConfig.panAuto1Speed}
+              panAuto2Step={runConfig.panAuto2Step}
+              tiltAuto1Speed={runConfig.tiltAuto1Speed}
+              tiltAuto2Step={runConfig.tiltAuto2Step}
+            />
+          </View>
+          <View style={styles.aimSpinBlock}>
+            <Text style={styles.radarLabel}>Spin</Text>
+            <SpinVisualization
+              size={PREVIEW_SIZE}
+              spinDirection={displaySpin}
+              spinIntensity={runConfig.spinIntensity}
+              launcherPower={runConfig.launcherPower}
+              animate={true}
+            />
+          </View>
         </View>
       </View>
 
@@ -207,27 +206,13 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontWeight: '700',
   },
-  spinValueRow: {
+  aimSpinRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.xs,
+    justifyContent: 'space-around',
+    alignItems: 'flex-start',
+    marginTop: theme.spacing.sm,
   },
-  randomBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    backgroundColor: theme.colors.primaryMuted,
-    borderRadius: theme.borderRadius.full,
-  },
-  randomBadgeText: {
-    ...theme.typography.label,
-    fontSize: 10,
-    color: theme.colors.primary,
-    textTransform: 'lowercase',
-  },
-  radarSection: {
+  aimSpinBlock: {
     alignItems: 'center',
   },
   radarLabel: {
