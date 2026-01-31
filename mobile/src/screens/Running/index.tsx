@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Vibration } from 'react-native';
 import type { RootStackParamList } from '../../navigation/RootStack';
+import { showTrainingCompleteNotification } from '../../services/localNotification';
 import { SPIN_DIRECTIONS, TIMER_OPTIONS } from '../../data/RobotConfig';
 import type { SpinDirection } from '../../data/RobotConfig';
 import {
@@ -62,6 +63,7 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
     timerEndFiredRef.current = true;
     if (runState.runConfig.timerSoundAlert) {
       Vibration.vibrate([0, 500, 200, 500]);
+      showTrainingCompleteNotification();
     }
     const elapsed = getElapsedSeconds(runState.runStartTime);
     stopRun().then(() =>

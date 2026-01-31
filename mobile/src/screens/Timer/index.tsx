@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   getTimerOptions,
   getTimerState,
@@ -7,6 +7,7 @@ import {
   setTimerSoundAlert,
   subscribeConfig,
 } from './Timer.viewModel';
+import { requestNotificationPermission } from '../../services/localNotification';
 import { TimerView } from './Timer.view';
 
 export function TimerScreen() {
@@ -18,6 +19,13 @@ export function TimerScreen() {
     });
   }, []);
 
+  const handleTimerSoundAlertChange = useCallback(async (value: boolean) => {
+    if (value) {
+      await requestNotificationPermission();
+    }
+    setTimerSoundAlert(value);
+  }, []);
+
   const options = getTimerOptions();
 
   return (
@@ -26,7 +34,7 @@ export function TimerScreen() {
       timerSoundAlert={state.timerSoundAlert}
       options={options}
       onSelect={setTimerIndex}
-      onTimerSoundAlertChange={setTimerSoundAlert}
+      onTimerSoundAlertChange={handleTimerSoundAlertChange}
       onReset={resetTimer}
     />
   );
