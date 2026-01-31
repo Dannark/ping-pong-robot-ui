@@ -1,23 +1,95 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
+import { AimPreview } from '../../components/AimPreview/AimPreview';
+import type { RobotConfig } from '../../data/RobotConfig';
+import { spinDirectionLabel } from '../../data/RobotConfig';
 
 type RunningViewProps = {
   elapsedSeconds: number;
+  leftSeconds: number | null;
+  runConfig: RobotConfig | null;
   onStop: () => void;
 };
 
-export function RunningView({ elapsedSeconds, onStop }: RunningViewProps) {
+const PREVIEW_SIZE = 80;
+
+export function RunningView({ elapsedSeconds, leftSeconds, runConfig, onStop }: RunningViewProps) {
+  const [blink, setBlink] = useState(true);
+
+  useEffect(() => {
+    const id = setInterval(() => setBlink((b) => !b), 350);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!runConfig) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Em execução</Text>
+        <Text style={styles.caption}>Nenhuma sessão ativa</Text>
+        <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
+          <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
+          <Text style={styles.stopLabel}>Voltar</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const spinLabel = spinDirectionLabel(runConfig.spinDirection, runConfig.spinRandom);
+
   return (
     <View style={styles.container}>
-      <View style={styles.statusWrap}>
-        <View style={styles.pulse} />
-        <MaterialCommunityIcons name="motion-play-outline" size={56} color={theme.colors.success} />
+      <View style={styles.header}>
+        <Text style={[styles.runningTitle, !blink && styles.runningTitleDim]}>
+          {blink ? 'RUNNING' : '       '}
+        </Text>
       </View>
-      <Text style={styles.title}>Em execução</Text>
-      <Text style={styles.elapsed}>{elapsedSeconds}s</Text>
-      <Text style={styles.caption}>Controle ao vivo (em breve)</Text>
+
+      <View style={styles.body}>
+        <View style={styles.timeRow}>
+          <Text style={styles.label}>
+            {leftSeconds !== null ? 'Left: ' : 'Elapsed: '}
+          </Text>
+          <Text style={styles.value}>
+            {leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`}
+          </Text>
+        </View>
+
+        <View style={styles.detailList}>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Pan:</Text>
+            <Text style={styles.detailValue}>{runConfig.panMode}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Tilt:</Text>
+            <Text style={styles.detailValue}>{runConfig.tiltMode}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Power:</Text>
+            <Text style={styles.detailValue}>{runConfig.launcherPower}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Spin:</Text>
+            <Text style={styles.detailValue}>{spinLabel}</Text>
+          </View>
+        </View>
+
+        <View style={styles.radarRow}>
+          <AimPreview
+            size={PREVIEW_SIZE}
+            pan={runConfig.panTarget}
+            tilt={runConfig.tiltTarget}
+            panMode={runConfig.panMode}
+            tiltMode={runConfig.tiltMode}
+            panAuto1Speed={runConfig.panAuto1Speed}
+            panAuto2Step={runConfig.panAuto2Step}
+            tiltAuto1Speed={runConfig.tiltAuto1Speed}
+            tiltAuto2Step={runConfig.tiltAuto2Step}
+          />
+        </View>
+      </View>
+
       <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
         <MaterialCommunityIcons name="stop" size={24} color={theme.colors.text} />
         <Text style={styles.stopLabel}>Parar</Text>
@@ -31,37 +103,66 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: Platform.OS === 'ios' ? theme.spacing.xxl : theme.spacing.xl,
-    alignItems: 'center',
+    paddingTop: Platform.OS === 'ios' ? theme.spacing.xl : theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
-  statusWrap: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: theme.colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing.lg,
-    ...theme.shadow.md,
+  header: {
+    marginBottom: theme.spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    paddingBottom: theme.spacing.sm,
   },
-  pulse: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 2,
-    borderColor: theme.colors.success,
-    opacity: 0.3,
-  },
-  title: {
+  runningTitle: {
     ...theme.typography.hero,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
+    color: theme.colors.success,
+    fontSize: 24,
   },
-  elapsed: {
+  runningTitleDim: {
+    color: 'transparent',
+  },
+  body: {
+    flex: 1,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginBottom: theme.spacing.xl,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: theme.spacing.md,
+  },
+  label: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+    marginRight: theme.spacing.sm,
+  },
+  value: {
     ...theme.typography.title,
     color: theme.colors.primary,
-    marginBottom: theme.spacing.sm,
+  },
+  detailList: {
+    marginBottom: theme.spacing.lg,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.xs,
+  },
+  detailLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    width: 56,
+  },
+  detailValue: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+    fontWeight: '600',
+  },
+  radarRow: {
+    alignItems: 'center',
   },
   caption: {
     ...theme.typography.caption,

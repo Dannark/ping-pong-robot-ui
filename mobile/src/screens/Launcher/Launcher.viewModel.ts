@@ -8,6 +8,7 @@ export function getLauncherState() {
     launcherPower: c.launcherPower,
     spinDirection: c.spinDirection,
     spinIntensity: c.spinIntensity,
+    spinRandom: c.spinRandom,
   };
 }
 
@@ -23,6 +24,10 @@ export function setSpinIntensity(value: number) {
   RobotConfigRepository.setConfig({ spinIntensity: value });
 }
 
+export function setSpinRandom(value: boolean) {
+  RobotConfigRepository.setConfig({ spinRandom: value });
+}
+
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
 }
@@ -32,5 +37,6 @@ export function resetLauncher() {
     launcherPower: DEFAULT_CONFIG.launcherPower,
     spinDirection: DEFAULT_CONFIG.spinDirection,
     spinIntensity: DEFAULT_CONFIG.spinIntensity,
+    spinRandom: DEFAULT_CONFIG.spinRandom,
   });
 }

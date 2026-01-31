@@ -10,10 +10,13 @@ export type WizardItem = {
 };
 
 export function getWizardItems(config: RobotConfig): WizardItem[] {
+  const launcherValue = config.spinRandom
+    ? `${config.launcherPower} Random`
+    : String(config.launcherPower);
   return [
     { label: 'Pan', value: config.panMode, screen: 'Pan' },
     { label: 'Tilt', value: config.tiltMode, screen: 'Tilt' },
-    { label: 'Launcher', value: String(config.launcherPower), screen: 'Launcher' },
+    { label: 'Launcher', value: launcherValue, screen: 'Launcher' },
     { label: 'Feeder', value: `${config.feederMode} ${config.feederSpeed}`, screen: 'Feeder' },
     { label: 'Timer', value: TIMER_OPTIONS[config.timerIndex], screen: 'Timer' },
   ];

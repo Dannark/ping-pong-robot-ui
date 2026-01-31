@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/RootStack';
+import { RobotConnectionRepository } from '../../data/RobotConnectionRepository';
 import { getWizardItems, subscribeConfig, getConfig } from './Wizard.viewModel';
 import { WizardView } from './Wizard.view';
 
@@ -24,7 +25,8 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
     navigation.navigate(screen);
   };
 
-  const handleStartPress = () => {
+  const handleStartPress = async () => {
+    await RobotConnectionRepository.startRun(config);
     navigation.navigate('Running');
   };
 

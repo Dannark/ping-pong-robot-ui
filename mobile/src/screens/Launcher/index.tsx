@@ -5,6 +5,7 @@ import {
   setLauncherPower,
   setSpinDirection,
   setSpinIntensity,
+  setSpinRandom,
   subscribeConfig,
 } from './Launcher.viewModel';
 import { LauncherView } from './Launcher.view';
@@ -18,6 +19,7 @@ export function LauncherScreen() {
         launcherPower: c.launcherPower,
         spinDirection: c.spinDirection,
         spinIntensity: c.spinIntensity,
+        spinRandom: c.spinRandom,
       });
     });
   }, []);
@@ -27,9 +29,11 @@ export function LauncherScreen() {
       launcherPower={state.launcherPower}
       spinDirection={state.spinDirection}
       spinIntensity={state.spinIntensity}
+      spinRandom={state.spinRandom}
       onPowerChange={setLauncherPower}
       onSpinDirectionChange={setSpinDirection}
       onSpinIntensityChange={setSpinIntensity}
+      onSpinRandomChange={setSpinRandom}
       onReset={resetLauncher}
     />
   );

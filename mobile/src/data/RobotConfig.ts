@@ -25,6 +25,7 @@ export type RobotConfig = {
   launcherPower: number;
   spinDirection: SpinDirection;
   spinIntensity: number;
+  spinRandom: boolean;
   feederMode: FeederMode;
   feederSpeed: number;
   timerIndex: number;
@@ -42,6 +43,7 @@ export const DEFAULT_CONFIG: RobotConfig = {
   launcherPower: 255,
   spinDirection: 'NONE',
   spinIntensity: 255,
+  spinRandom: false,
   feederMode: 'CONT',
   feederSpeed: 160,
   timerIndex: 0,
@@ -75,4 +77,24 @@ export function spinDirectionToAngleDeg(dir: SpinDirection): number {
     NW: 315,
   };
   return map[dir];
+}
+
+export function timerMsByIndex(idx: number): number {
+  switch (idx) {
+    case 0: return 0;
+    case 1: return 15000;
+    case 2: return 30000;
+    case 3: return 60000;
+    case 4: return 120000;
+    case 5: return 300000;
+    default: return 0;
+  }
+}
+
+export function axisModeName(mode: AxisMode): string {
+  return mode;
+}
+
+export function spinDirectionLabel(dir: SpinDirection, random: boolean): string {
+  return random ? 'Random' : dir;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
@@ -10,9 +10,11 @@ type LauncherViewProps = {
   launcherPower: number;
   spinDirection: SpinDirection;
   spinIntensity: number;
+  spinRandom: boolean;
   onPowerChange: (value: number) => void;
   onSpinDirectionChange: (value: SpinDirection) => void;
   onSpinIntensityChange: (value: number) => void;
+  onSpinRandomChange: (value: boolean) => void;
   onReset: () => void;
 };
 
@@ -22,9 +24,11 @@ export function LauncherView({
   launcherPower,
   spinDirection,
   spinIntensity,
+  spinRandom,
   onPowerChange,
   onSpinDirectionChange,
   onSpinIntensityChange,
+  onSpinRandomChange,
   onReset,
 }: LauncherViewProps) {
   return (
@@ -47,13 +51,31 @@ export function LauncherView({
         />
       </View>
       <View style={styles.section}>
+        <View style={styles.randomRow}>
+          <Text style={styles.label}>Spin random</Text>
+          <Switch
+            value={spinRandom}
+            onValueChange={onSpinRandomChange}
+            trackColor={{ false: theme.colors.border, true: theme.colors.primaryMuted }}
+            thumbColor={spinRandom ? theme.colors.primary : theme.colors.textSecondary}
+          />
+        </View>
+      </View>
+      <View style={styles.section}>
         <Text style={styles.label}>Spin direction</Text>
         <View style={styles.clockWrap}>
-          <SpinClockPicker
-            size={CLOCK_SIZE}
-            value={spinDirection}
-            onSelect={onSpinDirectionChange}
-          />
+          {spinRandom ? (
+            <View style={styles.randomPlaceholder}>
+              <MaterialCommunityIcons name="shuffle-variant" size={48} color={theme.colors.textSecondary} />
+              <Text style={styles.randomLabel}>Random</Text>
+            </View>
+          ) : (
+            <SpinClockPicker
+              size={CLOCK_SIZE}
+              value={spinDirection}
+              onSelect={onSpinDirectionChange}
+            />
+          )}
         </View>
       </View>
       <View style={styles.section}>
@@ -116,9 +138,30 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 40,
   },
+  randomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   clockWrap: {
     alignItems: 'center',
     marginTop: theme.spacing.sm,
+  },
+  randomPlaceholder: {
+    width: CLOCK_SIZE,
+    height: CLOCK_SIZE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.surfaceElevated,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  randomLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing.sm,
+    textTransform: 'uppercase',
   },
   resetButton: {
     flexDirection: 'row',
