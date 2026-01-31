@@ -9,6 +9,7 @@ export function getLauncherState() {
     spinDirection: c.spinDirection,
     spinIntensity: c.spinIntensity,
     spinRandom: c.spinRandom,
+    spinRandomIntervalSec: c.spinRandomIntervalSec,
   };
 }
 
@@ -28,6 +29,10 @@ export function setSpinRandom(value: boolean) {
   RobotConfigRepository.setConfig({ spinRandom: value });
 }
 
+export function setSpinRandomIntervalSec(value: number) {
+  RobotConfigRepository.setConfig({ spinRandomIntervalSec: value });
+}
+
 export function subscribeConfig(cb: (c: import('../../data/RobotConfig').RobotConfig) => void) {
   return RobotConfigRepository.subscribe(cb);
 }
@@ -38,5 +43,6 @@ export function resetLauncher() {
     spinDirection: DEFAULT_CONFIG.spinDirection,
     spinIntensity: DEFAULT_CONFIG.spinIntensity,
     spinRandom: DEFAULT_CONFIG.spinRandom,
+    spinRandomIntervalSec: DEFAULT_CONFIG.spinRandomIntervalSec,
   });
 }

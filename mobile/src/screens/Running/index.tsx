@@ -12,7 +12,6 @@ import {
 } from './Running.viewModel';
 import { RunningView } from './Running.view';
 
-const RANDOM_SPIN_INTERVAL_MS = 5000;
 const RANDOM_SPIN_POOL: SpinDirection[] = SPIN_DIRECTIONS.filter((d) => d !== 'NONE');
 
 function pickRandomSpin(): SpinDirection {
@@ -40,10 +39,12 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
 
   useEffect(() => {
     if (runState.runConfig?.spinRandom !== true) return;
+    const intervalSec = runState.runConfig.spinRandomIntervalSec ?? 5;
+    const intervalMs = Math.max(2000, Math.min(20000, intervalSec * 1000));
     setCurrentRandomSpin(pickRandomSpin());
-    const id = setInterval(() => setCurrentRandomSpin(pickRandomSpin()), RANDOM_SPIN_INTERVAL_MS);
+    const id = setInterval(() => setCurrentRandomSpin(pickRandomSpin()), intervalMs);
     return () => clearInterval(id);
-  }, [runState.runConfig?.spinRandom]);
+  }, [runState.runConfig?.spinRandom, runState.runConfig?.spinRandomIntervalSec]);
 
   const elapsedSeconds = getElapsedSeconds(runState.runStartTime);
   const leftSeconds =
@@ -65,6 +66,7 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
       leftSeconds={leftSeconds}
       runConfig={runState.runConfig}
       displaySpin={displaySpin}
+      spinRandom={runState.runConfig?.spinRandom ?? false}
       onStop={handleStop}
     />
   );

@@ -13,27 +13,38 @@ type LauncherViewProps = {
   spinDirection: SpinDirection;
   spinIntensity: number;
   spinRandom: boolean;
+  spinRandomIntervalSec: number;
+  displaySpin: SpinDirection;
   onPowerChange: (value: number) => void;
   onSpinDirectionChange: (value: SpinDirection) => void;
   onSpinIntensityChange: (value: number) => void;
   onSpinRandomChange: (value: boolean) => void;
+  onSpinRandomIntervalSecChange: (value: number) => void;
   onReset: () => void;
 };
 
 const CLOCK_SIZE = 200;
 const SPIN_PREVIEW_SIZE = 100;
 
+const SPIN_RANDOM_INTERVAL_MIN = 2;
+const SPIN_RANDOM_INTERVAL_MAX = 20;
+
 export function LauncherView({
   launcherPower,
   spinDirection,
   spinIntensity,
   spinRandom,
+  spinRandomIntervalSec,
+  displaySpin,
   onPowerChange,
   onSpinDirectionChange,
   onSpinIntensityChange,
   onSpinRandomChange,
+  onSpinRandomIntervalSecChange,
   onReset,
 }: LauncherViewProps) {
+  const spinForPreview = spinRandom ? displaySpin : spinDirection;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.section}>
@@ -64,23 +75,37 @@ export function LauncherView({
           />
         </View>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Spin direction</Text>
-        <View style={styles.clockWrap}>
-          {spinRandom ? (
-            <View style={styles.randomPlaceholder}>
-              <MaterialCommunityIcons name="shuffle-variant" size={48} color={theme.colors.textSecondary} />
-              <Text style={styles.randomLabel}>Random</Text>
-            </View>
-          ) : (
+      {spinRandom && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Random interval</Text>
+            <Text style={styles.value}>{spinRandomIntervalSec}s</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={SPIN_RANDOM_INTERVAL_MIN}
+            maximumValue={SPIN_RANDOM_INTERVAL_MAX}
+            step={1}
+            value={spinRandomIntervalSec}
+            onValueChange={onSpinRandomIntervalSecChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+        </View>
+      )}
+      {!spinRandom && (
+        <View style={styles.section}>
+          <Text style={styles.label}>Spin direction</Text>
+          <View style={styles.clockWrap}>
             <SpinClockPicker
               size={CLOCK_SIZE}
               value={spinDirection}
               onSelect={onSpinDirectionChange}
             />
-          )}
+          </View>
         </View>
-      </View>
+      )}
       <View style={styles.section}>
         <View style={styles.sliderRow}>
           <Text style={styles.label}>Spin intensity</Text>
@@ -103,7 +128,7 @@ export function LauncherView({
         <View style={styles.previewRow}>
           <SpinVisualization
             size={SPIN_PREVIEW_SIZE}
-            spinDirection={spinDirection}
+            spinDirection={spinForPreview}
             spinIntensity={spinIntensity}
             launcherPower={launcherPower}
             animate={true}
@@ -112,7 +137,7 @@ export function LauncherView({
             {(() => {
               const { speed1, speed2, speed3 } = getLauncherMotorSpeeds(
                 launcherPower,
-                spinDirection,
+                spinForPreview,
                 spinIntensity
               );
               return (
@@ -192,22 +217,6 @@ const styles = StyleSheet.create({
   clockWrap: {
     alignItems: 'center',
     marginTop: theme.spacing.sm,
-  },
-  randomPlaceholder: {
-    width: CLOCK_SIZE,
-    height: CLOCK_SIZE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.surfaceElevated,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  randomLabel: {
-    ...theme.typography.label,
-    color: theme.colors.textSecondary,
-    marginTop: theme.spacing.sm,
-    textTransform: 'uppercase',
   },
   previewRow: {
     flexDirection: 'row',

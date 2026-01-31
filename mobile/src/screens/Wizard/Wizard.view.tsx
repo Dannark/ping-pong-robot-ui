@@ -10,21 +10,24 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
-import { SpinClockPicker } from '../../components/SpinClockPicker/SpinClockPicker';
+import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import type { WizardItem } from './Wizard.viewModel';
-import type { RobotConfig } from '../../data/RobotConfig';
+import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
 
 type WizardViewProps = {
   items: WizardItem[];
   config: RobotConfig;
+  displaySpin: SpinDirection;
   onItemPress: (screen: WizardItem['screen']) => void;
   onStartPress: () => void;
 };
 
 const PREVIEW_SIZE = 100;
-const SPIN_CLOCK_SIZE = 120;
+const SPIN_PREVIEW_SIZE = 100;
 
-export function WizardView({ items, config, onItemPress, onStartPress }: WizardViewProps) {
+export function WizardView({ items, config, displaySpin, onItemPress, onStartPress }: WizardViewProps) {
+  const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -51,10 +54,12 @@ export function WizardView({ items, config, onItemPress, onStartPress }: WizardV
             </View>
             <View style={styles.previewBlock}>
               <Text style={styles.previewLabel}>Spin</Text>
-              <SpinClockPicker
-                size={SPIN_CLOCK_SIZE}
-                value={config.spinDirection}
-                onSelect={() => {}}
+              <SpinVisualization
+                size={SPIN_PREVIEW_SIZE}
+                spinDirection={spinForPreview}
+                spinIntensity={config.spinIntensity}
+                launcherPower={config.launcherPower}
+                animate={true}
               />
             </View>
           </View>

@@ -26,6 +26,7 @@ export type RobotConfig = {
   spinDirection: SpinDirection;
   spinIntensity: number;
   spinRandom: boolean;
+  spinRandomIntervalSec: number;
   feederMode: FeederMode;
   feederSpeed: number;
   timerIndex: number;
@@ -44,6 +45,7 @@ export const DEFAULT_CONFIG: RobotConfig = {
   spinDirection: 'NONE',
   spinIntensity: 255,
   spinRandom: false,
+  spinRandomIntervalSec: 5,
   feederMode: 'CONT',
   feederSpeed: 160,
   timerIndex: 0,

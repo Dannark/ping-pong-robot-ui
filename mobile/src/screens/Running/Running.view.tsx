@@ -11,6 +11,7 @@ type RunningViewProps = {
   leftSeconds: number | null;
   runConfig: RobotConfig | null;
   displaySpin: SpinDirection;
+  spinRandom: boolean;
   onStop: () => void;
 };
 
@@ -21,6 +22,7 @@ export function RunningView({
   leftSeconds,
   runConfig,
   displaySpin,
+  spinRandom,
   onStop,
 }: RunningViewProps) {
   const [blink, setBlink] = useState(true);
@@ -77,6 +79,12 @@ export function RunningView({
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>Power</Text>
             <Text style={styles.detailValue}>{runConfig.launcherPower}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>Spin</Text>
+            <Text style={styles.detailValue}>
+              {spinRandom ? 'Random' : displaySpin}
+            </Text>
           </View>
         </View>
 
