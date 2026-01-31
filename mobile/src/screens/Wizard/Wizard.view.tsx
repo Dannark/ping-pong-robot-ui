@@ -46,6 +46,10 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
                 tilt={config.tiltTarget}
                 panMode={config.panMode}
                 tiltMode={config.tiltMode}
+                panMin={config.panMin}
+                panMax={config.panMax}
+                tiltMin={config.tiltMin}
+                tiltMax={config.tiltMax}
                 panAuto1Speed={config.panAuto1Speed}
                 panAuto2Step={config.panAuto2Step}
                 tiltAuto1Speed={config.tiltAuto1Speed}

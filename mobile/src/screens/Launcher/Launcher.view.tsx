@@ -49,7 +49,7 @@ export function LauncherView({
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.section}>
         <View style={styles.sliderRow}>
-          <Text style={styles.label}>Power</Text>
+          <Text style={styles.label}>MAX POWER</Text>
           <Text style={styles.value}>{launcherPower}</Text>
         </View>
         <Slider

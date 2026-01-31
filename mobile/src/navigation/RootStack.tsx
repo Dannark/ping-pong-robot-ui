@@ -35,7 +35,7 @@ const screenOptions = {
   headerShadowVisible: false,
   headerBackTitleVisible: false,
   contentStyle: { backgroundColor: theme.colors.background },
-  animation: 'slide_from_right' as const,
+  presentation: 'modal' as const,
 };
 
 export function RootStack() {
@@ -83,12 +83,12 @@ export function RootStack() {
         <Stack.Screen
           name="Feeder"
           component={FeederScreen}
-          options={{ title: 'Feeder', presentation: 'modal' }}
+          options={{ title: 'Feeder' }}
         />
         <Stack.Screen
           name="Timer"
           component={TimerScreen}
-          options={{ title: 'Timer', presentation: 'modal' }}
+          options={{ title: 'Timer' }}
         />
         <Stack.Screen
           name="Running"

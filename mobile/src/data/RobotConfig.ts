@@ -18,6 +18,10 @@ export type RobotConfig = {
   tiltMode: AxisMode;
   panTarget: number;
   tiltTarget: number;
+  panMin: number;
+  panMax: number;
+  tiltMin: number;
+  tiltMax: number;
   panAuto1Speed: number;
   panAuto2Step: number;
   tiltAuto1Speed: number;
@@ -37,6 +41,10 @@ export const DEFAULT_CONFIG: RobotConfig = {
   tiltMode: 'LIVE',
   panTarget: 0,
   tiltTarget: 0,
+  panMin: -1,
+  panMax: 1,
+  tiltMin: -1,
+  tiltMax: 1,
   panAuto1Speed: 0.035,
   panAuto2Step: 0.25,
   tiltAuto1Speed: 0.035,

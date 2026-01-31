@@ -11,6 +11,10 @@ type TiltViewProps = {
   panTarget: number;
   tiltTarget: number;
   panMode: AxisMode;
+  panMin: number;
+  panMax: number;
+  tiltMin: number;
+  tiltMax: number;
   panAuto1Speed: number;
   panAuto2Step: number;
   tiltAuto1Speed: number;
@@ -18,6 +22,9 @@ type TiltViewProps = {
   axisModes: AxisMode[];
   onModeSelect: (mode: AxisMode) => void;
   onTiltTargetChange: (value: number) => void;
+  onTiltMinChange: (value: number) => void;
+  onTiltMaxChange: (value: number) => void;
+  onTiltAuto2StepChange: (value: number) => void;
   onReset: () => void;
 };
 
@@ -28,6 +35,10 @@ export function TiltView({
   panTarget,
   tiltTarget,
   panMode,
+  panMin,
+  panMax,
+  tiltMin,
+  tiltMax,
   panAuto1Speed,
   panAuto2Step,
   tiltAuto1Speed,
@@ -35,8 +46,13 @@ export function TiltView({
   axisModes,
   onModeSelect,
   onTiltTargetChange,
+  onTiltMinChange,
+  onTiltMaxChange,
+  onTiltAuto2StepChange,
   onReset,
 }: TiltViewProps) {
+  const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2';
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.previewSection}>
@@ -47,6 +63,10 @@ export function TiltView({
           tilt={tiltTarget}
           panMode={panMode}
           tiltMode={tiltMode}
+          panMin={panMin}
+          panMax={panMax}
+          tiltMin={tiltMin}
+          tiltMax={tiltMax}
           panAuto1Speed={panAuto1Speed}
           panAuto2Step={panAuto2Step}
           tiltAuto1Speed={tiltAuto1Speed}
@@ -70,23 +90,87 @@ export function TiltView({
           ))}
         </View>
       </View>
-      <View style={styles.section}>
-        <View style={styles.sliderRow}>
-          <Text style={styles.label}>Tilt target</Text>
-          <Text style={styles.value}>{tiltTarget.toFixed(2)}</Text>
+      {tiltMode === 'LIVE' && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Initial Tilt target</Text>
+            <Text style={styles.value}>{tiltTarget.toFixed(2)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={-1}
+            maximumValue={1}
+            step={0.01}
+            value={tiltTarget}
+            onValueChange={onTiltTargetChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
         </View>
-        <Slider
-          style={styles.slider}
-          minimumValue={-1}
-          maximumValue={1}
-          step={0.01}
-          value={tiltTarget}
-          onValueChange={onTiltTargetChange}
-          minimumTrackTintColor={theme.colors.primary}
-          maximumTrackTintColor={theme.colors.border}
-          thumbTintColor={theme.colors.primary}
-        />
-      </View>
+      )}
+      {isAuto && (() => {
+        const minSliderMax = Math.min(1, tiltMax - 0.1);
+        const minRange = minSliderMax - (-1);
+        const minSliderNorm = minRange > 0 ? (tiltMin - (-1)) / minRange : 0;
+        return (
+        <View style={styles.section}>
+          <Text style={styles.label}>Angle range (Tilt)</Text>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Min</Text>
+            <Text style={styles.value}>{tiltMin.toFixed(1)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={1}
+            step={minRange > 0 ? 0.1 / minRange : 0.01}
+            value={minSliderNorm}
+            onValueChange={(raw) => {
+              const v = -1 + raw * minRange;
+              onTiltMinChange(Math.round(v * 10) / 10);
+            }}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>Max</Text>
+            <Text style={styles.value}>{tiltMax.toFixed(1)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={Math.max(-1, tiltMin + 0.1)}
+            maximumValue={1}
+            step={0.1}
+            value={tiltMax}
+            onValueChange={onTiltMaxChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+        </View>
+        );
+      })()}
+      {tiltMode === 'AUTO2' && (
+        <View style={styles.section}>
+          <View style={styles.sliderRow}>
+            <Text style={styles.label}>AUTO2 Step</Text>
+            <Text style={styles.value}>{tiltAuto2Step.toFixed(2)}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={0.05}
+            maximumValue={0.5}
+            step={0.05}
+            value={tiltAuto2Step}
+            onValueChange={onTiltAuto2StepChange}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor={theme.colors.border}
+            thumbTintColor={theme.colors.primary}
+          />
+        </View>
+      )}
       <TouchableOpacity style={styles.resetButton} onPress={onReset} activeOpacity={0.85}>
         <MaterialCommunityIcons name="restore" size={20} color={theme.colors.text} />
         <Text style={styles.resetLabel}>Reset</Text>

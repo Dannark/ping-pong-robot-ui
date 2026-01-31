@@ -97,6 +97,10 @@ export function RunningView({
               tilt={runConfig.tiltTarget}
               panMode={runConfig.panMode}
               tiltMode={runConfig.tiltMode}
+              panMin={runConfig.panMin}
+              panMax={runConfig.panMax}
+              tiltMin={runConfig.tiltMin}
+              tiltMax={runConfig.tiltMax}
               panAuto1Speed={runConfig.panAuto1Speed}
               panAuto2Step={runConfig.panAuto2Step}
               tiltAuto1Speed={runConfig.tiltAuto1Speed}
