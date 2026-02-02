@@ -71,6 +71,8 @@
   "feeder": {
     "mode": "模式",
     "speed": "速度",
+    "ballsPerMin": "约 {{count}} 球/分钟 @ {{voltage}} V",
+    "ballsPerMinZero": "0 球/分钟（速度 &lt; 60）— {{voltage}} V",
     "p1Label": "P1/1 — 开 / 关（毫秒）",
     "p2Label": "P2/2 — 开 / 关（毫秒）",
     "on": "开",

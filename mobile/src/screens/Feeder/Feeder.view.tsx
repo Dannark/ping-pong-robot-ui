@@ -12,6 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
+import { estimateBallsPerMinute, DEFAULT_FEEDER_VOLTAGE } from '../../data/feederCalibration';
 import type { FeederMode } from '../../data/RobotConfig';
 
 const VISUALIZER_SIZE = 160;
@@ -105,6 +106,16 @@ export function FeederView({
           maximumTrackTintColor={theme.colors.border}
           thumbTintColor={theme.colors.primary}
         />
+        <View style={styles.ballsPerMinRow}>
+          <Text style={styles.ballsPerMinLabel}>
+            {feederSpeed < 60
+              ? t('feeder.ballsPerMinZero', { voltage: DEFAULT_FEEDER_VOLTAGE })
+              : t('feeder.ballsPerMin', {
+                  count: estimateBallsPerMinute(feederSpeed),
+                  voltage: DEFAULT_FEEDER_VOLTAGE,
+                })}
+          </Text>
+        </View>
       </View>
       {feederMode === 'P1/1' && (
         <View style={styles.section}>
@@ -263,6 +274,13 @@ const styles = StyleSheet.create({
   slider: {
     width: '100%',
     height: 40,
+  },
+  ballsPerMinRow: {
+    marginTop: theme.spacing.sm,
+  },
+  ballsPerMinLabel: {
+    ...theme.typography.caption,
+    color: theme.colors.textSecondary,
   },
   resetButton: {
     flexDirection: 'row',

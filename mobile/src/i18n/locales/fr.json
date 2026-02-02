@@ -71,6 +71,8 @@
   "feeder": {
     "mode": "Mode",
     "speed": "Vitesse",
+    "ballsPerMin": "~{{count}} balles/min @ {{voltage}} V",
+    "ballsPerMinZero": "0 balles/min (vit. &lt; 60) — {{voltage}} V",
     "p1Label": "P1/1 — Marche / Arrêt (ms)",
     "p2Label": "P2/2 — Marche / Arrêt (ms)",
     "on": "Marche",
