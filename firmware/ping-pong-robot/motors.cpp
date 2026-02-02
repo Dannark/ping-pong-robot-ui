@@ -202,6 +202,7 @@ void runSingleMotor(int which, int speed) {
   motor1.run(RELEASE);
   motor2.run(RELEASE);
   motor3.run(RELEASE);
+  motor4.run(RELEASE);
   if (which == 0 || speed == 0) {
     return;
   }
@@ -215,6 +216,9 @@ void runSingleMotor(int which, int speed) {
   } else if (which == 3) {
     motor3.setSpeed(s);
     motor3.run(FORWARD);
+  } else if (which == 4) {
+    motor4.setSpeed(s);
+    motor4.run(FORWARD);
   }
 }
 

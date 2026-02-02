@@ -273,8 +273,8 @@ void renderRunning() {
   display.display();
 }
 
-// Índices: 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=Back
-#define SETTINGS_ITEMS 6
+// Índices: 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=M4, 6=Back
+#define SETTINGS_ITEMS 7
 #define SETTINGS_VISIBLE 4
 
 void renderSettings() {
@@ -286,7 +286,7 @@ void renderSettings() {
     : (settingsIndex >= 1 ? settingsIndex - 1 : 0);
   if (scrollOffset < 0) scrollOffset = 0;
 
-  const char* labels[SETTINGS_ITEMS] = { "Servo 1", "Servo 2", "M1", "M2", "M3", "Back" };
+  const char* labels[SETTINGS_ITEMS] = { "Servo 1", "Servo 2", "M1", "M2", "M3", "M4", "Back" };
 
   for (int i = 0; i < SETTINGS_VISIBLE && (scrollOffset + i) < SETTINGS_ITEMS; i++) {
     int idx = scrollOffset + i;

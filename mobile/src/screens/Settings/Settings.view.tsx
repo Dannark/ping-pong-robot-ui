@@ -16,7 +16,7 @@ import { getStoredLanguage, setStoredLanguage, SUPPORTED_LANGUAGES } from '../..
 export type HardwareItem =
   | { labelKey: string; icon: string; screen: 'SettingsServoTilt' }
   | { labelKey: string; icon: string; screen: 'SettingsServoPan' }
-  | { labelKey: string; icon: string; screen: 'SettingsMotorTest'; motorIndex: 1 | 2 | 3 };
+  | { labelKey: string; icon: string; screen: 'SettingsMotorTest'; motorIndex: 1 | 2 | 3 | 4 };
 
 const HARDWARE_ITEMS: HardwareItem[] = [
   { labelKey: 'settings.servo1', icon: 'axis-z-rotate-counterclockwise', screen: 'SettingsServoTilt' },
@@ -24,6 +24,7 @@ const HARDWARE_ITEMS: HardwareItem[] = [
   { labelKey: 'settings.m1Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 1 },
   { labelKey: 'settings.m2Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 2 },
   { labelKey: 'settings.m3Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 3 },
+  { labelKey: 'settings.m4Test', icon: 'engine-outline', screen: 'SettingsMotorTest', motorIndex: 4 },
 ];
 
 type SettingsViewProps = {

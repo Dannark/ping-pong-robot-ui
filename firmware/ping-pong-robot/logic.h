@@ -27,10 +27,10 @@ extern int launcherIndex;
 extern int spinIndex;
 extern int feederIndex;
 extern int timerMenuIndex;
-extern int settingsIndex;  // 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=Back
+extern int settingsIndex;  // 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=M4, 6=Back
 extern int settingsServoEditIndex;  // 0: MIN, 1: MID, 2: MAX, 3: Back
 extern int settingsServoSelected;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
-extern int settingsMotorTest;       // 0=nada, 1=M1, 2=M2, 3=M3
+extern int settingsMotorTest;       // 0=nada, 1=M1, 2=M2, 3=M3, 4=M4
 extern int settingsMotorSpeed;     // 0..255 para teste individual
 
 extern Config cfg;

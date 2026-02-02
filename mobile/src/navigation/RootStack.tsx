@@ -26,7 +26,7 @@ export type RootStackParamList = {
   Settings: undefined;
   SettingsServoTilt: undefined;
   SettingsServoPan: undefined;
-  SettingsMotorTest: { motorIndex: 1 | 2 | 3 };
+  SettingsMotorTest: { motorIndex: 1 | 2 | 3 | 4 };
   Pan: undefined;
   Tilt: undefined;
   Launcher: undefined;
@@ -60,7 +60,7 @@ export function RootStack() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => {
-          const params = route.params as { motorIndex?: 1 | 2 | 3 } | undefined;
+          const params = route.params as { motorIndex?: 1 | 2 | 3 | 4 } | undefined;
           const title =
             route.name === 'SettingsMotorTest' && params?.motorIndex
               ? t(`settings.m${params.motorIndex}Test`)

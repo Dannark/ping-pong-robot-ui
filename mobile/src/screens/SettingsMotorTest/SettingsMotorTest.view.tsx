@@ -5,7 +5,7 @@ import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 
 type SettingsMotorTestViewProps = {
-  motorIndex: 1 | 2 | 3;
+  motorIndex: 1 | 2 | 3 | 4;
   speed: number;
   onSpeedChange: (v: number) => void;
 };

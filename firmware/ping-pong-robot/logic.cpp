@@ -39,10 +39,10 @@ int launcherIndex = 0;
 int spinIndex = 0;
 int feederIndex = 0;
 int timerMenuIndex = 0;
-int settingsIndex = 0;  // 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=Back
+int settingsIndex = 0;  // 0=Servo1, 1=Servo2, 2=M1, 3=M2, 4=M3, 5=M4, 6=Back
 int settingsServoEditIndex = 0;  // 0: MIN, 1: MID, 2: MAX, 3: Back
 int settingsServoSelected = 0;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
-int settingsMotorTest = 0;      // 0=nada, 1=M1, 2=M2, 3=M3
+int settingsMotorTest = 0;      // 0=nada, 1=M1, 2=M2, 3=M3, 4=M4
 int settingsMotorSpeed = 0;     // 0..255 para teste individual
 
 Config cfg;

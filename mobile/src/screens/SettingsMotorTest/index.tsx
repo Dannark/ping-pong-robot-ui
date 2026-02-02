@@ -5,7 +5,7 @@ import { SettingsMotorTestView } from './SettingsMotorTest.view';
 
 type SettingsMotorTestScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SettingsMotorTest'>;
-  route: { params: { motorIndex: 1 | 2 | 3 } };
+  route: { params: { motorIndex: 1 | 2 | 3 | 4 } };
 };
 
 export function SettingsMotorTestScreen({ navigation, route }: SettingsMotorTestScreenProps) {

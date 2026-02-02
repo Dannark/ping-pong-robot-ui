@@ -63,8 +63,8 @@ void loop() {
     }
 
     case SCREEN_SETTINGS: {
-      if (nav == NAV_UP) settingsIndex = clampInt(settingsIndex - 1, 0, 5);
-      if (nav == NAV_DOWN) settingsIndex = clampInt(settingsIndex + 1, 0, 5);
+      if (nav == NAV_UP) settingsIndex = clampInt(settingsIndex - 1, 0, 6);
+      if (nav == NAV_DOWN) settingsIndex = clampInt(settingsIndex + 1, 0, 6);
 
       if (swPressedEvent) {
         if (settingsIndex == 0) {
@@ -88,6 +88,10 @@ void loop() {
           settingsMotorSpeed = 0;
           currentScreen = SCREEN_SETTINGS_MOTOR;
         } else if (settingsIndex == 5) {
+          settingsMotorTest = 4;
+          settingsMotorSpeed = 0;
+          currentScreen = SCREEN_SETTINGS_MOTOR;
+        } else if (settingsIndex == 6) {
           stopAllMotors();
           currentScreen = SCREEN_HOME;
         }
