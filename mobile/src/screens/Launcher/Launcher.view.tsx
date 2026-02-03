@@ -114,7 +114,7 @@ export function LauncherView({
           </View>
         </View>
       )}
-      {spinDirection !== 'NONE' && (
+      {(spinDirection !== 'NONE' || spinRandom) && (
         <View style={styles.section}>
           <View style={styles.sliderRow}>
             <Text style={styles.label}>{t('launcher.spinIntensity')}</Text>
