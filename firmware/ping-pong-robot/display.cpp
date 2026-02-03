@@ -132,24 +132,31 @@ void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned
 }
 
 // Rotor (hélices) do feeder: 3 blades, sincronizado com fase on/off, sentido horário.
-// Velocidade angular conforme calibração: 255 → 2.7 s/volta, 80 → 4 s/volta (7.5 V).
+// Calibração a 7,5 V (modo contínuo): 70→4,50s, 160→2,91s, 255→2,60s.
 #define FEEDER_ROTOR_BLADES 3
-#define FEEDER_T_SEC_AT_80  4.0f
-#define FEEDER_T_SEC_AT_255 2.7f
+#define FEEDER_T_SEC_AT_70  4.50f
+#define FEEDER_T_SEC_AT_160 2.91f
+#define FEEDER_T_SEC_AT_255 2.60f
 
-// Segundos por volta para um dado speed (0–255), mesma lógica do app.
+// Segundos por volta para um dado speed (0–255), interpolação linear entre os 3 pontos.
 static float feederSecondsPerRotation(int speed) {
   if (speed <= 0) return 6.0f;
-  if (speed <= 80) {
-    float t = FEEDER_T_SEC_AT_80 + (80 - speed) / 80.0f * (6.0f - FEEDER_T_SEC_AT_80);
+  if (speed <= 70) {
+    float t = FEEDER_T_SEC_AT_70 + (70 - speed) / 70.0f * (6.0f - FEEDER_T_SEC_AT_70);
     if (t > 6.0f) t = 6.0f;
-    if (t < FEEDER_T_SEC_AT_80) t = FEEDER_T_SEC_AT_80;
+    if (t < FEEDER_T_SEC_AT_70) t = FEEDER_T_SEC_AT_70;
     return t;
   }
-  float t = FEEDER_T_SEC_AT_80 - (FEEDER_T_SEC_AT_80 - FEEDER_T_SEC_AT_255) / (255.0f - 80.0f) * (float)(speed - 80);
-  if (t < FEEDER_T_SEC_AT_255) t = FEEDER_T_SEC_AT_255;
-  if (t > FEEDER_T_SEC_AT_80) t = FEEDER_T_SEC_AT_80;
-  return t;
+  if (speed <= 160) {
+    return FEEDER_T_SEC_AT_70 - (FEEDER_T_SEC_AT_70 - FEEDER_T_SEC_AT_160) / (160.0f - 70.0f) * (float)(speed - 70);
+  }
+  if (speed <= 255) {
+    float t = FEEDER_T_SEC_AT_160 - (FEEDER_T_SEC_AT_160 - FEEDER_T_SEC_AT_255) / (255.0f - 160.0f) * (float)(speed - 160);
+    if (t < FEEDER_T_SEC_AT_255) t = FEEDER_T_SEC_AT_255;
+    if (t > FEEDER_T_SEC_AT_160) t = FEEDER_T_SEC_AT_160;
+    return t;
+  }
+  return FEEDER_T_SEC_AT_255;
 }
 
 // Tempo acumulado em fase "on" (ms); em off o valor fica congelado.

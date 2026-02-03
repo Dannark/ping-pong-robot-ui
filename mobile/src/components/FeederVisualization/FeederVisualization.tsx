@@ -3,9 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 import type { FeederMode } from '../../data/RobotConfig';
+import { secondsPerRotation } from '../../data/feederCalibration';
 
 const TICK_MS = 50;
-const DEG_PER_TICK_BASE = 8;
+const FEEDER_MIN_SPEED_TO_ROTATE = 60;
 
 type FeederVisualizationProps = {
   size: number;
@@ -32,16 +33,20 @@ export function FeederVisualization({
     if (!animate) return;
     const id = setInterval(() => {
       const now = Date.now();
-      const delta = (feederSpeed / 255) * DEG_PER_TICK_BASE;
+      const tSec = secondsPerRotation(feederSpeed);
+      const degPerTick =
+        feederSpeed >= FEEDER_MIN_SPEED_TO_ROTATE
+          ? (360 / (tSec * 1000)) * TICK_MS
+          : 0;
 
       if (feederMode === 'CONT') {
-        setRotation((r) => (r + delta) % 360);
+        setRotation((r) => (r + degPerTick) % 360);
         return;
       }
 
       const elapsed = now - phaseStartRef.current;
       if (phaseRef.current === 'on') {
-        setRotation((r) => (r + delta) % 360);
+        setRotation((r) => (r + degPerTick) % 360);
         if (elapsed >= feederOnMs) {
           phaseRef.current = 'off';
           phaseStartRef.current = now;
