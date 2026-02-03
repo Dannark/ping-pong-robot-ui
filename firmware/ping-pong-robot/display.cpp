@@ -34,23 +34,31 @@ void drawMiniRadar(int x0, int y0, int size, float pan, float tilt) {
 }
 
 void drawMiniRadarWithLimits(int x0, int y0, int size, float pan, float tilt, float panMin, float panMax, float tiltMin, float tiltMax) {
-  display.drawRect(x0, y0, size, size, SSD1306_WHITE);
-
   int cx = x0 + size / 2;
   int cy = y0 + size / 2;
   int radius = size / 2;
 
-  display.drawPixel(cx, cy, SSD1306_WHITE);
-  display.drawLine(cx - 2, cy, cx + 2, cy, SSD1306_WHITE);
-  display.drawLine(cx, cy - 2, cx, cy + 2, SSD1306_WHITE);
+  display.drawRect(x0, y0, size, size, SSD1306_WHITE);
+  if (size > 2) {
+    display.fillRect(x0 + 1, y0 + 1, size - 2, size - 2, SSD1306_WHITE);
+  }
 
   if (panMin < panMax && tiltMin < tiltMax) {
     int rx = x0 + (int)((panMin + 1.0f) * 0.5f * (float)size + 0.5f);
     int ry = y0 + (int)((tiltMin + 1.0f) * 0.5f * (float)size + 0.5f);
     int rw = (int)((panMax - panMin) * 0.5f * (float)size + 0.5f);
     int rh = (int)((tiltMax - tiltMin) * 0.5f * (float)size + 0.5f);
-    if (rw > 0 && rh > 0) display.drawRect(rx, ry, rw, rh, SSD1306_WHITE);
+    if (rw > 0 && rh > 0) {
+      if (rw >= 3 && rh >= 3) {
+        display.fillRect(rx + 1, ry + 1, rw - 2, rh - 2, SSD1306_BLACK);
+      }
+      display.drawRect(rx, ry, rw, rh, SSD1306_WHITE);
+    }
   }
+
+  display.drawPixel(cx, cy, SSD1306_WHITE);
+  display.drawLine(cx - 2, cy, cx + 2, cy, SSD1306_WHITE);
+  display.drawLine(cx, cy - 2, cx, cy + 2, SSD1306_WHITE);
 
   int px = cx + (int)(pan * (float)radius + 0.5f);
   int py = cy + (int)(tilt * (float)radius + 0.5f);

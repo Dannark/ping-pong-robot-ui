@@ -191,9 +191,7 @@ void startRunning() {
 // ================= Axis menu helpers =================
 int axisMaxIndex(AxisMode mode) {
   if (mode == AXIS_LIVE) return 2;
-  if (mode == AXIS_AUTO1) return 2;
-  if (mode == AXIS_AUTO2) return 2;
-  if (mode == AXIS_RANDOM) return 4;
+  if (mode == AXIS_AUTO1 || mode == AXIS_AUTO2 || mode == AXIS_RANDOM) return 4;
   return 1;
 }
 
