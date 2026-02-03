@@ -97,7 +97,7 @@ struct Config {
   SpinMode spinMode = SPIN_NONE;
   int spinIntensity = 255;  // 0..512 - >255 permite valores "negativos" (motor em REVERSE)
 
-  int feederSpeed = 160;    // 0..255 - 6V: 80 insuficiente, 160 adequado
+  int feederSpeed = 200;    // 0..255 - velocidade padrão do feeder
   FeederMode feederMode = FEED_CONTINUOUS;
   unsigned long feederCustomOnMs = 1500;
   unsigned long feederCustomOffMs = 750;

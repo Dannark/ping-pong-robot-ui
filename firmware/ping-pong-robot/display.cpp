@@ -182,6 +182,10 @@ static unsigned long feederRotorAccumulatedOnMs(FeederMode mode, unsigned long c
   return accumulated;
 }
 
+// Ângulo integrado por delta para não resetar ao mudar speed.
+static float feederRotorLastAngle = 0.0f;
+static unsigned long feederRotorPrevAccumulatedOn = 0xFFFFFFFFUL;
+
 void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs, int feederSpeed) {
   if (size < 6) return;
 
@@ -194,8 +198,22 @@ void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long cu
   float degPerMs = 360.0f / (tSec * 1000.0f);
 
   unsigned long accumulatedOn = feederRotorAccumulatedOnMs(mode, customOnMs, customOffMs);
-  float angleDeg = (float)(accumulatedOn % 360000UL) * degPerMs;
-  int baseAngle = (int)angleDeg % 360;
+
+  if (feederRotorPrevAccumulatedOn == 0xFFFFFFFFUL) {
+    feederRotorLastAngle = (float)(accumulatedOn % 360000UL) * degPerMs;
+    feederRotorPrevAccumulatedOn = accumulatedOn;
+  } else {
+    unsigned long delta = accumulatedOn - feederRotorPrevAccumulatedOn;
+    if (delta < 2000UL) {
+      feederRotorLastAngle += (float)delta * degPerMs;
+    }
+    feederRotorPrevAccumulatedOn = accumulatedOn;
+  }
+
+  while (feederRotorLastAngle >= 360.0f) feederRotorLastAngle -= 360.0f;
+  while (feederRotorLastAngle < 0.0f) feederRotorLastAngle += 360.0f;
+
+  int baseAngle = (int)(feederRotorLastAngle + 0.5f) % 360;
   if (baseAngle < 0) baseAngle += 360;
   // Sentido horário: ângulo decrescente na tela (y para cima = 0°)
   baseAngle = (360 - baseAngle) % 360;

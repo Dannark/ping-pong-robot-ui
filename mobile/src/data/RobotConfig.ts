@@ -70,7 +70,7 @@ export const DEFAULT_CONFIG: RobotConfig = {
   spinRandom: false,
   spinRandomIntervalSec: 5,
   feederMode: 'CONT',
-  feederSpeed: 160,
+  feederSpeed: 200,
   feederCustomOnMs: 1500,
   feederCustomOffMs: 750,
   timerIndex: 0,
