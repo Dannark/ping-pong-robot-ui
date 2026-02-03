@@ -186,7 +186,7 @@ void renderSpin() {
   display.display();
 }
 
-#define FEEDER_VISIBLE 4
+#define FEEDER_VISIBLE 5
 #define FEEDER_LINE_H  8
 
 void renderFeeder() {
