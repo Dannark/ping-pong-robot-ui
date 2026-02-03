@@ -85,6 +85,12 @@ struct Config {
   float panTarget = 0.0f;
   float tiltTarget = 0.0f;
 
+  // Limites de ângulo (-1 a 1) para AUTO1, AUTO2 e RANDOM
+  float panMin = -1.0f;
+  float panMax = 1.0f;
+  float tiltMin = -1.0f;
+  float tiltMax = 1.0f;
+
   // AUTO1 speed per tick (0.005 .. 0.08)
   float panAuto1Speed = 0.035f;
   float tiltAuto1Speed = 0.035f;
@@ -92,6 +98,12 @@ struct Config {
   // AUTO2 step size (0.05 .. 0.5)
   float panAuto2Step = 0.25f;
   float tiltAuto2Step = 0.25f;
+
+  // RANDOM: distância mínima entre alvos (0.1 .. 0.5), pausa entre movimentos (ms)
+  float panRandomMinDist = 0.2f;
+  unsigned long panRandomPauseMs = 2000UL;
+  float tiltRandomMinDist = 0.2f;
+  unsigned long tiltRandomPauseMs = 2000UL;
 
   int launcherPower = 255;  // 0..255 - velocidade máxima dos motores
   SpinMode spinMode = SPIN_NONE;

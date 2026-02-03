@@ -30,17 +30,30 @@ void drawHeader(const char* title) {
 }
 
 void drawMiniRadar(int x0, int y0, int size, float pan, float tilt) {
+  drawMiniRadarWithLimits(x0, y0, size, pan, tilt, -1.0f, 1.0f, -1.0f, 1.0f);
+}
+
+void drawMiniRadarWithLimits(int x0, int y0, int size, float pan, float tilt, float panMin, float panMax, float tiltMin, float tiltMax) {
   display.drawRect(x0, y0, size, size, SSD1306_WHITE);
 
   int cx = x0 + size / 2;
   int cy = y0 + size / 2;
+  int radius = size / 2;
 
   display.drawPixel(cx, cy, SSD1306_WHITE);
   display.drawLine(cx - 2, cy, cx + 2, cy, SSD1306_WHITE);
   display.drawLine(cx, cy - 2, cx, cy + 2, SSD1306_WHITE);
 
-  int px = cx + (int)(pan * (size / 2 - 2));
-  int py = cy + (int)(tilt * (size / 2 - 2));
+  if (panMin < panMax && tiltMin < tiltMax) {
+    int rx = x0 + (int)((panMin + 1.0f) * 0.5f * (float)size + 0.5f);
+    int ry = y0 + (int)((tiltMin + 1.0f) * 0.5f * (float)size + 0.5f);
+    int rw = (int)((panMax - panMin) * 0.5f * (float)size + 0.5f);
+    int rh = (int)((tiltMax - tiltMin) * 0.5f * (float)size + 0.5f);
+    if (rw > 0 && rh > 0) display.drawRect(rx, ry, rw, rh, SSD1306_WHITE);
+  }
+
+  int px = cx + (int)(pan * (float)radius + 0.5f);
+  int py = cy + (int)(tilt * (float)radius + 0.5f);
   display.fillCircle(px, py, 2, SSD1306_WHITE);
 }
 

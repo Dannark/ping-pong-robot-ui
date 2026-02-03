@@ -205,14 +205,27 @@ void loop() {
         if (nav == NAV_RIGHT) cfg.panAuto2Step = clampFloat(cfg.panAuto2Step + 0.05f, 0.05f, 0.50f);
       }
 
+      if (cfg.panMode == AXIS_RANDOM && panMenuIndex == 1) {
+        if (nav == NAV_LEFT)  cfg.panMin = clampFloat(cfg.panMin - 0.05f, -1.0f, cfg.panMax - 0.05f);
+        if (nav == NAV_RIGHT) cfg.panMin = clampFloat(cfg.panMin + 0.05f, -1.0f, cfg.panMax - 0.05f);
+      }
+      if (cfg.panMode == AXIS_RANDOM && panMenuIndex == 2) {
+        if (nav == NAV_LEFT)  cfg.panMax = clampFloat(cfg.panMax - 0.05f, cfg.panMin + 0.05f, 1.0f);
+        if (nav == NAV_RIGHT) cfg.panMax = clampFloat(cfg.panMax + 0.05f, cfg.panMin + 0.05f, 1.0f);
+      }
+      if (cfg.panMode == AXIS_RANDOM && panMenuIndex == 3) {
+        if (nav == NAV_LEFT)  cfg.panRandomPauseMs = (unsigned long)clampInt((int)(cfg.panRandomPauseMs - 250), 500, 10000);
+        if (nav == NAV_RIGHT) cfg.panRandomPauseMs = (unsigned long)clampInt((int)(cfg.panRandomPauseMs + 250), 500, 10000);
+      }
+
       if (swPressedEvent) {
         if (cfg.panMode == AXIS_LIVE && panMenuIndex == 1) {
           currentScreen = SCREEN_PAN_EDIT;
-        } else {
-          if ((axisHasSecondOption(cfg.panMode) && panMenuIndex == 2) ||
-              (!axisHasSecondOption(cfg.panMode) && panMenuIndex == 1)) {
-            goBackToWizard();
-          }
+        } else if (cfg.panMode == AXIS_RANDOM && panMenuIndex == 4) {
+          goBackToWizard();
+        } else if (cfg.panMode != AXIS_RANDOM && ((axisHasSecondOption(cfg.panMode) && panMenuIndex == 2) ||
+              (!axisHasSecondOption(cfg.panMode) && panMenuIndex == 1))) {
+          goBackToWizard();
         }
       }
 
@@ -241,14 +254,27 @@ void loop() {
         if (nav == NAV_RIGHT) cfg.tiltAuto2Step = clampFloat(cfg.tiltAuto2Step + 0.05f, 0.05f, 0.50f);
       }
 
+      if (cfg.tiltMode == AXIS_RANDOM && tiltMenuIndex == 1) {
+        if (nav == NAV_LEFT)  cfg.tiltMin = clampFloat(cfg.tiltMin - 0.05f, -1.0f, cfg.tiltMax - 0.05f);
+        if (nav == NAV_RIGHT) cfg.tiltMin = clampFloat(cfg.tiltMin + 0.05f, -1.0f, cfg.tiltMax - 0.05f);
+      }
+      if (cfg.tiltMode == AXIS_RANDOM && tiltMenuIndex == 2) {
+        if (nav == NAV_LEFT)  cfg.tiltMax = clampFloat(cfg.tiltMax - 0.05f, cfg.tiltMin + 0.05f, 1.0f);
+        if (nav == NAV_RIGHT) cfg.tiltMax = clampFloat(cfg.tiltMax + 0.05f, cfg.tiltMin + 0.05f, 1.0f);
+      }
+      if (cfg.tiltMode == AXIS_RANDOM && tiltMenuIndex == 3) {
+        if (nav == NAV_LEFT)  cfg.tiltRandomPauseMs = (unsigned long)clampInt((int)(cfg.tiltRandomPauseMs - 250), 500, 10000);
+        if (nav == NAV_RIGHT) cfg.tiltRandomPauseMs = (unsigned long)clampInt((int)(cfg.tiltRandomPauseMs + 250), 500, 10000);
+      }
+
       if (swPressedEvent) {
         if (cfg.tiltMode == AXIS_LIVE && tiltMenuIndex == 1) {
           currentScreen = SCREEN_TILT_EDIT;
-        } else {
-          if ((axisHasSecondOption(cfg.tiltMode) && tiltMenuIndex == 2) ||
-              (!axisHasSecondOption(cfg.tiltMode) && tiltMenuIndex == 1)) {
-            goBackToWizard();
-          }
+        } else if (cfg.tiltMode == AXIS_RANDOM && tiltMenuIndex == 4) {
+          goBackToWizard();
+        } else if (cfg.tiltMode != AXIS_RANDOM && ((axisHasSecondOption(cfg.tiltMode) && tiltMenuIndex == 2) ||
+              (!axisHasSecondOption(cfg.tiltMode) && tiltMenuIndex == 1))) {
+          goBackToWizard();
         }
       }
 

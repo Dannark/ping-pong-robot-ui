@@ -64,45 +64,54 @@ void renderWizard() {
   display.display();
 }
 
+#define AXIS_LINE_H   12
+#define AXIS_VISIBLE  4
+
 void renderAxisMenu(const char* title, AxisMode mode, float targetValue, int menuIndex) {
   display.clearDisplay();
   drawHeader(title);
 
   float pan = (title[0] == 'P') ? targetValue : cfg.panTarget;
   float tilt = (title[0] == 'T') ? targetValue : cfg.tiltTarget;
-  drawMiniRadar(92, BODY_Y, 32, pan, tilt);
+  drawMiniRadarWithLimits(92, BODY_Y, 32, pan, tilt, cfg.panMin, cfg.panMax, cfg.tiltMin, cfg.tiltMax);
 
-  display.setCursor(0, BODY_Y);
-  display.print(menuIndex == 0 ? "> " : "  ");
-  display.print("Mode: ");
-  display.println(axisModeName(mode));
+  bool isPan = (title[0] == 'P');
+  int totalItems = (mode == AXIS_RANDOM) ? 5 : (axisHasSecondOption(mode) ? 3 : 2);
+  int scrollOffset = 0;
+  if (totalItems > AXIS_VISIBLE) {
+    scrollOffset = menuIndex - (AXIS_VISIBLE - 1);
+    if (scrollOffset < 0) scrollOffset = 0;
+    if (scrollOffset > totalItems - AXIS_VISIBLE) scrollOffset = totalItems - AXIS_VISIBLE;
+  }
 
-  int line = BODY_Y + 12;
+  for (int i = 0; i < AXIS_VISIBLE && (scrollOffset + i) < totalItems; i++) {
+    int idx = scrollOffset + i;
+    int y = BODY_Y + i * AXIS_LINE_H;
+    display.setCursor(0, y);
+    display.print(idx == menuIndex ? "> " : "  ");
 
-  if (axisHasSecondOption(mode)) {
-    display.setCursor(0, line);
-    display.print(menuIndex == 1 ? "> " : "  ");
-    display.print(axisSecondLabel(mode));
-    display.print(": ");
-
-    if (mode == AXIS_AUTO1) {
-      float v = (title[0] == 'P') ? cfg.panAuto1Speed : cfg.tiltAuto1Speed;
-      display.println(v, 3);
-    } else if (mode == AXIS_AUTO2) {
-      float v = (title[0] == 'P') ? cfg.panAuto2Step : cfg.tiltAuto2Step;
-      display.println(v, 2);
+    if (idx == 0) {
+      display.print("Mode: ");
+      display.println(axisModeName(mode));
+    } else if (mode == AXIS_RANDOM) {
+      if (idx == 1) { display.print("Min: "); display.println(isPan ? cfg.panMin : cfg.tiltMin, 2); }
+      else if (idx == 2) { display.print("Max: "); display.println(isPan ? cfg.panMax : cfg.tiltMax, 2); }
+      else if (idx == 3) {
+        unsigned long pauseMs = isPan ? cfg.panRandomPauseMs : cfg.tiltRandomPauseMs;
+        display.print("Pause: ");
+        display.print((float)pauseMs / 1000.0f, 1);
+        display.println("s");
+      }
+      else { display.println("Back"); }
+    } else if (axisHasSecondOption(mode) && idx == 1) {
+      display.print(axisSecondLabel(mode));
+      display.print(": ");
+      if (mode == AXIS_AUTO1) display.println(isPan ? cfg.panAuto1Speed : cfg.tiltAuto1Speed, 3);
+      else if (mode == AXIS_AUTO2) display.println(isPan ? cfg.panAuto2Step : cfg.tiltAuto2Step, 2);
+      else display.println();
     } else {
-      display.println();
+      display.println("Back");
     }
-
-    line += 12;
-    display.setCursor(0, line);
-    display.print(menuIndex == 2 ? "> " : "  ");
-    display.println("Back");
-  } else {
-    display.setCursor(0, line);
-    display.print(menuIndex == 1 ? "> " : "  ");
-    display.println("Back");
   }
 
   display.display();
@@ -115,7 +124,7 @@ void renderAxisEdit(const char* title, float value) {
   float pan = (title[0] == 'P') ? value : cfg.panTarget;
   float tilt = (title[0] == 'T') ? value : cfg.tiltTarget;
 
-  drawMiniRadar(38, 12, 52, pan, tilt);
+  drawMiniRadarWithLimits(SCREEN_WIDTH - 52 - 2, 12, 52, pan, tilt, cfg.panMin, cfg.panMax, cfg.tiltMin, cfg.tiltMax);
 
   // Mostra o valor acima da label SW=OK
   display.setCursor(0, 48);
@@ -292,7 +301,7 @@ void renderRunning() {
   display.println(spinModeName(cfg.spinMode));
 
   // Radar a bit higher
-  drawMiniRadar(92, BODY_Y + 14, 32, livePan, liveTilt);
+  drawMiniRadarWithLimits(92, BODY_Y + 14, 32, livePan, liveTilt, cfg.panMin, cfg.panMax, cfg.tiltMin, cfg.tiltMax);
 
   display.display();
 }

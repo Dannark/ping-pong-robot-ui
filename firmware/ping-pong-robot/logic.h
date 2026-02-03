@@ -36,9 +36,10 @@ extern int settingsMotorSpeed;     // 0..255 para teste individual
 extern Config cfg;
 
 // ================= Auto update =================
-float auto1Update(float base, float &dir, float speed);
-float auto2Update(float base, float &dir, unsigned long &lastStepMs, float step, unsigned long pauseMs);
-void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step);
+float auto1Update(float base, float &dir, float speed, float minVal, float maxVal);
+float auto2Update(float base, float &dir, unsigned long &lastStepMs, float step, unsigned long pauseMs, float minVal, float maxVal);
+void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step,
+               float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist);
 
 // ================= Logic updates =================
 void updateRunningLogic();

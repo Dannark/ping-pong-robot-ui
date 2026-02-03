@@ -48,31 +48,48 @@ int settingsMotorSpeed = 0;     // 0..255 para teste individual
 Config cfg;
 
 // ================= Auto update =================
-float auto1Update(float base, float &dir, float speed) {
+float auto1Update(float base, float &dir, float speed, float minVal, float maxVal) {
   base += dir * speed;
-  if (base >= 1.0f) { base = 1.0f; dir = -1.0f; }
-  if (base <= -1.0f) { base = -1.0f; dir = 1.0f; }
+  if (base >= maxVal) { base = maxVal; dir = -1.0f; }
+  if (base <= minVal) { base = minVal; dir = 1.0f; }
   return base;
 }
 
-float auto2Update(float base, float &dir, unsigned long &lastStepMs, float step, unsigned long pauseMs) {
+float auto2Update(float base, float &dir, unsigned long &lastStepMs, float step, unsigned long pauseMs, float minVal, float maxVal) {
   unsigned long now = millis();
   if (now - lastStepMs < pauseMs) return base;
 
   lastStepMs = now;
   base += dir * step;
 
-  if (base >= 1.0f) { base = 1.0f; dir = -1.0f; }
-  if (base <= -1.0f) { base = -1.0f; dir = 1.0f; }
+  if (base >= maxVal) { base = maxVal; dir = -1.0f; }
+  if (base <= minVal) { base = minVal; dir = 1.0f; }
 
   return base;
 }
 
-void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step) {
+static float pickRandomTarget(float minVal, float maxVal, float current, float minDist) {
+  float range = maxVal - minVal;
+  if (range <= 0.0f) return current;
+  for (int attempt = 0; attempt < 20; attempt++) {
+    float t = minVal + (float)(random(0, 10001) / 10000.0) * range;
+    if (fabs(t - current) >= minDist) return t;
+  }
+  return current + (current < (minVal + maxVal) * 0.5f ? minDist : -minDist);
+}
+
+void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step,
+               float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist) {
   if (mode == AXIS_AUTO1) {
-    value = auto1Update(value, dir, auto1Speed);
+    value = auto1Update(value, dir, auto1Speed, minVal, maxVal);
   } else if (mode == AXIS_AUTO2) {
-    value = auto2Update(value, dir, lastStepMs, auto2Step, AUTO2_PAUSE_MS);
+    value = auto2Update(value, dir, lastStepMs, auto2Step, AUTO2_PAUSE_MS, minVal, maxVal);
+  } else if (mode == AXIS_RANDOM) {
+    unsigned long now = millis();
+    if (now - lastStepMs >= randomPauseMs) {
+      value = pickRandomTarget(minVal, maxVal, value, randomMinDist);
+      lastStepMs = now;
+    }
   }
 }
 
@@ -96,7 +113,8 @@ void updateRunningLogic() {
     float stickX = joyToNorm(analogRead(JOY_X));
     applyIncremental(livePan, stickX);
   } else {
-    applyAuto(livePan, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step);
+    applyAuto(livePan, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step,
+              cfg.panMin, cfg.panMax, cfg.panRandomPauseMs, cfg.panRandomMinDist);
   }
 
   // TILT
@@ -104,7 +122,8 @@ void updateRunningLogic() {
     float stickY = joyToNorm(analogRead(JOY_Y));
     applyIncremental(liveTilt, stickY);
   } else {
-    applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step);
+    applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step,
+              cfg.tiltMin, cfg.tiltMax, cfg.tiltRandomPauseMs, cfg.tiltRandomMinDist);
   }
 
   // Atualizar servos com os valores normalizados
@@ -119,10 +138,12 @@ void updateRunningLogic() {
 
 void updateAxisPreviewTargets() {
   if (currentScreen == SCREEN_PAN) {
-    applyAuto(cfg.panTarget, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step);
+    applyAuto(cfg.panTarget, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step,
+              cfg.panMin, cfg.panMax, cfg.panRandomPauseMs, cfg.panRandomMinDist);
   }
   if (currentScreen == SCREEN_TILT) {
-    applyAuto(cfg.tiltTarget, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step);
+    applyAuto(cfg.tiltTarget, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step,
+              cfg.tiltMin, cfg.tiltMax, cfg.tiltRandomPauseMs, cfg.tiltRandomMinDist);
   }
 }
 
@@ -172,16 +193,18 @@ int axisMaxIndex(AxisMode mode) {
   if (mode == AXIS_LIVE) return 2;
   if (mode == AXIS_AUTO1) return 2;
   if (mode == AXIS_AUTO2) return 2;
+  if (mode == AXIS_RANDOM) return 4;
   return 1;
 }
 
 bool axisHasSecondOption(AxisMode mode) {
-  return (mode == AXIS_LIVE || mode == AXIS_AUTO1 || mode == AXIS_AUTO2);
+  return (mode == AXIS_LIVE || mode == AXIS_AUTO1 || mode == AXIS_AUTO2 || mode == AXIS_RANDOM);
 }
 
 const char* axisSecondLabel(AxisMode mode) {
   if (mode == AXIS_LIVE) return "Edit Target";
   if (mode == AXIS_AUTO1) return "Speed";
   if (mode == AXIS_AUTO2) return "Step";
+  if (mode == AXIS_RANDOM) return "Min";
   return "";
 }
