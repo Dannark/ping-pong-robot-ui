@@ -93,11 +93,25 @@ static int feederPixelOnAt(unsigned long col, unsigned long onMs, unsigned long 
   return (t < onMs) ? 1 : 0;
 }
 
-// Mini gráfico do modo feeder: 16 px largura, 8 px altura. Onda on/off; 1 px = 250 ms.
+// Mini gráfico do modo feeder: borda 1px, margem 1px, barras 32x4 px (total 36x8). 1 px = 250 ms.
+#define FEEDER_GRAPH_BORDER 1
+#define FEEDER_GRAPH_GAP    1
+#define FEEDER_GRAPH_BAR_W  32
+#define FEEDER_GRAPH_BAR_H  4
+
 void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
   if (w <= 0 || h <= 0) return;
 
-  for (int col = 0; col < w; col++) {
+  // Borda ao redor do gráfico (1 px)
+  display.drawRect(x0, y0, w, h, SSD1306_WHITE);
+
+  // Área das barras: 1px de espaçamento da borda, altura reduzida em 4 px (2 cima, 2 baixo)
+  int barX = x0 + FEEDER_GRAPH_BORDER + FEEDER_GRAPH_GAP;
+  int barY = y0 + FEEDER_GRAPH_BORDER + FEEDER_GRAPH_GAP;
+  int barW = FEEDER_GRAPH_BAR_W;
+  int barH = FEEDER_GRAPH_BAR_H;
+
+  for (int col = 0; col < barW; col++) {
     int fillCol;
     if (mode == FEED_CONTINUOUS) {
       fillCol = 1;
@@ -112,7 +126,7 @@ void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned
     }
 
     if (fillCol) {
-      display.fillRect(x0 + col, y0, 1, h, SSD1306_WHITE);
+      display.fillRect(barX + col, barY, 1, barH, SSD1306_WHITE);
     }
   }
 }

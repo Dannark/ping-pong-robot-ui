@@ -222,8 +222,8 @@ void renderFeeder() {
     }
   }
 
-  // Mini gráfico do modo feeder na primeira linha, à direita (32x8 px = 8 s a 250 ms/px)
-  drawFeederModeGraph(SCREEN_WIDTH - 32, BODY_Y, 32, 8, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
+  // Mini gráfico do modo feeder na primeira linha, à direita (36x8 px com borda; barras 32x4 no interior)
+  drawFeederModeGraph(SCREEN_WIDTH - 36, BODY_Y, 36, 8, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
 
   display.display();
 }
