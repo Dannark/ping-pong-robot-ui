@@ -81,3 +81,38 @@ void drawSpinVisualizer(int x0, int y0, int size, SpinMode spinMode) {
   display.drawLine(endX, endY, leftX, leftY, SSD1306_WHITE);
   display.drawLine(endX, endY, rightX, rightY, SSD1306_WHITE);
 }
+
+// Step mínimo = 0.25 s = 250 ms; 1 pixel = 250 ms no eixo do tempo (todos os modos).
+#define FEEDER_MS_PER_PIXEL 250UL
+
+// Retorna 1 se no tempo (col * 250 ms) estamos na fase "on" do ciclo onMs/offMs.
+static int feederPixelOnAt(unsigned long col, unsigned long onMs, unsigned long offMs) {
+  unsigned long total = onMs + offMs;
+  if (total == 0) total = 1;
+  unsigned long t = (col * FEEDER_MS_PER_PIXEL) % total;
+  return (t < onMs) ? 1 : 0;
+}
+
+// Mini gráfico do modo feeder: 16 px largura, 8 px altura. Onda on/off; 1 px = 250 ms.
+void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
+  if (w <= 0 || h <= 0) return;
+
+  for (int col = 0; col < w; col++) {
+    int fillCol;
+    if (mode == FEED_CONTINUOUS) {
+      fillCol = 1;
+    } else if (mode == FEED_PULSE_1_1) {
+      fillCol = feederPixelOnAt((unsigned long)col, 1000UL, 1000UL);
+    } else if (mode == FEED_PULSE_2_1) {
+      fillCol = feederPixelOnAt((unsigned long)col, 2000UL, 1000UL);
+    } else if (mode == FEED_PULSE_2_2) {
+      fillCol = feederPixelOnAt((unsigned long)col, 2000UL, 2000UL);
+    } else {
+      fillCol = feederPixelOnAt((unsigned long)col, customOnMs, customOffMs);
+    }
+
+    if (fillCol) {
+      display.fillRect(x0 + col, y0, 1, h, SSD1306_WHITE);
+    }
+  }
+}

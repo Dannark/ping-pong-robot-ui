@@ -75,7 +75,7 @@
     "ballsPerMinZero": "0 balls/min (speed &lt; 60) — {{voltage}} V",
     "p1Label": "P1/1 — On / Off (s)",
     "p2Label": "P2/2 — On / Off (s)",
-    "customLabel": "Custom — On / Off (s)",
+    "customLabel": "Custom — On / Off (seconds)",
     "on": "On",
     "off": "Off",
     "reset": "Reset"

@@ -186,40 +186,44 @@ void renderSpin() {
   display.display();
 }
 
+#define FEEDER_VISIBLE 4
+#define FEEDER_LINE_H  8
+
 void renderFeeder() {
   display.clearDisplay();
   drawHeader("FEEDER");
 
-  int row = 0;
-  display.setCursor(0, BODY_Y + row * 12);
-  display.print(feederIndex == row ? "> " : "  ");
-  display.print("Mode: ");
-  display.println(feederModeLabel(cfg.feederMode));
-  row++;
+  int feederTotalItems = (cfg.feederMode == FEED_CUSTOM) ? 5 : 3;
+  int scrollOffset = (feederIndex >= feederTotalItems - FEEDER_VISIBLE)
+    ? (feederTotalItems - FEEDER_VISIBLE)
+    : (feederIndex >= 1 ? feederIndex - 1 : 0);
+  if (scrollOffset < 0) scrollOffset = 0;
 
-  display.setCursor(0, BODY_Y + row * 12);
-  display.print(feederIndex == row ? "> " : "  ");
-  display.print("Speed: ");
-  display.println(cfg.feederSpeed);
-  row++;
+  for (int i = 0; i < FEEDER_VISIBLE && (scrollOffset + i) < feederTotalItems; i++) {
+    int idx = scrollOffset + i;
+    int y = BODY_Y + i * FEEDER_LINE_H;
+    display.setCursor(0, y);
+    display.print(idx == feederIndex ? "> " : "  ");
 
-  if (cfg.feederMode == FEED_CUSTOM) {
-    display.setCursor(0, BODY_Y + row * 12);
-    display.print(feederIndex == row ? "> " : "  ");
-    display.print("On(ms): ");
-    display.println((long)cfg.feederCustomOnMs);
-    row++;
-
-    display.setCursor(0, BODY_Y + row * 12);
-    display.print(feederIndex == row ? "> " : "  ");
-    display.print("Off(ms): ");
-    display.println((long)cfg.feederCustomOffMs);
-    row++;
+    if (idx == 0) {
+      display.print("Mode: ");
+      display.println(feederModeLabel(cfg.feederMode));
+    } else if (idx == 1) {
+      display.print("Speed: ");
+      display.println(cfg.feederSpeed);
+    } else if (cfg.feederMode == FEED_CUSTOM && idx == 2) {
+      display.print("On(ms): ");
+      display.println((long)cfg.feederCustomOnMs);
+    } else if (cfg.feederMode == FEED_CUSTOM && idx == 3) {
+      display.print("Off(ms): ");
+      display.println((long)cfg.feederCustomOffMs);
+    } else {
+      display.println("Back");
+    }
   }
 
-  display.setCursor(0, BODY_Y + row * 12);
-  display.print(feederIndex == row ? "> " : "  ");
-  display.println("Back");
+  // Mini gráfico do modo feeder na primeira linha, à direita (32x8 px = 8 s a 250 ms/px)
+  drawFeederModeGraph(SCREEN_WIDTH - 32, BODY_Y, 32, 8, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
 
   display.display();
 }

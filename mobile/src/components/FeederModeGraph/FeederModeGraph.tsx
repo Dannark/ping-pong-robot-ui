@@ -4,7 +4,9 @@ import { theme } from '../../theme';
 import type { FeederMode } from '../../data/RobotConfig';
 
 const GRAPH_HEIGHT = 20;
-const NUM_CYCLES = 3;
+/** 1 segmento = 0.25 s (250 ms), igual ao step mínimo; 32 segmentos = 8 s no gráfico (mais repetições) */
+const MS_PER_SEGMENT = 250;
+const SEGMENTS = 32;
 
 type FeederModeGraphProps = {
   feederMode: FeederMode;
@@ -14,8 +16,9 @@ type FeederModeGraphProps = {
 };
 
 /**
- * Gráfico tipo onda quadrada: __|   |__|   |__
- * CONT = barra cheia; P1/1, P2/1, P2/2, CUSTOM = ciclos on (alto) / off (baixo).
+ * Gráfico tipo onda quadrada. CONT = barra cheia.
+ * P1/1, P2/1, P2/2, CUSTOM: cada segmento = 250 ms; 32 segmentos = 8 s (mais repetições visíveis).
+ * P1/1: 4+4+4+4…; P2/2: 8+8+8+8…; mesma largura, mais “espaço” para ver o padrão.
  */
 export function FeederModeGraph({
   feederMode,
@@ -36,15 +39,10 @@ export function FeederModeGraph({
     return <View style={[styles.container, { width }]} />;
   }
 
-  const onRatio = onMs / cycleMs;
-  const offRatio = offMs / cycleMs;
-  const segmentCount = NUM_CYCLES * 2;
-  const segmentWidth = width / segmentCount;
-
-  const segments: { on: boolean; flex: number }[] = [];
-  for (let i = 0; i < NUM_CYCLES; i++) {
-    segments.push({ on: true, flex: onRatio });
-    segments.push({ on: false, flex: offRatio });
+  const segments: { on: boolean }[] = [];
+  for (let i = 0; i < SEGMENTS; i++) {
+    const t = (i * MS_PER_SEGMENT) % cycleMs;
+    segments.push({ on: t < onMs });
   }
 
   return (
@@ -55,7 +53,7 @@ export function FeederModeGraph({
             key={i}
             style={[
               styles.segment,
-              { flex: seg.flex, minWidth: 2 },
+              { flex: 1, minWidth: 2 },
               seg.on ? styles.barOn : styles.barOff,
             ]}
           />
