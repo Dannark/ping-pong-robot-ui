@@ -130,3 +130,57 @@ void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned
     }
   }
 }
+
+// Rotor (hélices) do feeder: 3 blades, sincronizado com fase on/off, sentido horário.
+#define FEEDER_ROTOR_BLADES 3
+#define FEEDER_ROTOR_DEG_PER_MS (1.0f / 40.0f)  // ~0.025: graus por ms na fase "on" (40 ms/grau como antes)
+
+// Tempo acumulado em fase "on" (ms); em off o valor fica congelado.
+static unsigned long feederRotorAccumulatedOnMs(FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
+  unsigned long now = millis();
+  if (mode == FEED_CONTINUOUS) return now;
+
+  unsigned long onMs = customOnMs;
+  unsigned long offMs = customOffMs;
+  if (mode == FEED_PULSE_1_1) { onMs = 1000UL; offMs = 1000UL; }
+  else if (mode == FEED_PULSE_2_1) { onMs = 2000UL; offMs = 1000UL; }
+  else if (mode == FEED_PULSE_2_2) { onMs = 2000UL; offMs = 2000UL; }
+
+  unsigned long total = onMs + offMs;
+  if (total == 0) total = 1;
+  unsigned long fullCycles = now / total;
+  unsigned long inCycle = now % total;
+  unsigned long accumulated;
+  if (inCycle < onMs)
+    accumulated = fullCycles * onMs + inCycle;
+  else
+    accumulated = fullCycles * onMs + onMs;
+  return accumulated;
+}
+
+void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
+  if (size < 6) return;
+
+  int cx = x0 + size / 2;
+  int cy = y0 + size / 2;
+  int radius = size / 2 - 2;
+  if (radius < 2) radius = 2;
+
+  unsigned long accumulatedOn = feederRotorAccumulatedOnMs(mode, customOnMs, customOffMs);
+  float angleDeg = (float)(accumulatedOn % 360000UL) * FEEDER_ROTOR_DEG_PER_MS;
+  int baseAngle = (int)angleDeg % 360;
+  if (baseAngle < 0) baseAngle += 360;
+  // Sentido horário: ângulo decrescente na tela (y para cima = 0°)
+  baseAngle = (360 - baseAngle) % 360;
+  if (baseAngle < 0) baseAngle += 360;
+
+  for (int i = 0; i < FEEDER_ROTOR_BLADES; i++) {
+    float bladeDeg = (float)(baseAngle + i * 120);
+    float rad = bladeDeg * 0.01745329252f;
+    int ex = cx + (int)(radius * cos(rad) + 0.5f);
+    int ey = cy - (int)(radius * sin(rad) + 0.5f);
+    display.drawLine(cx, cy, ex, ey, SSD1306_WHITE);
+  }
+
+  display.drawCircle(cx, cy, 2, SSD1306_WHITE);
+}
