@@ -14,7 +14,7 @@ import { AimPreview } from '../../components/AimPreview/AimPreview';
 import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
 import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import type { WizardItem } from './Wizard.viewModel';
-import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
+import { getFeederOnOffMs, type RobotConfig, type SpinDirection } from '../../data/RobotConfig';
 
 type WizardViewProps = {
   items: WizardItem[];
@@ -71,10 +71,16 @@ export function WizardView({ items, config, displaySpin, onItemPress, onStartPre
                 size={PREVIEW_SIZE}
                 feederMode={config.feederMode}
                 feederSpeed={config.feederSpeed}
-                feederP1OnMs={config.feederP1OnMs}
-                feederP1OffMs={config.feederP1OffMs}
-                feederP2OnMs={config.feederP2OnMs}
-                feederP2OffMs={config.feederP2OffMs}
+                feederOnMs={getFeederOnOffMs(
+                  config.feederMode,
+                  config.feederCustomOnMs,
+                  config.feederCustomOffMs
+                ).onMs}
+                feederOffMs={getFeederOnOffMs(
+                  config.feederMode,
+                  config.feederCustomOnMs,
+                  config.feederCustomOffMs
+                ).offMs}
                 animate={true}
               />
             </View>

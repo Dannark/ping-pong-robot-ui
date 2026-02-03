@@ -114,7 +114,7 @@ void updateRunningLogic() {
   updateLauncherMotors(cfg.launcherPower, cfg.spinMode, cfg.spinIntensity);
 
   // Atualizar motor feeder (M4)
-  updateFeederMotor(cfg.feederSpeed, cfg.feederMode);
+  updateFeederMotor(cfg.feederSpeed, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
 }
 
 void updateAxisPreviewTargets() {

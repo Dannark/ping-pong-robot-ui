@@ -321,12 +321,15 @@ void loop() {
     }
 
     case SCREEN_FEEDER: {
-      if (nav == NAV_UP) feederIndex = clampInt(feederIndex - 1, 0, 2);
-      if (nav == NAV_DOWN) feederIndex = clampInt(feederIndex + 1, 0, 2);
+      int feederMaxIndex = (cfg.feederMode == FEED_CUSTOM) ? 4 : 2;
+      if (nav == NAV_UP) feederIndex = clampInt(feederIndex - 1, 0, feederMaxIndex);
+      if (nav == NAV_DOWN) feederIndex = clampInt(feederIndex + 1, 0, feederMaxIndex);
 
       if (feederIndex == 0) {
         if (nav == NAV_LEFT)  cfg.feederMode = (FeederMode)((cfg.feederMode + FEED_MODE_COUNT - 1) % FEED_MODE_COUNT);
         if (nav == NAV_RIGHT) cfg.feederMode = (FeederMode)((cfg.feederMode + 1) % FEED_MODE_COUNT);
+        feederMaxIndex = (cfg.feederMode == FEED_CUSTOM) ? 4 : 2;
+        if (feederIndex > feederMaxIndex) feederIndex = feederMaxIndex;
       }
 
       if (feederIndex == 1) {
@@ -334,8 +337,19 @@ void loop() {
         if (nav == NAV_RIGHT) cfg.feederSpeed = clampInt(cfg.feederSpeed + 5, 0, 255);
       }
 
+      if (cfg.feederMode == FEED_CUSTOM) {
+        if (feederIndex == 2) {
+          if (nav == NAV_LEFT)  cfg.feederCustomOnMs = (unsigned long)clampInt((int)(cfg.feederCustomOnMs - 250), 500, 5000);
+          if (nav == NAV_RIGHT) cfg.feederCustomOnMs = (unsigned long)clampInt((int)(cfg.feederCustomOnMs + 250), 500, 5000);
+        }
+        if (feederIndex == 3) {
+          if (nav == NAV_LEFT)  cfg.feederCustomOffMs = (unsigned long)clampInt((int)(cfg.feederCustomOffMs - 250), 500, 5000);
+          if (nav == NAV_RIGHT) cfg.feederCustomOffMs = (unsigned long)clampInt((int)(cfg.feederCustomOffMs + 250), 500, 5000);
+        }
+      }
+
       if (swPressedEvent) {
-        if (feederIndex == 2) goBackToWizard();
+        if (feederIndex == feederMaxIndex) goBackToWizard();
       }
 
       renderFeeder();

@@ -136,27 +136,38 @@ void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int
   speed3 = (speed3 < -255) ? -255 : (speed3 > 255) ? 255 : speed3;
 }
 
-void updateFeederMotor(int speed, FeederMode mode) {
+void updateFeederMotor(int speed, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
   unsigned long now = millis();
   bool shouldRun = false;
 
   switch (mode) {
     case FEED_CONTINUOUS:
-      // Modo contínuo: sempre girando
       shouldRun = true;
       break;
 
     case FEED_PULSE_1_1: {
-      // Pulso 1 segundo ligado, 1 segundo desligado
-      unsigned long cycleTime = now % 2000UL; // Ciclo de 2 segundos
+      unsigned long cycleTime = now % 2000UL;
       shouldRun = (cycleTime < 1000UL);
       break;
     }
 
-    case FEED_PULSE_2_2: {
-      // Pulso 2 segundos ligado, 2 segundos desligado
-      unsigned long cycleTime = now % 4000UL; // Ciclo de 4 segundos
+    case FEED_PULSE_2_1: {
+      unsigned long cycleTime = now % 3000UL;
       shouldRun = (cycleTime < 2000UL);
+      break;
+    }
+
+    case FEED_PULSE_2_2: {
+      unsigned long cycleTime = now % 4000UL;
+      shouldRun = (cycleTime < 2000UL);
+      break;
+    }
+
+    case FEED_CUSTOM: {
+      unsigned long cycleMs = customOnMs + customOffMs;
+      if (cycleMs == 0) break;
+      unsigned long cycleTime = now % cycleMs;
+      shouldRun = (cycleTime < customOnMs);
       break;
     }
 

@@ -73,8 +73,9 @@
     "speed": "Vitesse",
     "ballsPerMin": "~{{count}} balles/min @ {{voltage}} V",
     "ballsPerMinZero": "0 balles/min (vit. &lt; 60) — {{voltage}} V",
-    "p1Label": "P1/1 — Marche / Arrêt (ms)",
-    "p2Label": "P2/2 — Marche / Arrêt (ms)",
+    "p1Label": "P1/1 — Marche / Arrêt (s)",
+    "p2Label": "P2/2 — Marche / Arrêt (s)",
+    "customLabel": "Custom — Marche / Arrêt (s)",
     "on": "Marche",
     "off": "Arrêt",
     "reset": "Réinitialiser"

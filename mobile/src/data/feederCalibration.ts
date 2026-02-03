@@ -35,10 +35,24 @@ function secondsPerRotation(speed: number): number {
 
 /**
  * Estima quantas bolas por minuto serão disparadas para o speed dado (0–255).
- * Assume 7,5 V. Abaixo de 60 o motor não gira → 0.
+ * Assume motor a girar continuamente (modo CONT). Abaixo de 60 o motor não gira → 0.
  */
 export function estimateBallsPerMinute(speed: number): number {
   if (speed < FEEDER_MIN_SPEED_TO_ROTATE) return 0;
   const t = secondsPerRotation(speed);
   return Math.round((60 / t) * HOLES_PER_ROTATION);
+}
+
+/**
+ * Bolas/min efetivas quando o motor não está sempre ligado (P1/1, P2/1, P2/2, CUSTOM).
+ * Aplica o duty cycle: efectivo = contínuo × (onMs / (onMs + offMs)).
+ */
+export function effectiveBallsPerMinute(
+  continuousBallsPerMin: number,
+  onMs: number,
+  offMs: number
+): number {
+  const cycleMs = onMs + offMs;
+  if (cycleMs <= 0) return 0;
+  return Math.round(continuousBallsPerMin * (onMs / cycleMs));
 }

@@ -11,7 +11,7 @@ export type SpinDirection =
   | 'W'
   | 'NW';
 
-export type FeederMode = 'CONT' | 'P1/1' | 'P2/2';
+export type FeederMode = 'CONT' | 'P1/1' | 'P2/1' | 'P2/2' | 'CUSTOM';
 
 export type RobotConfig = {
   panMode: AxisMode;
@@ -39,10 +39,8 @@ export type RobotConfig = {
   spinRandomIntervalSec: number;
   feederMode: FeederMode;
   feederSpeed: number;
-  feederP1OnMs: number;
-  feederP1OffMs: number;
-  feederP2OnMs: number;
-  feederP2OffMs: number;
+  feederCustomOnMs: number;
+  feederCustomOffMs: number;
   timerIndex: number;
   timerSoundAlert: boolean;
 };
@@ -73,10 +71,8 @@ export const DEFAULT_CONFIG: RobotConfig = {
   spinRandomIntervalSec: 5,
   feederMode: 'CONT',
   feederSpeed: 160,
-  feederP1OnMs: 1000,
-  feederP1OffMs: 1000,
-  feederP2OnMs: 2000,
-  feederP2OffMs: 2000,
+  feederCustomOnMs: 1000,
+  feederCustomOffMs: 1000,
   timerIndex: 0,
   timerSoundAlert: false,
 };
@@ -93,7 +89,22 @@ export const SPIN_DIRECTIONS: SpinDirection[] = [
   'W',
   'NW',
 ];
-export const FEEDER_MODES: FeederMode[] = ['CONT', 'P1/1', 'P2/2'];
+export const FEEDER_MODES: FeederMode[] = ['CONT', 'P1/1', 'P2/1', 'P2/2', 'CUSTOM'];
+
+/** Tempos on/off (ms) por modo; CUSTOM usa customOnMs/customOffMs. */
+export function getFeederOnOffMs(
+  mode: FeederMode,
+  customOnMs: number,
+  customOffMs: number
+): { onMs: number; offMs: number } {
+  switch (mode) {
+    case 'P1/1': return { onMs: 1000, offMs: 1000 };
+    case 'P2/1': return { onMs: 2000, offMs: 1000 };
+    case 'P2/2': return { onMs: 2000, offMs: 2000 };
+    case 'CUSTOM': return { onMs: customOnMs, offMs: customOffMs };
+    default: return { onMs: 0, offMs: 0 };
+  }
+}
 export const TIMER_OPTIONS = ['OFF', '15s', '30s', '1m', '2m', '5m'] as const;
 
 export function spinDirectionToAngleDeg(dir: SpinDirection): number {

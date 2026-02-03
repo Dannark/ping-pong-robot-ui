@@ -14,7 +14,9 @@ const char* feederModeLabel(FeederMode m) {
   switch (m) {
     case FEED_CONTINUOUS: return "CONT";
     case FEED_PULSE_1_1:  return "P1/1";
+    case FEED_PULSE_2_1:  return "P2/1";
     case FEED_PULSE_2_2:  return "P2/2";
+    case FEED_CUSTOM:     return "CUSTOM";
     default: return "?";
   }
 }

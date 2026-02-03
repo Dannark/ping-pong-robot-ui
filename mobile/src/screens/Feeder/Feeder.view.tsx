@@ -12,45 +12,56 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
-import { estimateBallsPerMinute, DEFAULT_FEEDER_VOLTAGE } from '../../data/feederCalibration';
-import type { FeederMode } from '../../data/RobotConfig';
+import {
+  estimateBallsPerMinute,
+  effectiveBallsPerMinute,
+  DEFAULT_FEEDER_VOLTAGE,
+} from '../../data/feederCalibration';
+import { getFeederOnOffMs, type FeederMode } from '../../data/RobotConfig';
+import { FeederModeGraph } from '../../components/FeederModeGraph/FeederModeGraph';
 
 const VISUALIZER_SIZE = 160;
+const CUSTOM_STEP_MS = 250;
+const CUSTOM_MIN_MS = 500;
+const CUSTOM_MAX_MS = 5000;
 
 type FeederViewProps = {
   feederMode: FeederMode;
   feederSpeed: number;
-  feederP1OnMs: number;
-  feederP1OffMs: number;
-  feederP2OnMs: number;
-  feederP2OffMs: number;
+  feederCustomOnMs: number;
+  feederCustomOffMs: number;
   feederModes: FeederMode[];
   onModeSelect: (mode: FeederMode) => void;
   onSpeedChange: (value: number) => void;
-  onP1OnMsChange: (value: number) => void;
-  onP1OffMsChange: (value: number) => void;
-  onP2OnMsChange: (value: number) => void;
-  onP2OffMsChange: (value: number) => void;
+  onCustomOnMsChange: (value: number) => void;
+  onCustomOffMsChange: (value: number) => void;
   onReset: () => void;
 };
 
 export function FeederView({
   feederMode,
   feederSpeed,
-  feederP1OnMs,
-  feederP1OffMs,
-  feederP2OnMs,
-  feederP2OffMs,
+  feederCustomOnMs,
+  feederCustomOffMs,
   feederModes,
   onModeSelect,
   onSpeedChange,
-  onP1OnMsChange,
-  onP1OffMsChange,
-  onP2OnMsChange,
-  onP2OffMsChange,
+  onCustomOnMsChange,
+  onCustomOffMsChange,
   onReset,
 }: FeederViewProps) {
   const { t } = useTranslation();
+  const { onMs: visOnMs, offMs: visOffMs } = getFeederOnOffMs(
+    feederMode,
+    feederCustomOnMs,
+    feederCustomOffMs
+  );
+  const continuousBalls = estimateBallsPerMinute(feederSpeed);
+  const displayBallsPerMin =
+    feederMode === 'CONT'
+      ? continuousBalls
+      : effectiveBallsPerMinute(continuousBalls, visOnMs, visOffMs);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.visualizerSection}>
@@ -59,12 +70,18 @@ export function FeederView({
           size={VISUALIZER_SIZE}
           feederMode={feederMode}
           feederSpeed={feederSpeed}
-          feederP1OnMs={feederP1OnMs}
-          feederP1OffMs={feederP1OffMs}
-          feederP2OnMs={feederP2OnMs}
-          feederP2OffMs={feederP2OffMs}
+          feederOnMs={visOnMs}
+          feederOffMs={visOffMs}
           animate={true}
         />
+        <View style={styles.modeGraphWrap}>
+          <FeederModeGraph
+            feederMode={feederMode}
+            onMs={visOnMs}
+            offMs={visOffMs}
+            width={VISUALIZER_SIZE}
+          />
+        </View>
       </View>
       <View style={styles.section}>
         <Text style={styles.label}>{t('feeder.mode')}</Text>
@@ -111,76 +128,41 @@ export function FeederView({
             {feederSpeed < 60
               ? t('feeder.ballsPerMinZero', { voltage: DEFAULT_FEEDER_VOLTAGE })
               : t('feeder.ballsPerMin', {
-                  count: estimateBallsPerMinute(feederSpeed),
+                  count: displayBallsPerMin,
                   voltage: DEFAULT_FEEDER_VOLTAGE,
                 })}
           </Text>
         </View>
       </View>
-      {feederMode === 'P1/1' && (
+      {feederMode === 'CUSTOM' && (
         <View style={styles.section}>
-          <Text style={styles.label}>{t('feeder.p1Label')}</Text>
+          <Text style={styles.label}>{t('feeder.customLabel')}</Text>
           <View style={styles.sliderRow}>
             <Text style={styles.label}>{t('feeder.on')}</Text>
-            <Text style={styles.value}>{feederP1OnMs}</Text>
+            <Text style={styles.value}>{(feederCustomOnMs / 1000).toFixed(2)} s</Text>
           </View>
           <Slider
             style={styles.slider}
-            minimumValue={200}
-            maximumValue={3000}
-            step={100}
-            value={feederP1OnMs}
-            onValueChange={onP1OnMsChange}
+            minimumValue={CUSTOM_MIN_MS}
+            maximumValue={CUSTOM_MAX_MS}
+            step={CUSTOM_STEP_MS}
+            value={feederCustomOnMs}
+            onValueChange={onCustomOnMsChange}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary}
           />
           <View style={styles.sliderRow}>
             <Text style={styles.label}>{t('feeder.off')}</Text>
-            <Text style={styles.value}>{feederP1OffMs}</Text>
+            <Text style={styles.value}>{(feederCustomOffMs / 1000).toFixed(2)} s</Text>
           </View>
           <Slider
             style={styles.slider}
-            minimumValue={200}
-            maximumValue={3000}
-            step={100}
-            value={feederP1OffMs}
-            onValueChange={onP1OffMsChange}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor={theme.colors.border}
-            thumbTintColor={theme.colors.primary}
-          />
-        </View>
-      )}
-      {feederMode === 'P2/2' && (
-        <View style={styles.section}>
-          <Text style={styles.label}>{t('feeder.p2Label')}</Text>
-          <View style={styles.sliderRow}>
-            <Text style={styles.label}>{t('feeder.on')}</Text>
-            <Text style={styles.value}>{feederP2OnMs}</Text>
-          </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={200}
-            maximumValue={5000}
-            step={100}
-            value={feederP2OnMs}
-            onValueChange={onP2OnMsChange}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor={theme.colors.border}
-            thumbTintColor={theme.colors.primary}
-          />
-          <View style={styles.sliderRow}>
-            <Text style={styles.label}>{t('feeder.off')}</Text>
-            <Text style={styles.value}>{feederP2OffMs}</Text>
-          </View>
-          <Slider
-            style={styles.slider}
-            minimumValue={200}
-            maximumValue={5000}
-            step={100}
-            value={feederP2OffMs}
-            onValueChange={onP2OffMsChange}
+            minimumValue={CUSTOM_MIN_MS}
+            maximumValue={CUSTOM_MAX_MS}
+            step={CUSTOM_STEP_MS}
+            value={feederCustomOffMs}
+            onValueChange={onCustomOffMsChange}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary}
@@ -219,6 +201,9 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing.sm,
     textTransform: 'uppercase',
+  },
+  modeGraphWrap: {
+    marginTop: theme.spacing.md,
   },
   section: {
     marginBottom: theme.spacing.lg,

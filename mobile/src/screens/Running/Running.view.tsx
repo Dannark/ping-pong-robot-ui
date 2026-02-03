@@ -6,7 +6,7 @@ import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
 import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
-import type { RobotConfig, SpinDirection } from '../../data/RobotConfig';
+import { getFeederOnOffMs, type RobotConfig, type SpinDirection } from '../../data/RobotConfig';
 
 type RunningViewProps = {
   elapsedSeconds: number;
@@ -148,10 +148,16 @@ export function RunningView({
               size={PREVIEW_SIZE}
               feederMode={runConfig.feederMode}
               feederSpeed={runConfig.feederSpeed}
-              feederP1OnMs={runConfig.feederP1OnMs}
-              feederP1OffMs={runConfig.feederP1OffMs}
-              feederP2OnMs={runConfig.feederP2OnMs}
-              feederP2OffMs={runConfig.feederP2OffMs}
+              feederOnMs={getFeederOnOffMs(
+                runConfig.feederMode,
+                runConfig.feederCustomOnMs,
+                runConfig.feederCustomOffMs
+              ).onMs}
+              feederOffMs={getFeederOnOffMs(
+                runConfig.feederMode,
+                runConfig.feederCustomOnMs,
+                runConfig.feederCustomOffMs
+              ).offMs}
               animate={true}
             />
           </View>

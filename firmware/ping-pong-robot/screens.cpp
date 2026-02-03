@@ -190,18 +190,35 @@ void renderFeeder() {
   display.clearDisplay();
   drawHeader("FEEDER");
 
-  display.setCursor(0, BODY_Y);
-  display.print(feederIndex == 0 ? "> " : "  ");
+  int row = 0;
+  display.setCursor(0, BODY_Y + row * 12);
+  display.print(feederIndex == row ? "> " : "  ");
   display.print("Mode: ");
   display.println(feederModeLabel(cfg.feederMode));
+  row++;
 
-  display.setCursor(0, BODY_Y + 12);
-  display.print(feederIndex == 1 ? "> " : "  ");
+  display.setCursor(0, BODY_Y + row * 12);
+  display.print(feederIndex == row ? "> " : "  ");
   display.print("Speed: ");
   display.println(cfg.feederSpeed);
+  row++;
 
-  display.setCursor(0, BODY_Y + 24);
-  display.print(feederIndex == 2 ? "> " : "  ");
+  if (cfg.feederMode == FEED_CUSTOM) {
+    display.setCursor(0, BODY_Y + row * 12);
+    display.print(feederIndex == row ? "> " : "  ");
+    display.print("On(ms): ");
+    display.println((long)cfg.feederCustomOnMs);
+    row++;
+
+    display.setCursor(0, BODY_Y + row * 12);
+    display.print(feederIndex == row ? "> " : "  ");
+    display.print("Off(ms): ");
+    display.println((long)cfg.feederCustomOffMs);
+    row++;
+  }
+
+  display.setCursor(0, BODY_Y + row * 12);
+  display.print(feederIndex == row ? "> " : "  ");
   display.println("Back");
 
   display.display();

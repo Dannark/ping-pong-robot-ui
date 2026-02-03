@@ -11,10 +11,8 @@ type FeederVisualizationProps = {
   size: number;
   feederMode: FeederMode;
   feederSpeed: number;
-  feederP1OnMs?: number;
-  feederP1OffMs?: number;
-  feederP2OnMs?: number;
-  feederP2OffMs?: number;
+  feederOnMs?: number;
+  feederOffMs?: number;
   animate?: boolean;
 };
 
@@ -22,10 +20,8 @@ export function FeederVisualization({
   size,
   feederMode,
   feederSpeed,
-  feederP1OnMs = 1000,
-  feederP1OffMs = 1000,
-  feederP2OnMs = 2000,
-  feederP2OffMs = 2000,
+  feederOnMs = 1000,
+  feederOffMs = 1000,
   animate = true,
 }: FeederVisualizationProps) {
   const [rotation, setRotation] = useState(0);
@@ -43,49 +39,22 @@ export function FeederVisualization({
         return;
       }
 
-      if (feederMode === 'P1/1') {
-        const elapsed = now - phaseStartRef.current;
-        if (phaseRef.current === 'on') {
-          setRotation((r) => (r + delta) % 360);
-          if (elapsed >= feederP1OnMs) {
-            phaseRef.current = 'off';
-            phaseStartRef.current = now;
-          }
-        } else {
-          if (elapsed >= feederP1OffMs) {
-            phaseRef.current = 'on';
-            phaseStartRef.current = now;
-          }
+      const elapsed = now - phaseStartRef.current;
+      if (phaseRef.current === 'on') {
+        setRotation((r) => (r + delta) % 360);
+        if (elapsed >= feederOnMs) {
+          phaseRef.current = 'off';
+          phaseStartRef.current = now;
         }
-        return;
-      }
-
-      if (feederMode === 'P2/2') {
-        const elapsed = now - phaseStartRef.current;
-        if (phaseRef.current === 'on') {
-          setRotation((r) => (r + delta) % 360);
-          if (elapsed >= feederP2OnMs) {
-            phaseRef.current = 'off';
-            phaseStartRef.current = now;
-          }
-        } else {
-          if (elapsed >= feederP2OffMs) {
-            phaseRef.current = 'on';
-            phaseStartRef.current = now;
-          }
+      } else {
+        if (elapsed >= feederOffMs) {
+          phaseRef.current = 'on';
+          phaseStartRef.current = now;
         }
       }
     }, TICK_MS);
     return () => clearInterval(id);
-  }, [
-    animate,
-    feederMode,
-    feederSpeed,
-    feederP1OnMs,
-    feederP1OffMs,
-    feederP2OnMs,
-    feederP2OffMs,
-  ]);
+  }, [animate, feederMode, feederSpeed, feederOnMs, feederOffMs]);
 
   useEffect(() => {
     phaseRef.current = 'on';
