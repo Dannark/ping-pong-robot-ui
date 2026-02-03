@@ -132,8 +132,25 @@ void drawFeederModeGraph(int x0, int y0, int w, int h, FeederMode mode, unsigned
 }
 
 // Rotor (hélices) do feeder: 3 blades, sincronizado com fase on/off, sentido horário.
+// Velocidade angular conforme calibração: 255 → 2.7 s/volta, 80 → 4 s/volta (7.5 V).
 #define FEEDER_ROTOR_BLADES 3
-#define FEEDER_ROTOR_DEG_PER_MS (1.0f / 40.0f)  // ~0.025: graus por ms na fase "on" (40 ms/grau como antes)
+#define FEEDER_T_SEC_AT_80  4.0f
+#define FEEDER_T_SEC_AT_255 2.7f
+
+// Segundos por volta para um dado speed (0–255), mesma lógica do app.
+static float feederSecondsPerRotation(int speed) {
+  if (speed <= 0) return 6.0f;
+  if (speed <= 80) {
+    float t = FEEDER_T_SEC_AT_80 + (80 - speed) / 80.0f * (6.0f - FEEDER_T_SEC_AT_80);
+    if (t > 6.0f) t = 6.0f;
+    if (t < FEEDER_T_SEC_AT_80) t = FEEDER_T_SEC_AT_80;
+    return t;
+  }
+  float t = FEEDER_T_SEC_AT_80 - (FEEDER_T_SEC_AT_80 - FEEDER_T_SEC_AT_255) / (255.0f - 80.0f) * (float)(speed - 80);
+  if (t < FEEDER_T_SEC_AT_255) t = FEEDER_T_SEC_AT_255;
+  if (t > FEEDER_T_SEC_AT_80) t = FEEDER_T_SEC_AT_80;
+  return t;
+}
 
 // Tempo acumulado em fase "on" (ms); em off o valor fica congelado.
 static unsigned long feederRotorAccumulatedOnMs(FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
@@ -158,7 +175,7 @@ static unsigned long feederRotorAccumulatedOnMs(FeederMode mode, unsigned long c
   return accumulated;
 }
 
-void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
+void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs, int feederSpeed) {
   if (size < 6) return;
 
   int cx = x0 + size / 2;
@@ -166,8 +183,11 @@ void drawFeederRotor(int x0, int y0, int size, FeederMode mode, unsigned long cu
   int radius = size / 2 - 2;
   if (radius < 2) radius = 2;
 
+  float tSec = feederSecondsPerRotation(feederSpeed);
+  float degPerMs = 360.0f / (tSec * 1000.0f);
+
   unsigned long accumulatedOn = feederRotorAccumulatedOnMs(mode, customOnMs, customOffMs);
-  float angleDeg = (float)(accumulatedOn % 360000UL) * FEEDER_ROTOR_DEG_PER_MS;
+  float angleDeg = (float)(accumulatedOn % 360000UL) * degPerMs;
   int baseAngle = (int)angleDeg % 360;
   if (baseAngle < 0) baseAngle += 360;
   // Sentido horário: ângulo decrescente na tela (y para cima = 0°)

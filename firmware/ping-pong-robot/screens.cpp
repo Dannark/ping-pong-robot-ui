@@ -225,8 +225,8 @@ void renderFeeder() {
   // Mini gráfico do modo feeder na primeira linha, à direita (36x8 px com borda; barras 32x4 no interior)
   drawFeederModeGraph(SCREEN_WIDTH - 36, BODY_Y, 36, 8, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
 
-  // Rotor (3 hélices) logo abaixo do gráfico de frequência; sincronizado com on/off, sentido horário
-  drawFeederRotor(SCREEN_WIDTH - 36, BODY_Y + 8 + 1, 36, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
+  // Rotor (3 hélices) logo abaixo do gráfico de frequência; sincronizado com on/off, sentido horário, velocidade por feederSpeed
+  drawFeederRotor(SCREEN_WIDTH - 36, BODY_Y + 8 + 1, 36, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs, cfg.feederSpeed);
 
   display.display();
 }
