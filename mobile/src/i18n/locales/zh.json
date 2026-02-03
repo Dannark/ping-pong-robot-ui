@@ -30,7 +30,26 @@
     "aim": "瞄准",
     "feeder": "供球",
     "spin": "旋转",
-    "start": "开始"
+    "start": "开始",
+    "presets": {
+      "menuTitle": "预设",
+      "saveAs": "另存为预设",
+      "manage": "管理预设",
+      "saveModalTitle": "预设名称",
+      "saveModalPlaceholder": "例如：上旋练习",
+      "save": "保存",
+      "cancel": "取消",
+      "listTitle": "已保存的预设",
+      "empty": "暂无预设。请从菜单保存当前配置。",
+      "load": "加载",
+      "overwrite": "覆盖",
+      "delete": "删除",
+      "loaded": "已加载预设",
+      "saved": "已保存预设",
+      "deleted": "已删除预设",
+      "confirmOverwrite": "用当前配置覆盖「{{name}}」？",
+      "confirmDelete": "删除「{{name}}」？"
+    }
   },
   "running": {
     "emptyTitle": "无进行中的会话",

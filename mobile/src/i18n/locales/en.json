@@ -30,7 +30,26 @@
     "aim": "Aim",
     "feeder": "Feeder",
     "spin": "Spin",
-    "start": "Start"
+    "start": "Start",
+    "presets": {
+      "menuTitle": "Presets",
+      "saveAs": "Save as preset",
+      "manage": "Manage presets",
+      "saveModalTitle": "Preset name",
+      "saveModalPlaceholder": "e.g. Topspin training",
+      "save": "Save",
+      "cancel": "Cancel",
+      "listTitle": "Saved presets",
+      "empty": "No presets. Save current config from the menu.",
+      "load": "Load",
+      "overwrite": "Overwrite",
+      "delete": "Delete",
+      "loaded": "Preset loaded",
+      "saved": "Preset saved",
+      "deleted": "Preset deleted",
+      "confirmOverwrite": "Overwrite «{{name}}» with current config?",
+      "confirmDelete": "Delete «{{name}}»?"
+    }
   },
   "running": {
     "emptyTitle": "No active session",

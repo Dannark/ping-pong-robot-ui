@@ -30,7 +30,26 @@
     "aim": "Visée",
     "feeder": "Alimentation",
     "spin": "Effet",
-    "start": "Démarrer"
+    "start": "Démarrer",
+    "presets": {
+      "menuTitle": "Préréglages",
+      "saveAs": "Enregistrer comme préréglage",
+      "manage": "Gérer les préréglages",
+      "saveModalTitle": "Nom du préréglage",
+      "saveModalPlaceholder": "ex. Entraînement topspin",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "listTitle": "Préréglages enregistrés",
+      "empty": "Aucun préréglage. Enregistrez la config actuelle depuis le menu.",
+      "load": "Charger",
+      "overwrite": "Remplacer",
+      "delete": "Supprimer",
+      "loaded": "Préréglage chargé",
+      "saved": "Préréglage enregistré",
+      "deleted": "Préréglage supprimé",
+      "confirmOverwrite": "Remplacer «{{name}}» par la config actuelle ?",
+      "confirmDelete": "Supprimer «{{name}}» ?"
+    }
   },
   "running": {
     "emptyTitle": "Aucune session active",

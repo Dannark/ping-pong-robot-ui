@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import { SPIN_DIRECTIONS } from '../../data/RobotConfig';
 import type { SpinDirection } from '../../data/RobotConfig';
 import { RobotConnectionRepository } from '../../data/RobotConnectionRepository';
+import { RobotConfigRepository } from '../../data/RobotConfigRepository';
+import { PresetsRepository } from '../../data/PresetsRepository';
 import { getWizardItems, subscribeConfig, getConfig } from './Wizard.viewModel';
 import { WizardView } from './Wizard.view';
+import { WizardMenuModal } from './WizardMenuModal';
+import { SavePresetModal } from './SavePresetModal';
+import { PresetsListModal } from './PresetsListModal';
+import { theme } from '../../theme';
 
 const RANDOM_SPIN_POOL: SpinDirection[] = SPIN_DIRECTIONS.filter((d) => d !== 'NONE');
 
@@ -23,6 +31,27 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
   const [config, setConfig] = useState(() => getConfig());
   const [items, setItems] = useState(() => getWizardItems(getConfig(), t));
   const [currentRandomSpin, setCurrentRandomSpin] = useState<SpinDirection>(() => pickRandomSpin());
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [listModalVisible, setListModalVisible] = useState(false);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => setMenuVisible(true)}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          style={{ padding: theme.spacing.xs }}
+        >
+          <MaterialCommunityIcons
+            name="dots-vertical"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     const unsub = subscribeConfig((c) => {
@@ -52,13 +81,45 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
     navigation.navigate('Running');
   };
 
+  const handleSavePreset = useCallback(async (name: string) => {
+    await PresetsRepository.save(config, name);
+    setSaveModalVisible(false);
+  }, [config]);
+
+  const handleLoadPreset = useCallback((preset: { config: typeof config }) => {
+    RobotConfigRepository.setConfig(preset.config);
+    setListModalVisible(false);
+  }, []);
+
   return (
-    <WizardView
-      items={items}
-      config={config}
-      displaySpin={displaySpin}
-      onItemPress={handleItemPress}
-      onStartPress={handleStartPress}
-    />
+    <>
+      <WizardView
+        items={items}
+        config={config}
+        displaySpin={displaySpin}
+        onItemPress={handleItemPress}
+        onStartPress={handleStartPress}
+      />
+
+      <WizardMenuModal
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        onSaveAsPreset={() => setSaveModalVisible(true)}
+        onManagePresets={() => setListModalVisible(true)}
+      />
+
+      <SavePresetModal
+        visible={saveModalVisible}
+        onSave={handleSavePreset}
+        onCancel={() => setSaveModalVisible(false)}
+      />
+
+      <PresetsListModal
+        visible={listModalVisible}
+        currentConfigSnapshot={config}
+        onLoad={handleLoadPreset}
+        onClose={() => setListModalVisible(false)}
+      />
+    </>
   );
 }

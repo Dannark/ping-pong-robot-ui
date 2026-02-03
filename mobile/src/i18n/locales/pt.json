@@ -30,7 +30,26 @@
     "aim": "Aim",
     "feeder": "Feeder",
     "spin": "Spin",
-    "start": "Iniciar"
+    "start": "Iniciar",
+    "presets": {
+      "menuTitle": "Predefinições",
+      "saveAs": "Salvar como predefinição",
+      "manage": "Gerir predefinições",
+      "saveModalTitle": "Nome da predefinição",
+      "saveModalPlaceholder": "Ex: Treino topspin",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "listTitle": "Predefinições guardadas",
+      "empty": "Nenhuma predefinição. Salve a configuração atual no menu.",
+      "load": "Carregar",
+      "overwrite": "Sobrescrever",
+      "delete": "Eliminar",
+      "loaded": "Predefinição carregada",
+      "saved": "Predefinição guardada",
+      "deleted": "Predefinição eliminada",
+      "confirmOverwrite": "Sobrescrever «{{name}}» com a configuração atual?",
+      "confirmDelete": "Eliminar «{{name}}»?"
+    }
   },
   "running": {
     "emptyTitle": "Nenhuma sessão ativa",

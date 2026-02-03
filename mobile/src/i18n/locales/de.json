@@ -30,7 +30,26 @@
     "aim": "Ziel",
     "feeder": "Zubringer",
     "spin": "Drall",
-    "start": "Starten"
+    "start": "Starten",
+    "presets": {
+      "menuTitle": "Voreinstellungen",
+      "saveAs": "Als Voreinstellung speichern",
+      "manage": "Voreinstellungen verwalten",
+      "saveModalTitle": "Name der Voreinstellung",
+      "saveModalPlaceholder": "z. B. Topspin-Training",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "listTitle": "Gespeicherte Voreinstellungen",
+      "empty": "Keine Voreinstellungen. Aktuelle Konfiguration im Menü speichern.",
+      "load": "Laden",
+      "overwrite": "Überschreiben",
+      "delete": "Löschen",
+      "loaded": "Voreinstellung geladen",
+      "saved": "Voreinstellung gespeichert",
+      "deleted": "Voreinstellung gelöscht",
+      "confirmOverwrite": "«{{name}}» mit aktueller Konfiguration überschreiben?",
+      "confirmDelete": "«{{name}}» löschen?"
+    }
   },
   "running": {
     "emptyTitle": "Keine aktive Sitzung",

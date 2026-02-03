@@ -30,7 +30,26 @@
     "aim": "Apuntar",
     "feeder": "Alimentador",
     "spin": "Efecto",
-    "start": "Iniciar"
+    "start": "Iniciar",
+    "presets": {
+      "menuTitle": "Preajustes",
+      "saveAs": "Guardar como preajuste",
+      "manage": "Gestionar preajustes",
+      "saveModalTitle": "Nombre del preajuste",
+      "saveModalPlaceholder": "ej. Entrenamiento topspin",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "listTitle": "Preajustes guardados",
+      "empty": "Ningún preajuste. Guarda la configuración actual desde el menú.",
+      "load": "Cargar",
+      "overwrite": "Sobrescribir",
+      "delete": "Eliminar",
+      "loaded": "Preajuste cargado",
+      "saved": "Preajuste guardado",
+      "deleted": "Preajuste eliminado",
+      "confirmOverwrite": "¿Sobrescribir «{{name}}» con la configuración actual?",
+      "confirmDelete": "¿Eliminar «{{name}}»?"
+    }
   },
   "running": {
     "emptyTitle": "Ninguna sesión activa",
