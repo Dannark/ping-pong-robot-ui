@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "乒乓机器人",
+    "home": "SpinBot",
     "wizard": "配置并开始",
     "info": "信息",
     "settings": "设置",
@@ -16,7 +16,7 @@
     "trainingComplete": "训练完成"
   },
   "home": {
-    "heroTitle": "乒乓机器人",
+    "heroTitle": "SpinBot",
     "heroSubtitle": "用应用控制",
     "cardStart": "开始",
     "cardStartSubtitle": "配置并发射",
@@ -166,7 +166,7 @@
     "langZh": "中文"
   },
   "info": {
-    "title": "乒乓机器人",
+    "title": "SpinBot",
     "caption": "蓝牙控制（即将推出）"
   }
 }

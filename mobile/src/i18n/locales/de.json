@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Ping Pong Robot",
+    "home": "SpinBot",
     "wizard": "Konfigurieren und starten",
     "info": "Info",
     "settings": "Einstellungen",
@@ -16,7 +16,7 @@
     "trainingComplete": "Training abgeschlossen"
   },
   "home": {
-    "heroTitle": "Ping Pong Robot",
+    "heroTitle": "SpinBot",
     "heroSubtitle": "Steuerung per App",
     "cardStart": "Starten",
     "cardStartSubtitle": "Konfigurieren und starten",
@@ -166,7 +166,7 @@
     "langZh": "中文"
   },
   "info": {
-    "title": "Ping Pong Robot",
+    "title": "SpinBot",
     "caption": "Steuerung per Bluetooth (demnächst)"
   }
 }

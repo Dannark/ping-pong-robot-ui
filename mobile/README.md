@@ -1,4 +1,4 @@
-App **Ping Pong Robot** – React Native (bare, sem Expo), gerenciado com **yarn**.  
+App **SpinBot** – React Native (bare, sem Expo), gerenciado com **yarn**.  
 Projeto criado com [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started

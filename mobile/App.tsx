@@ -1,5 +1,5 @@
 /**
- * Ping Pong Robot – App
+ * SpinBot – App
  * Navegação e telas alinhadas ao display TFT do robô.
  */
 

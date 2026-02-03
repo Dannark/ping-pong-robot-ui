@@ -1,4 +1,4 @@
-# Plano – UI do App Ping Pong Robot
+# Plano – UI do App SpinBot
 
 ## Objetivo
 Interface que replica e supera o display TFT do robô: navegação entre telas, boa UI/UX, todas as funções do display e mais personalização.
