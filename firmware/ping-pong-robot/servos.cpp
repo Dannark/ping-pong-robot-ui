@@ -1,6 +1,11 @@
 #include "servos.h"
 #include "utils.h"
 #include <Arduino.h>
+#include <EEPROM.h>
+
+#define EEPROM_SERVO_BASE  0
+#define EEPROM_SERVO_MAGIC 6
+#define EEPROM_SERVO_MAGIC_VAL 0xA5
 
 Servo tiltServo; // SERVO1 (subir/descer)
 Servo panServo;  // SERVO2 (esquerda/direita)
@@ -30,12 +35,38 @@ int normalizedToAngle(float x, int minAngle, int midAngle, int maxAngle) {
   }
 }
 
-void initServos() {
-  // Shield L293D: geralmente SERVO1 = D10, SERVO2 = D9
-  tiltServo.attach(SERVO_TILT_PIN); // SERVO1
-  panServo.attach(SERVO_PAN_PIN);    // SERVO2
+void loadServoLimitsFromEEPROM() {
+  if (EEPROM.read(EEPROM_SERVO_MAGIC) != EEPROM_SERVO_MAGIC_VAL) return;
+  servo_tilt_up    = EEPROM.read(EEPROM_SERVO_BASE + 0);
+  servo_tilt_mid   = EEPROM.read(EEPROM_SERVO_BASE + 1);
+  servo_tilt_down  = EEPROM.read(EEPROM_SERVO_BASE + 2);
+  servo_pan_left   = EEPROM.read(EEPROM_SERVO_BASE + 3);
+  servo_pan_mid    = EEPROM.read(EEPROM_SERVO_BASE + 4);
+  servo_pan_right  = EEPROM.read(EEPROM_SERVO_BASE + 5);
+  servo_tilt_up   = clampInt(servo_tilt_up, 0, 180);
+  servo_tilt_mid  = clampInt(servo_tilt_mid, 0, 180);
+  servo_tilt_down = clampInt(servo_tilt_down, 0, 180);
+  servo_pan_left  = clampInt(servo_pan_left, 0, 180);
+  servo_pan_mid   = clampInt(servo_pan_mid, 0, 180);
+  servo_pan_right = clampInt(servo_pan_right, 0, 180);
+}
 
-  // Começa centralizado
+void saveServoLimitsToEEPROM() {
+  EEPROM.write(EEPROM_SERVO_BASE + 0, (uint8_t)servo_tilt_up);
+  EEPROM.write(EEPROM_SERVO_BASE + 1, (uint8_t)servo_tilt_mid);
+  EEPROM.write(EEPROM_SERVO_BASE + 2, (uint8_t)servo_tilt_down);
+  EEPROM.write(EEPROM_SERVO_BASE + 3, (uint8_t)servo_pan_left);
+  EEPROM.write(EEPROM_SERVO_BASE + 4, (uint8_t)servo_pan_mid);
+  EEPROM.write(EEPROM_SERVO_BASE + 5, (uint8_t)servo_pan_right);
+  EEPROM.write(EEPROM_SERVO_MAGIC, EEPROM_SERVO_MAGIC_VAL);
+}
+
+void initServos() {
+  loadServoLimitsFromEEPROM();
+
+  tiltServo.attach(SERVO_TILT_PIN); // SERVO1
+  panServo.attach(SERVO_PAN_PIN);   // SERVO2
+
   tiltServo.write(servo_tilt_mid);
   panServo.write(servo_pan_mid);
 }

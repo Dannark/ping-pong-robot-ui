@@ -19,6 +19,8 @@ extern int servo_pan_right;
 void initServos();
 void updateServos(float panNormalized, float tiltNormalized);
 int normalizedToAngle(float x, int minAngle, int midAngle, int maxAngle);
+void loadServoLimitsFromEEPROM();
+void saveServoLimitsToEEPROM();
 
 extern Servo tiltServo;
 extern Servo panServo;

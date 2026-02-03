@@ -158,7 +158,7 @@ void loop() {
 
       if (swPressedEvent) {
         if (settingsServoEditIndex == 3) {
-          // Back para tela de Settings
+          saveServoLimitsToEEPROM();
           currentScreen = SCREEN_SETTINGS;
         }
       }
