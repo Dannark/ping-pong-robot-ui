@@ -4,6 +4,18 @@
  * HC-05 usa 3.3V em RXD; o Mega usa 5V em TX. SEM divisor de tensão
  * na linha TX -> RXD você pode QUEIMAR o HC-05. Use o esquema abaixo.
  *
+ * === SE NENHUMA LUZ ACENDE NO MODULO ===
+ * O modulo nao esta recebendo alimentacao. Confira:
+ * 1. PINOUT do SEU modulo (ordem dos pinos varia!). Procure no verso da placa
+ *    ou no datasheet. Tipico: VCC, GND, TXD, RXD, STATE, EN/KEY (ou similar).
+ * 2. So alimentacao: ligue APENAS VCC do HC-05 no 5V (ou 3.3V se o modulo for so 3.3V)
+ *    e GND do HC-05 no GND do Arduino. Nada mais. A luz deve piscar ao ligar.
+ * 3. Se nao acender nem assim: multimetro entre VCC e GND do modulo (deve dar
+ *    ~3.3V ou ~5V). Fio solto, placa queimada ou pinout errado (ex: ligou 5V no STATE).
+ * 4. Mac/iPhone: HC-05 e Bluetooth CLASSIC (SPP). iPhone nao faz SPP; no Mac pode
+ *    aparecer em Preferencias > Bluetooth como dispositivo de serie. Use celular
+ *    Android ou app "Serial Bluetooth Terminal" para testar.
+ *
  * === CONEXOES (com resistores 1k e 2k para nivel 5V -> 3.3V) ===
  *
  *   Arduino Mega          Resistores              HC-05
@@ -24,7 +36,7 @@
  *         TXD do HC-05 direto no pin 19 (sem resistor).
  *
  * 1. Envie este sketch para o Mega e abra o Monitor Serial (9600).
- * 2. No celular: Configurações > Bluetooth > procurar "HC-05".
+ * 2. No celular Android: Configurações > Bluetooth > procurar "HC-05".
  * 3. Use um app "Serial Bluetooth Terminal" para conectar; dados aparecem aqui.
  */
 

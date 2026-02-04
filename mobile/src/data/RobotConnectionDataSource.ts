@@ -9,6 +9,7 @@ export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
 export type ConnectionState = {
   status: ConnectionStatus;
   error?: string;
+  deviceName?: string | null;
 };
 
 export interface RobotConnectionDataSource {

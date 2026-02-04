@@ -34,6 +34,9 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [listModalVisible, setListModalVisible] = useState(false);
+  const [connectionState, setConnectionState] = useState(() =>
+    RobotConnectionRepository.getDataSource().getConnectionState()
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,6 +63,11 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
     });
     return unsub;
   }, [t]);
+
+  useEffect(() => {
+    const unsub = RobotConnectionRepository.getDataSource().subscribeConnectionState(setConnectionState);
+    return unsub;
+  }, []);
 
   useEffect(() => {
     if (config.spinRandom !== true) return;
@@ -97,6 +105,7 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
         items={items}
         config={config}
         displaySpin={displaySpin}
+        connectionStatus={connectionState.status}
         onItemPress={handleItemPress}
         onStartPress={handleStartPress}
       />

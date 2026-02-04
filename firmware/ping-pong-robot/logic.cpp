@@ -79,11 +79,11 @@ static float pickRandomTarget(float minVal, float maxVal, float current, float m
 }
 
 void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step,
-               float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist) {
+               unsigned long auto2PauseMs, float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist) {
   if (mode == AXIS_AUTO1) {
     value = auto1Update(value, dir, auto1Speed, minVal, maxVal);
   } else if (mode == AXIS_AUTO2) {
-    value = auto2Update(value, dir, lastStepMs, auto2Step, AUTO2_PAUSE_MS, minVal, maxVal);
+    value = auto2Update(value, dir, lastStepMs, auto2Step, auto2PauseMs, minVal, maxVal);
   } else if (mode == AXIS_RANDOM) {
     unsigned long now = millis();
     if (now - lastStepMs >= randomPauseMs) {
@@ -113,7 +113,7 @@ void updateRunningLogic() {
     float stickX = joyToNorm(analogRead(JOY_X));
     applyIncremental(livePan, stickX);
   } else {
-    applyAuto(livePan, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step,
+    applyAuto(livePan, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step, cfg.panAuto2PauseMs,
               cfg.panMin, cfg.panMax, cfg.panRandomPauseMs, cfg.panRandomMinDist);
   }
 
@@ -122,7 +122,7 @@ void updateRunningLogic() {
     float stickY = joyToNorm(analogRead(JOY_Y));
     applyIncremental(liveTilt, stickY);
   } else {
-    applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step,
+    applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step, cfg.tiltAuto2PauseMs,
               cfg.tiltMin, cfg.tiltMax, cfg.tiltRandomPauseMs, cfg.tiltRandomMinDist);
   }
 
@@ -138,11 +138,11 @@ void updateRunningLogic() {
 
 void updateAxisPreviewTargets() {
   if (currentScreen == SCREEN_PAN) {
-    applyAuto(cfg.panTarget, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step,
+    applyAuto(cfg.panTarget, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step, cfg.panAuto2PauseMs,
               cfg.panMin, cfg.panMax, cfg.panRandomPauseMs, cfg.panRandomMinDist);
   }
   if (currentScreen == SCREEN_TILT) {
-    applyAuto(cfg.tiltTarget, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step,
+    applyAuto(cfg.tiltTarget, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step, cfg.tiltAuto2PauseMs,
               cfg.tiltMin, cfg.tiltMax, cfg.tiltRandomPauseMs, cfg.tiltRandomMinDist);
   }
 }

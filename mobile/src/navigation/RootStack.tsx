@@ -17,10 +17,12 @@ import { TrainingCompleteScreen } from '../screens/TrainingComplete';
 import { SettingsServoTiltScreen } from '../screens/SettingsServoTilt';
 import { SettingsServoPanScreen } from '../screens/SettingsServoPan';
 import { SettingsMotorTestScreen } from '../screens/SettingsMotorTest';
+import { ConnectScreen } from '../screens/Connect';
 import type { RobotConfig } from '../data/RobotConfig';
 
 export type RootStackParamList = {
   Home: undefined;
+  Connect: undefined;
   Wizard: undefined;
   Info: undefined;
   Settings: undefined;
@@ -74,6 +76,7 @@ export function RootStack() {
         }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Connect" component={ConnectScreen} />
         <Stack.Screen name="Wizard" component={WizardScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />

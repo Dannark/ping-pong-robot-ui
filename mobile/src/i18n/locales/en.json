@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "SpinBot",
+    "connect": "Connect to robot",
     "wizard": "Configure and start",
     "info": "Info",
     "settings": "Settings",
@@ -18,6 +19,8 @@
   "home": {
     "heroTitle": "SpinBot",
     "heroSubtitle": "Control from the app",
+    "cardConnect": "Connect to robot",
+    "cardConnectSubtitle": "Pair Bluetooth (HC-05)",
     "cardStart": "Start",
     "cardStartSubtitle": "Configure and launch",
     "cardInfo": "Info",
@@ -26,6 +29,8 @@
     "cardSettingsSubtitle": "Servos and motors"
   },
   "wizard": {
+    "robotConnected": "Robot connected",
+    "robotDisconnected": "Robot not connected",
     "preview": "Preview",
     "aim": "Aim",
     "feeder": "Feeder",
@@ -164,6 +169,20 @@
     "langDe": "Deutsch",
     "langFr": "Français",
     "langZh": "中文"
+  },
+  "connect": {
+    "selectDevice": "Tap a device to connect",
+    "connecting": "Connecting…",
+    "connected": "Connected to {{name}}",
+    "disconnect": "Disconnect",
+    "retry": "Retry",
+    "pairedDevices": "Paired devices",
+    "noPairedDevices": "No paired devices. Pair HC-05 in your phone's Bluetooth settings.",
+    "permissionTitle": "Bluetooth permission",
+    "permissionMessage": "SpinBot needs Bluetooth access to connect to the robot.",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "unknownDevice": "Device"
   },
   "info": {
     "title": "SpinBot",

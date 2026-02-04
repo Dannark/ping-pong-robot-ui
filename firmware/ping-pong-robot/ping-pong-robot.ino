@@ -10,6 +10,7 @@
 #include "screens.h"
 #include "servos.h"
 #include "motors.h"
+#include "bt_command.h"
 
 // ================= Main =================
 void setup() {
@@ -19,9 +20,11 @@ void setup() {
   initDisplay();
   initServos();
   initMotors();
+  initBTCommand();
 }
 
 void loop() {
+  processBTInput();  // Comandos do app (CONFIG/START/STOP) via Bluetooth
   updateButton();
   updateRunningLogic();
   updateAxisPreviewTargets();

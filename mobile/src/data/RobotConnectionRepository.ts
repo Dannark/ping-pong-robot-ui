@@ -1,8 +1,6 @@
 import type { RobotConfig } from './RobotConfig';
 import type { RobotConnectionDataSource } from './RobotConnectionDataSource';
-import { StubRobotConnectionDataSource } from './RobotConnectionDataSource';
-
-/** Swap StubRobotConnectionDataSource for BluetoothRobotConnectionDataSource when implementing BT. */
+import { BluetoothRobotConnectionDataSource } from './BluetoothRobotConnectionDataSource';
 
 export type RunState = {
   runStartTime: number | null;
@@ -62,4 +60,4 @@ function createRepository(dataSource: RobotConnectionDataSource) {
   };
 }
 
-export const RobotConnectionRepository = createRepository(new StubRobotConnectionDataSource());
+export const RobotConnectionRepository = createRepository(new BluetoothRobotConnectionDataSource());

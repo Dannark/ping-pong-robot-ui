@@ -39,7 +39,7 @@ extern Config cfg;
 float auto1Update(float base, float &dir, float speed, float minVal, float maxVal);
 float auto2Update(float base, float &dir, unsigned long &lastStepMs, float step, unsigned long pauseMs, float minVal, float maxVal);
 void applyAuto(float &value, AxisMode mode, float &dir, unsigned long &lastStepMs, float auto1Speed, float auto2Step,
-               float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist);
+               unsigned long auto2PauseMs, float minVal, float maxVal, unsigned long randomPauseMs, float randomMinDist);
 
 // ================= Logic updates =================
 void updateRunningLogic();

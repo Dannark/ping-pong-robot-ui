@@ -95,9 +95,11 @@ struct Config {
   float panAuto1Speed = 0.035f;
   float tiltAuto1Speed = 0.035f;
 
-  // AUTO2 step size (0.05 .. 0.5)
+  // AUTO2 step size (0.05 .. 0.5), pause between steps (ms)
   float panAuto2Step = 0.25f;
+  unsigned long panAuto2PauseMs = 1000UL;
   float tiltAuto2Step = 0.25f;
+  unsigned long tiltAuto2PauseMs = 1000UL;
 
   // RANDOM: distância mínima entre alvos (0.1 .. 0.5), pausa entre movimentos (ms)
   float panRandomMinDist = 0.2f;

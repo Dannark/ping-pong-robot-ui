@@ -20,6 +20,7 @@ type WizardViewProps = {
   items: WizardItem[];
   config: RobotConfig;
   displaySpin: SpinDirection;
+  connectionStatus: 'disconnected' | 'connecting' | 'connected';
   onItemPress: (screen: WizardItem['screen']) => void;
   onStartPress: () => void;
 };
@@ -27,12 +28,22 @@ type WizardViewProps = {
 const PREVIEW_SIZE = 90;
 const SPIN_PREVIEW_SIZE = 90;
 
-export function WizardView({ items, config, displaySpin, onItemPress, onStartPress }: WizardViewProps) {
+export function WizardView({ items, config, displaySpin, connectionStatus, onItemPress, onStartPress }: WizardViewProps) {
   const { t } = useTranslation();
   const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
 
   return (
     <View style={styles.container}>
+      <View style={styles.robotStatus}>
+        <MaterialCommunityIcons
+          name={connectionStatus === 'connected' ? 'bluetooth-connected' : 'bluetooth'}
+          size={18}
+          color={connectionStatus === 'connected' ? theme.colors.primary : theme.colors.textSecondary}
+        />
+        <Text style={[styles.robotStatusText, connectionStatus === 'connected' && styles.robotStatusConnected]}>
+          {connectionStatus === 'connected' ? t('wizard.robotConnected') : t('wizard.robotDisconnected')}
+        </Text>
+      </View>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -142,6 +153,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  robotStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    backgroundColor: theme.colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  robotStatusText: {
+    ...theme.typography.caption,
+    color: theme.colors.textSecondary,
+  },
+  robotStatusConnected: {
+    color: theme.colors.primary,
+    fontWeight: '600',
   },
   scroll: {
     flex: 1,
