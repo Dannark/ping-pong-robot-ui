@@ -31,8 +31,41 @@ Redução total no eixo da “hélice” (disco com 3 furos): **1:48 × 1:3 × 1
 
 Limites (MIN/MID/MAX) configuráveis na tela Settings e gravados em EEPROM.
 
-### Bluetooth
-- **Módulo HC-05** – conectado em **Serial1** (TX 18, RX 19), 9600 baud. Uso previsto para comandos do app (CONFIG/START/STOP). Detalhes e mudanças serão documentados em seguida.
+### Bluetooth (HC-05)
+- **Módulo HC-05** – conectado em **Serial1** (TX 18, RX 19), **9600 baud**. Envio de comandos do app (CONFIG/START/STOP). **Funciona apenas com Android**; o app mobile não suporta iOS para Bluetooth clássico (SPP).
+
+Conexão do HC-05 com o Arduino Mega (divisor de tensão no RXD para 3,3 V):
+
+- **Arduino TX (pino 18)** → resistor **1 kΩ** → **HC-05 RXD**. Nessa mesma junção (entre o 1 kΩ e o RXD), um resistor de **2 kΩ** vai para **GND**. Assim o RXD do HC-05 vê ~3,3 V (5 V × 2k/(1k+2k)).
+- **HC-05 TXD** → **Arduino RX (pino 19)**. O HC-05 em geral é 3,3 V; o RX da Mega aceita 3,3 V, então costuma ser conexão direta.
+
+```
+                    Arduino Mega 2560
+                    ┌─────────────────┐
+                    │                 │
+     Serial1 TX  ────┤ 18 (TX1)        │
+                    │      │          │
+                    │      │ 1kΩ      │
+                    │      └──┬────────┤
+                    │         │       │
+                    │         ├───────┤
+                    │         │ 2kΩ   │
+                    │         │       │
+     Serial1 RX  ────┤ 19 (RX1)◄──────┼──── HC-05 TXD
+                    │         │       │
+                    │        GND      │
+                    │                 │
+                    └─────────────────┘
+                           │
+                           │  (entre 1k e RXD)
+                           ▼
+                    ┌─────────────────┐
+                    │      HC-05       │
+                    │  RXD ◄── junção  │
+                    │  TXD ────────────┼────► Arduino 19 (RX1)
+                    │  GND, VCC, etc.  │
+                    └─────────────────┘
+```
 
 ---
 
@@ -99,6 +132,6 @@ A struct `Config` guarda todos os parâmetros de treino (pan/tilt, launcher, spi
 
 ---
 
-## Próximos passos (Bluetooth)
+## App mobile
 
-O módulo HC-05 e o protocolo via Serial1 serão o foco da próxima etapa; a documentação do app (pasta `mobile/`) ficará para depois.
+O app React Native (pasta `mobile/`) conecta ao robô via Bluetooth e envia a mesma config e comandos (CONFIG/START/STOP). Documentação completa do app: ver **`../mobile/README.md`**.

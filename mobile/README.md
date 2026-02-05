@@ -1,98 +1,168 @@
-App **SpinBot** – React Native (bare, sem Expo), gerenciado com **yarn**.  
-Projeto criado com [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Ping Pong Robot – App Mobile
 
-# Getting Started
+App React Native que controla o robô de ping-pong via **Bluetooth clássico (SPP)**. Replica e estende a experiência do display TFT do robô com interface mais rica e intuitiva.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+**Plataforma:** apenas **Android** (Bluetooth clássico; iOS não é suportado pelo módulo HC-05 / stack atual).
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Conexão com o Arduino
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Requisitos
+- **Dispositivo Android** com Bluetooth.
+- **Robô ligado** e módulo **HC-05** pareado com o celular (modo pareamento do HC-05, se necessário).
+- **Permissões:** `BLUETOOTH`, `BLUETOOTH_CONNECT` (Android 12+). O app solicita em tempo de execução.
 
-```sh
-# Using npm
-npm start
+### Fluxo no app
+1. **Home** → toque em **Conectar** (ou equivalente).
+2. Tela **Connect** lista dispositivos **já pareados** (`getBondedDevices()`). Não há descoberta de dispositivos não pareados; o usuário deve parear o HC-05 nas configurações do Android antes.
+3. Usuário toca em um dispositivo → `setBluetoothTargetDevice(btDevice)` e `dataSource.connect()`. A lib usa **RFCOMM** com delimiter `\n` e charset UTF-8.
+4. Após conectado, o status fica “Conectado” e o app pode enviar **CONFIG**, **START** e **STOP**.
 
-# OR using Yarn
-yarn start
-```
+### Biblioteca
+- **react-native-bluetooth-classic** (1.73.0-rc.17). API: `getBondedDevices()`, `device.connect(options)`, `device.write(data, 'utf-8')`, `device.disconnect()`.
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## Protocolo de comunicação (app → Arduino)
 
-### Android
+Tudo é **texto por linha** (terminador `\n`). O Arduino **não envia respostas**; o app apenas envia comandos e assume que foram recebidos.
 
-```sh
-# Using npm
-npm run android
+### Comandos
 
-# OR using Yarn
-yarn android
-```
+| Comando | Formato | Efeito no Arduino |
+|--------|---------|-------------------|
+| **Start** | `S\n` ou `START\n` | Chama `startRunning()`: inicia motores com velocidade reduzida e vai para tela RUNNING. |
+| **Stop** | `P\n` ou `STOP\n` | Para todos os motores, `isRunning = false`, `currentScreen = SCREEN_HOME`. |
+| **Config** | `C,v0,v1,...,v25\n` | Atualiza a struct `Config` no Arduino com 26 inteiros (ordem fixa). |
 
-### iOS
+### Formato da linha de config (`C,...`)
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+26 valores inteiros separados por vírgula, na ordem abaixo. Valores float no app são enviados × 1000 (inteiro).
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+| Índice | Significado no Arduino | Exemplo (app → Arduino) |
+|--------|------------------------|-------------------------|
+| 0 | panMode (0=LIVE, 1=AUTO1, 2=AUTO2, 3=RANDOM) | 0 |
+| 1 | tiltMode | 0 |
+| 2 | panTarget × 1000 | 0 |
+| 3 | tiltTarget × 1000 | 0 |
+| 4–7 | panMin, panMax, tiltMin, tiltMax × 1000 | -1000, 1000, -1000, 1000 |
+| 8 | panAuto1Speed × 1000 | 35 |
+| 9 | panAuto2Step × 1000 | 250 |
+| 10 | panAuto2PauseMs | 1000 |
+| 11 | tiltAuto1Speed × 1000 | 35 |
+| 12 | tiltAuto2Step × 1000 | 250 |
+| 13 | tiltAuto2PauseMs | 1000 |
+| 14 | panRandomMinDist × 1000 | 200 |
+| 15 | panRandomPauseMs | 1500 |
+| 16 | tiltRandomMinDist × 1000 | 200 |
+| 17 | tiltRandomPauseMs | 1500 |
+| 18 | launcherPower (0–255) | 255 |
+| 19 | spinMode (0=NONE, 1=N, 2=NE, … 9=NW) | 0 |
+| 20 | spinIntensity (0–512) | 255 |
+| 21 | feederMode (0=CONT, 1=P1/1, 2=P2/1, 3=P2/2, 4=CUSTOM) | 0 |
+| 22 | feederSpeed (0–255) | 200 |
+| 23 | feederCustomOnMs | 1500 |
+| 24 | feederCustomOffMs | 750 |
+| 25 | timerIndex (0=OFF, 1=15s, … 5=5m) | 0 |
 
-```sh
-bundle install
-```
+A geração da linha no app está em **`src/data/btProtocol.ts`**: `configToConfigLine(config)` e `getStartCommand()` / `getStopCommand()`.
 
-Then, and every time you update your native dependencies, run:
+---
 
-```sh
-bundle exec pod install
-```
+## Como o Arduino interpreta e “responde”
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+- **Não há canal de resposta.** O Arduino só lê de `Serial1` no `loop()` em `processBTInput()`.
+- Acumula caracteres até `\n` ou `\r`, monta uma linha e chama `processLine()`:
+  - **S** ou **START** → `startRunning()` (entra em RUNNING e liga motores).
+  - **P** ou **STOP** → para motores e volta para `SCREEN_HOME`.
+  - **C,v0,...,v25** → preenche `cfg` (struct global), com clamps nos valores.
+- O estado real (telas, motores, timer) existe só no Arduino. O app mantém um “espelho” local (config + run state) para UI e timer; se a conexão cair, o robô continua com a última config até receber STOP ou desligar.
 
-```sh
-# Using npm
-npm run ios
+---
 
-# OR using Yarn
-yarn ios
-```
+## Arquitetura do app (resumo)
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- **MVVM** por tela: `index.tsx` (container), `*.viewModel.ts` (lógica), `*.view.tsx` (UI). Repositórios para dados; nenhuma chamada de API direta na viewModel.
+- **Navegação:** `RootStack.tsx` – stack com telas: Home, Connect, Wizard, Pan, Tilt, Launcher, Feeder, Timer, Running, TrainingComplete, Info, Settings, SettingsServoTilt, SettingsServoPan, SettingsMotorTest.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Camada de dados
 
-## Step 3: Modify your app
+| Artefato | Função |
+|----------|--------|
+| **RobotConfig** / **DEFAULT_CONFIG** | Tipo e valores padrão da config (pan, tilt, launcher, spin, feeder, timer). |
+| **RobotConfigRepository** | Config em memória; `getConfig`, `setConfig(partial)`, `subscribe`. Usado por Wizard e telas de ajuste. |
+| **RobotConnectionDataSource** | Interface: `connect`, `disconnect`, `sendConfig`, `start`, `stop`, estado de conexão. |
+| **BluetoothRobotConnectionDataSource** | Implementação real: usa `react-native-bluetooth-classic`, `setBluetoothTargetDevice`, `write(line)`. |
+| **RobotConnectionRepository** | `startRun(config)` = `sendConfig(config)` + `start()`; `stopRun()` = `stop()`; mantém `runStartTime` e `runConfig` para Running/TrainingComplete. |
+| **btProtocol.ts** | `configToConfigLine`, `getStartCommand`, `getStopCommand` – geração exata das linhas enviadas ao Arduino. |
+| **PresetsRepository** | Presets do Wizard (AsyncStorage); load/save/delete; não existe no Arduino. |
+| **HardwareSettingsRepository** (servos) | Limites de servos (min/mid/max) no app via AsyncStorage; **não são enviados ao Arduino**. No robô, os limites são ajustados no display e gravados em EEPROM. |
 
-Now that you have successfully run the app, let's make changes!
+### Fluxo “Start” a partir do app
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+1. Usuário no **Wizard** toca **Start**.
+2. `RobotConnectionRepository.startRun(config)`:
+   - `dataSource.sendConfig(config)` → envia `C,<26 valores>\n`.
+   - `dataSource.start()` → envia `S\n`.
+3. Navegação para **Running**; o repositório guarda `runStartTime` e `runConfig`.
+4. Na tela **Running**, o app mostra tempo decorrido/restante e pode chamar `stopRun()` (envia `P\n`) e voltar.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+---
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Telas principais e equivalência com o Arduino
 
-## Congratulations! :tada:
+| App | Arduino (display) | Observação |
+|-----|-------------------|------------|
+| **Home** | HOME | App tem cards: Conectar, Start Wizard, Info, Settings. |
+| **Connect** | — | Só no app: listar pareados e conectar ao HC-05. |
+| **Wizard** | WIZARD | Pan, Tilt, Launcher, Feeder, Timer + Start. Preview visual rico (Aim, Feeder, Spin). |
+| **Pan / Tilt** | SCREEN_PAN / SCREEN_TILT | Mesmos modos (LIVE, AUTO1, AUTO2, RANDOM) e parâmetros. App tem sliders/inputs; Arduino usa joystick. |
+| **Launcher** | SCREEN_LAUNCHER + SCREEN_SPIN | Power e spin (direção + intensidade). |
+| **Feeder** | SCREEN_FEEDER | Modos e velocidade; CUSTOM com on/off em ms. |
+| **Timer** | SCREEN_TIMER | OFF, 15s, 30s, 1m, 2m, 5m. |
+| **Running** | SCREEN_RUNNING | App mostra tempo, config atual, previews; botão Stop envia `P\n`. |
+| **TrainingComplete** | — | Só no app: tela ao fim do timer (vibração/notificação opcional). |
+| **Settings** | SCREEN_SETTINGS | Servo Tilt/Pan, teste M1–M4. Limites de servo no app ficam no app (AsyncStorage); no robô ficam na EEPROM. |
+| **Info** | SCREEN_INFO | Versão / estatísticas. |
 
-You've successfully run and modified your React Native App. :partying_face:
+---
 
-### Now what?
+## Diferenças importantes (app vs Arduino)
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+1. **Spin “Random”**  
+   No app existe **spinRandom** e **spinRandomIntervalSec**. O protocolo envia **apenas uma direção de spin** (campo 19). O Arduino mantém essa direção fixa. O “random” no app é **só visual**: a cada N segundos o app troca a direção exibida na UI; o robô **não** recebe atualizações de spin durante o run. Para spin realmente aleatório no robô seria preciso enviar novas linhas `C,...` periodicamente (não implementado).
 
-# Troubleshooting
+2. **Timer e fim de treino**  
+   O Arduino usa `timerMsByIndex` e para sozinho ao atingir o tempo, voltando para HOME. O app também calcula tempo restante; ao chegar a zero dispara notificação/vibração (se habilitado) e chama `stopRun()` e navega para **TrainingComplete**.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+3. **Limites dos servos**  
+   No Arduino: editados na tela Settings e salvos em EEPROM. No app: **HardwareSettingsRepository** (ServoTilt/ServoPan) persiste no AsyncStorage; **não há envio desses valores para o robô**. São duas fontes de verdade independentes.
 
-# Learn More
+4. **Presets**  
+   Só no app (PresetsRepository, Wizard menu “Save/Load preset”). O Arduino não conhece presets.
 
-To learn more about React Native, take a look at the following resources:
+5. **Conexão**  
+   O app precisa estar conectado para Start/Stop/Config terem efeito. O display e o joystick do robô funcionam mesmo sem app.
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+---
+
+## O que é necessário para conectar ao Arduino
+
+- **Android** (iOS não suportado).
+- HC-05 **já pareado** com o dispositivo.
+- App com permissão **Bluetooth (Connect)**.
+- Robô ligado e HC-05 em modo SPP (comunicação serial).
+- **Ordem recomendada:** 1) Conectar (tela Connect); 2) Configurar no Wizard; 3) Start (envia config + start). Para parar: Stop na tela Running ou no robô (long press para Home).
+
+---
+
+## Referência rápida para colaboradores e agentes
+
+- **Protocolo:** linhas terminadas em `\n`. Comandos: `S`, `P`, `C,<26 ints>`. Código de geração: `src/data/btProtocol.ts`.
+- **Conexão:** `src/data/BluetoothRobotConnectionDataSource.ts` e `src/screens/Connect/`.
+- **Config global do treino:** `RobotConfigRepository` + `RobotConfig` em `src/data/RobotConfig.ts`.
+- **Início/fim de run:** `RobotConnectionRepository.startRun` / `stopRun`; telas Wizard e Running.
+- **Diferenças com o firmware:** spinRandom só na UI do app; limites de servo não sincronizados; presets e TrainingComplete só no app; Arduino não envia nada de volta.
+
+Documentação do hardware e do firmware (incluindo diagrama do HC-05): **`../firmware/README.md`**.
