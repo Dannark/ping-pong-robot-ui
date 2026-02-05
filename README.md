@@ -1,79 +1,79 @@
 # Ping Pong Robot
 
-Robô que dispara bolinhas de ping-pong, com projeto em impressão 3D, Arduino Mega e interface por display + joystick e/ou app Android via Bluetooth.
+Robot that launches ping-pong balls, with a 3D-printed design, Arduino Mega, and interface via display + joystick and/or Android app over Bluetooth.
 
-**Repositório:** [github.com/Dannark/ping-pong-robot-ui](https://github.com/Dannark/ping-pong-robot-ui)
+**Repository:** [github.com/Dannark/ping-pong-robot-ui](https://github.com/Dannark/ping-pong-robot-ui)
 
 ---
 
-## Sobre o projeto
+## About the project
 
-O robô é montado em peças **impressas em 3D**, com foco em **baixo custo** e **modularidade**: dá para trocar partes, reimprimir e adaptar conforme a necessidade. A maior parte da montagem é por **encaixe**, com uso mínimo de parafusos — apenas **M2×6 ou M2×8** para fixar a caixa de redução extra do motor do alimentador (feeder).
+The robot is built from **3D-printed** parts, with a focus on **low cost** and **modularity**: you can swap parts, reprint and adapt as needed. Most of the assembly is **snap-fit**, with minimal use of screws — only **M2×6 or M2×8** to fix the extra gearbox of the feeder motor.
 
-### Por que motores DC 130?
+### Why DC 130 motors?
 
-A ideia foi usar **motores DC 130 simples**: apesar de fracos e subestimados, são leves, baratos e fáceis de encontrar. O projeto tenta **otimizar ao máximo** o lançamento com eles. Motores brushless provavelmente dariam um spin com mais facilidade, mas o desafio aqui foi trazer o mesmo desempenho para algo **barato e funcional**. Os DC 130 têm força suficiente para:
+The goal was to use **simple DC 130 motors**: despite being weak and underrated, they are light, cheap and easy to find. The project tries to **optimize launch performance** with them. Brushless motors would likely give better spin more easily, but the challenge here was to get similar performance with something **cheap and functional**. The DC 130s have enough power for:
 
-- **Disparo médio/forte em linha reta**
-- **Spin com bastante efeito**, em troca de um pouco de alcance final (menos força no disparo)
+- **Medium/strong straight shots**
+- **Strong spin**, at the cost of some final range (less power on the shot)
 
-Os motores são especificados para 6 V, mas neste projeto **funcionam melhor alimentados com 7,5 V ou 9 V** — suficiente para não queimar os motores de imediato. **Atenção:** alguns DC 130 de baixa qualidade **não são compatíveis** com shields de motor para Arduino e só rodam quando alimentados direto fora da shield. Vale comprar **motores DC 130 de qualidade** (como os que vêm em kits de rodinhas com redução para Arduino).
+The motors are rated for 6 V, but in this project **they work better at 7.5 V or 9 V** — enough to avoid burning them right away. **Note:** some low-quality DC 130s **are not compatible** with Arduino motor shields and only run when powered directly off the shield. It’s worth buying **quality DC 130 motors** (like those from Arduino wheel kits with gearbox).
 
-### Por que não motor de passo no feeder?
+### Why not a stepper on the feeder?
 
-No início foi usado motor de passo no alimentador, mas ele era lento e ocupava **dois canais da shield (M3 e M4)**. O controle fino de passo não era tão útil: o que importava era alimentar o lançador com torque o suficiente sendo o mais rápido possível sem travar as bolinhas. Com um **motor DC 130 comum** no feeder, dá para configurar velocidades bem mais altas (configuravel com mais ou menos velocidades a depender das reduções das engrenagens ou ajuste de speed no software), o que **aumenta a taxa de bolinhas por minuto** e ainda libera **três motores dedicados só para o lançador**, permitindo **spin em todas as direções** (back, top, sides e diagonais).
+A stepper was used on the feeder at first, but it was slow and used **two shield channels (M3 and M4)**. Fine step control wasn’t that useful: what mattered was feeding the launcher with enough torque as fast as possible without jamming. With a **plain DC 130** on the feeder, you can set much higher speeds (configurable with more or less gearing or speed in software), which **increases balls per minute** and frees **three motors for the launcher only**, allowing **spin in all directions** (back, top, sides and diagonals).
 
 ### Performance
 
-Os disparos são **estáveis**. Alimentando com **7,5 V**, a taxa fica em torno de **65–69 bolinhas por minuto**. Tanto a interface do **display** quanto o **app** são bem personalizáveis: limites dos servos, frequência do feeder, randomização de pan/tilt e outras opções independentes. Em uso geral o robô tem **performance constante e boa**, com força suficiente para rebater bolas médias e lentas — não para bolas ultra-rápidas.
+Shots are **stable**. At **7.5 V**, the rate is around **65–69 balls per minute**. Both the **display** UI and the **app** are highly customizable: servo limits, feeder frequency, pan/tilt randomization and other independent options. Overall the robot has **consistent, good performance**, with enough power to return medium and slow balls — not ultra-fast ones.
 
 ---
 
 ## Hardware
 
-### Obrigatório
+### Required
 
-| Item | Observação |
-|------|------------|
-| **Arduino Mega 2560** | Controlador principal. |
-| **Shield de motor** | Compatível com AFMotor (ex.: L293D). A V1 não é requisito rígido; foi a usada no projeto. |
-| **4× motores DC 130** | Um deles **com caixa de redução 1:48** (aquela amarela de eixo duplo; um dos eixos deve ser cortado) — esse é o motor do **feeder**. Os outros três são do **lançador** (spin). Preferir motores de qualidade, compatíveis com shield. |
-| **4× rolamentos 6700zz** | Dois na cabeça do lançador (pan/tilt) para reduzir atrito; dois na redução do motor do feeder. |
-| **Folha de EVA** | Para as rodas de atrito. |
-| **Filamento flexível** (recomendado) | Para imprimir as rodas. |
+| Item | Notes |
+|------|--------|
+| **Arduino Mega 2560** | Main controller. |
+| **Motor shield** | AFMotor-compatible (e.g. L293D). V1 is not a strict requirement; it’s what was used. |
+| **4× DC 130 motors** | One **with 1:48 gearbox** (yellow double-shaft type; one shaft is cut) — that’s the **feeder** motor. The other three are for the **launcher** (spin). Prefer quality motors that work with the shield. |
+| **4× 6700zz bearings** | Two on the launcher head (pan/tilt) to reduce friction; two in the feeder motor reduction. |
+| **EVA sheet** | For the friction wheels. |
+| **Flexible filament** (recommended) | For printing the wheels. |
 
-### Interface (pelo menos uma)
+### Interface (at least one)
 
-Sem uma interface você não consegue comandar o robô. É necessário **um** dos conjuntos abaixo (ou os dois):
+Without an interface you can’t control the robot. You need **one** of the following (or both):
 
-| Opção | Itens |
-|-------|--------|
-| **Display + joystick** | Display **OLED 0,96"** (128×64, I²C) + **joystick** analógico. Menu no display e navegação pelo joystick. |
-| **Bluetooth** | Módulo **HC-05** (ou similar). Controle pelo **app Android** (iOS não suportado). |
+| Option | Items |
+|--------|--------|
+| **Display + joystick** | **0.96" OLED** display (128×64, I²C) + analog **joystick**. Menu on display, navigation with joystick. |
+| **Bluetooth** | **HC-05** (or similar) module. Control via **Android app** (iOS not supported). |
 
-### Opcionais
+### Optional
 
-- **2 servos** para pan e tilt da cabeça do lançador.
-- **Display + joystick** e **Bluetooth** ao mesmo tempo: dá para usar o robô pelo display ou pelo app.
-
----
-
-## Estrutura do repositório e documentação
-
-Este repositório contém o **firmware** (Arduino) e o **app mobile** (React Native). Cada parte tem um README próprio com detalhes de hardware, protocolo e uso.
-
-| Pasta | Conteúdo | Documentação |
-|-------|----------|--------------|
-| **[firmware/](firmware/)** | Código do Arduino Mega: display, joystick, motores, servos, Bluetooth. Pinagem, módulos, telas do display, conexão do HC-05 (com diagrama). | **[firmware/README.md](firmware/README.md)** — guia do firmware e hardware do robô |
-| **[mobile/](mobile/)** | App Android (React Native): conexão Bluetooth, protocolo (CONFIG/START/STOP), telas, diferenças em relação ao display. | **[mobile/README.md](mobile/README.md)** — guia do app e da comunicação com o robô |
-
-Sugestão de leitura:
-
-1. **Começar por [firmware/README.md](firmware/README.md)** — hardware completo (motores, reduções do M4, display, joystick, diagrama do Bluetooth), arquitetura do firmware e como compilar/gravar.
-2. **Depois [mobile/README.md](mobile/README.md)** — como o app se conecta ao Arduino, formato dos comandos, telas e o que é específico do app (presets, spin “random” na UI, etc.).
+- **2 servos** for launcher head pan and tilt.
+- **Display + joystick** and **Bluetooth** together: use the robot from the display or from the app.
 
 ---
 
-## Licença e contribuição
+## Repository structure and documentation
 
-Projeto aberto. Para contribuir ou reportar problemas, use o repositório: [github.com/Dannark/ping-pong-robot-ui](https://github.com/Dannark/ping-pong-robot-ui).
+This repository contains the **firmware** (Arduino) and the **mobile app** (React Native). Each has its own README with hardware, protocol and usage details.
+
+| Folder | Contents | Documentation |
+|--------|----------|---------------|
+| **[firmware/](firmware/)** | Arduino Mega code: display, joystick, motors, servos, Bluetooth. Pinout, modules, display screens, HC-05 wiring (with diagram). | **[firmware/README.md](firmware/README.md)** — firmware and robot hardware guide |
+| **[mobile/](mobile/)** | Android app (React Native): Bluetooth connection, protocol (CONFIG/START/STOP), screens, differences from the display. | **[mobile/README.md](mobile/README.md)** — app and robot communication guide |
+
+Suggested reading order:
+
+1. **Start with [firmware/README.md](firmware/README.md)** — full hardware (motors, M4 reductions, display, joystick, Bluetooth diagram), firmware architecture, and how to build/upload.
+2. **Then [mobile/README.md](mobile/README.md)** — how the app connects to the Arduino, command format, screens, and app-specific behavior (presets, spin “random” in the UI, etc.).
+
+---
+
+## License and contributing
+
+Open project. To contribute or report issues, use the repository: [github.com/Dannark/ping-pong-robot-ui](https://github.com/Dannark/ping-pong-robot-ui).

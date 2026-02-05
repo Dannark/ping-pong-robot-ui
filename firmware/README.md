@@ -1,137 +1,121 @@
 # Ping Pong Robot – Firmware
 
-Firmware do robô que dispara bolinhas de ping-pong. Controlado por display TFT/OLED 0.96", joystick e (opcionalmente) por app via Bluetooth HC-05.
+Firmware for the ping-pong ball launcher robot. Controlled by a 0.96" TFT/OLED display, joystick, and (optionally) by the mobile app via HC-05 Bluetooth.
 
 ---
 
-## Hardware do robô
+## Robot hardware
 
-### Controlador e interface
-- **Arduino Mega 2560** – controlador principal.
-- **Display TFT/OLED 0.96"** (128×64) – I²C, endereço 0x3C (driver SSD1306). Menu e feedback visual.
-- **Joystick analógico** – eixos X/Y (A8, A9) e botão (pino 52). Navegação e confirmação (short/long press).
+### Controller and interface
+- **Arduino Mega 2560** – main controller.
+- **0.96" TFT/OLED display** (128×64) – I²C, address 0x3C (SSD1306 driver). Menu and visual feedback.
+- **Analog joystick** – X/Y axes (A8, A9) and button (pin 52). Navigation and confirmation (short/long press).
 
-### Motores e shield
-- **Shield de motor** (compatível com AFMotor) – 4 canais DC.
-- **4× motores DC 130**:
-  - **M1, M2, M3** – lançador e efeito (spin). Posições angulares no disco: M1 = 12h (0°), M2 = 4h (120°), M3 = 8h (240°). Velocidade e diferença entre eles definem direção e intensidade do spin.
-  - **M4** – alimentador (feeder): empurra as bolinhas para o tubo vertical que leva ao lançador.
+### Motors and shield
+- **Motor shield** (AFMotor-compatible) – 4 DC channels.
+- **4× DC 130 motors**:
+  - **M1, M2, M3** – launcher and spin. Angular positions on the wheel: M1 = 12 o’clock (0°), M2 = 4 o’clock (120°), M3 = 8 o’clock (240°). Speed and difference between them set spin direction and intensity.
+  - **M4** – feeder: pushes balls through the vertical tube into the launcher.
 
-### Motor M4 (feeder) – reduções
-O M4 precisa de torque alto para empurrar as bolinhas por um longo percurso vertical com folga. Por isso usa várias reduções:
+### M4 motor (feeder) – gear reductions
+M4 needs high torque to push balls along a long vertical path with clearance. It uses several reductions:
 
-1. **Primeira redução** – caixa de redução amarela (tipo “carrinho”), **1:48**.
-2. **Segundo conjunto** – em série no mesmo eixo: **1:3** e **1:4** (total 1:12 nesse estágio).
+1. **First reduction** – yellow gearbox (common “car” type), **1:48**.
+2. **Second stage** – in series on the same shaft: **1:3** and **1:4** (1:12 total for that stage).
 
-Redução total no eixo da “hélice” (disco com 3 furos): **1:48 × 1:3 × 1:4 = 1:576**. O disco gira devagar, com torque suficiente para alimentar o tubo vertical.
+Total reduction at the “propeller” (3-hole disc) shaft: **1:48 × 1:3 × 1:4 = 1:576**. The disc turns slowly with enough torque to feed the vertical tube.
 
 ### Servos
-- **Servo 1 (TILT)** – pino 10. Inclinação (cima/baixo).
-- **Servo 2 (PAN)** – pino 9. Direção horizontal (esquerda/direita).
+- **Servo 1 (TILT)** – pin 10. Tilt (up/down).
+- **Servo 2 (PAN)** – pin 9. Horizontal aim (left/right).
 
-Limites (MIN/MID/MAX) configuráveis na tela Settings e gravados em EEPROM.
+Limits (MIN/MID/MAX) are configurable in the Settings screen and stored in EEPROM.
 
 ### Bluetooth (HC-05)
-- **Módulo HC-05** – conectado em **Serial1** (TX 18, RX 19), **9600 baud**. Envio de comandos do app (CONFIG/START/STOP). **Funciona apenas com Android**; o app mobile não suporta iOS para Bluetooth clássico (SPP).
+- **HC-05 module** – connected to **Serial1** (TX pin 18, RX pin 19), **9600 baud**. Sends app commands (CONFIG/START/STOP). **Android only**; the mobile app does not support iOS for classic Bluetooth (SPP).
 
-Conexão do HC-05 com o Arduino Mega (divisor de tensão no RXD para 3,3 V):
+Wiring between Arduino Mega and HC-05. The module’s **RX** needs a voltage divider from 5 V to ~3.3 V:
 
-- **Arduino TX (pino 18)** → resistor **1 kΩ** → **HC-05 RXD**. Nessa mesma junção (entre o 1 kΩ e o RXD), um resistor de **2 kΩ** vai para **GND**. Assim o RXD do HC-05 vê ~3,3 V (5 V × 2k/(1k+2k)).
-- **HC-05 TXD** → **Arduino RX (pino 19)**. O HC-05 em geral é 3,3 V; o RX da Mega aceita 3,3 V, então costuma ser conexão direta.
+- **Arduino TX (pin 18)** is 5 V. Use a **1 kΩ** resistor from TX to the module’s **RX**; at that same junction, a **2 kΩ** resistor to **GND**. The module RX then sees ~3.3 V (5 V × 2k/(1k+2k)).
+- **Module TX** → **Arduino RX (pin 19)**. HC-05 is 3.3 V; Mega RX accepts 3.3 V, so usually a direct connection.
+
+Voltage divider (Arduino TX → module RX):
 
 ```
-                    Arduino Mega 2560
-                    ┌─────────────────┐
-                    │                 │
-     Serial1 TX  ────┤ 18 (TX1)        │
-                    │      │          │
-                    │      │ 1kΩ      │
-                    │      └──┬────────┤
-                    │         │       │
-                    │         ├───────┤
-                    │         │ 2kΩ   │
-                    │         │       │
-     Serial1 RX  ────┤ 19 (RX1)◄──────┼──── HC-05 TXD
-                    │         │       │
-                    │        GND      │
-                    │                 │
-                    └─────────────────┘
-                           │
-                           │  (entre 1k e RXD)
-                           ▼
-                    ┌─────────────────┐
-                    │      HC-05       │
-                    │  RXD ◄── junção  │
-                    │  TXD ────────────┼────► Arduino 19 (RX1)
-                    │  GND, VCC, etc.  │
-                    └─────────────────┘
+5V (Arduino pin 18 TX) ── 1k ──●── Module RX (HC-05 RXD)
+                              │
+                             2k
+                              │
+                             GND
 ```
+
+Module TX (TXD) → Arduino pin 19 (RX) — direct.
 
 ---
 
-## Arquitetura do firmware
+## Firmware architecture
 
-O projeto está em `firmware/ping-pong-robot/`. Um único sketch (.ino) inclui vários módulos em C++.
+The project lives in `firmware/ping-pong-robot/`. A single sketch (.ino) pulls in several C++ modules.
 
-### Fluxo principal (`ping-pong-robot.ino`)
+### Main flow (`ping-pong-robot.ino`)
 
 1. **setup()**  
-   Inicializa: Serial (debug), joystick, display, servos, motores, Bluetooth.
+   Initializes: Serial (debug), joystick, display, servos, motors, Bluetooth.
 
-2. **loop()** (resumo):
-   - **processBTInput()** – lê Serial1, acumula linhas e processa comandos (START/STOP/CONFIG).
-   - **updateButton()** – atualiza short/long press do botão do joystick.
-   - **updateRunningLogic()** – se `isRunning`, atualiza PAN/TILT (live ou auto), servos, motores do lançador (M1–M3) e do feeder (M4); respeita timer se configurado.
-   - **updateAxisPreviewTargets()** – nas telas PAN/TILT, atualiza o alvo para preview dos modos auto/random.
-   - **Long press** – em qualquer tela (exceto Home) volta para Home e para motores se estiver rodando.
-   - **readNavEvent()** – lê joystick e gera eventos NAV_UP/DOWN/LEFT/RIGHT (com debounce/repeat).
-   - **Switch por `currentScreen`** – trata navegação e botão para cada tela e chama o `render*` correspondente.
+2. **loop()** (summary):
+   - **processBTInput()** – reads Serial1, buffers lines, processes commands (START/STOP/CONFIG).
+   - **updateButton()** – updates short/long press for the joystick button.
+   - **updateRunningLogic()** – when `isRunning`, updates PAN/TILT (live or auto), servos, launcher motors (M1–M3) and feeder (M4); respects timer if set.
+   - **updateAxisPreviewTargets()** – on PAN/TILT screens, updates target for auto/random preview.
+   - **Long press** – from any screen (except Home) goes back to Home and stops motors if running.
+   - **readNavEvent()** – reads joystick and emits NAV_UP/DOWN/LEFT/RIGHT (with debounce/repeat).
+   - **Switch on `currentScreen`** – handles navigation and button per screen and calls the right `render*`.
 
-### Módulos
+### Modules
 
-| Arquivo        | Função |
-|----------------|--------|
-| **config.h/cpp** | Defines (pinos, tamanho do display, deadzone, etc.), enums (`Screen`, `NavEvent`, `AxisMode`, `FeederMode`, `SpinMode`), struct `Config` (pan/tilt, launcher, feeder, timer). Funções auxiliares para nomes e timers. |
-| **utils.h/cpp** | `clampInt`, `clampFloat`, `joyToNorm` (analógico → -1..1), `applyIncremental` (ajuste de aim com stick). |
-| **joystick.h/cpp** | `initJoystick`, `updateButton` (short/long press), `readNavEvent` (D-pad a partir de JOY_X/JOY_Y). |
-| **display.h/cpp** | Inicialização do OLED, `drawHeader`, `drawMiniRadar`, `drawSpinVisualizer`, `drawFeederModeGraph`, `drawFeederRotor`. |
-| **servos.h/cpp** | Inicialização, `updateServos(panNorm, tiltNorm)` (mapeia -1..1 para ângulos com MIN/MID/MAX), leitura/gravação de limites na EEPROM. |
-| **motors.h/cpp** | Inicialização dos 4 motores (AF_DCMotor). `updateLauncherMotors(power, spinMode, spinIntensity)` (M1–M3 com spin por ângulo), `updateFeederMotor(speed, mode, customOnMs, customOffMs)` (M4 em contínuo ou pulsos). `stopAllMotors`, `runSingleMotor` (teste em Settings), cache para evitar writes desnecessários. |
-| **logic.h/cpp** | Estado global (telas, índices de menu, `cfg`, `isRunning`, etc.). Lógica de auto: AUTO1 (velocidade contínua), AUTO2 (step + pause), RANDOM (alvo aleatório com pause). `updateRunningLogic()` aplica pan/tilt (live ou auto), atualiza servos e motores. `startRunning()` inicia com velocidade reduzida e sobe no próximo loop. |
-| **screens.h/cpp** | Funções `render*` para cada tela: Home, Info, Wizard, Pan, Tilt, Launcher, Spin, Feeder, Timer, Running, Settings, Settings Servo, Settings Motor, Pan/Tilt Edit. |
-| **bt_command.h/cpp** | `initBTCommand` (Serial1 9600), `processBTInput`. Protocolo por linhas: `S`/`START` = start, `P`/`STOP` = parar e ir para Home, `C,<26 ints>` = aplicar config (panMode, tiltMode, targets, limites, launcher, feeder, timer, etc.). |
+| File | Role |
+|------|------|
+| **config.h/cpp** | Defines (pins, display size, deadzone, etc.), enums (`Screen`, `NavEvent`, `AxisMode`, `FeederMode`, `SpinMode`), struct `Config` (pan/tilt, launcher, feeder, timer). Helpers for names and timers. |
+| **utils.h/cpp** | `clampInt`, `clampFloat`, `joyToNorm` (analog → -1..1), `applyIncremental` (aim adjustment with stick). |
+| **joystick.h/cpp** | `initJoystick`, `updateButton` (short/long press), `readNavEvent` (D-pad from JOY_X/JOY_Y). |
+| **display.h/cpp** | OLED init, `drawHeader`, `drawMiniRadar`, `drawSpinVisualizer`, `drawFeederModeGraph`, `drawFeederRotor`. |
+| **servos.h/cpp** | Init, `updateServos(panNorm, tiltNorm)` (maps -1..1 to angles with MIN/MID/MAX), load/save servo limits to EEPROM. |
+| **motors.h/cpp** | Init of 4 motors (AF_DCMotor). `updateLauncherMotors(power, spinMode, spinIntensity)` (M1–M3 with spin by angle), `updateFeederMotor(speed, mode, customOnMs, customOffMs)` (M4 continuous or pulsed). `stopAllMotors`, `runSingleMotor` (Settings test), cache to avoid unnecessary writes. |
+| **logic.h/cpp** | Global state (screens, menu indices, `cfg`, `isRunning`, etc.). Auto logic: AUTO1 (continuous speed), AUTO2 (step + pause), RANDOM (random target + pause). `updateRunningLogic()` applies pan/tilt (live or auto), updates servos and motors. `startRunning()` starts at reduced speed and ramps on next loop. |
+| **screens.h/cpp** | `render*` functions for each screen: Home, Info, Wizard, Pan, Tilt, Launcher, Spin, Feeder, Timer, Running, Settings, Settings Servo, Settings Motor, Pan/Tilt Edit. |
+| **bt_command.h/cpp** | `initBTCommand` (Serial1 9600), `processBTInput`. Line-based protocol: `S`/`START` = start, `P`/`STOP` = stop and go to Home, `C,<26 ints>` = apply config (panMode, tiltMode, targets, limits, launcher, feeder, timer, etc.). |
 
-### Telas (enum `Screen`)
+### Screens (enum `Screen`)
 
 - **HOME** – Start Wizard, Info, Settings.
-- **WIZARD** – Pan, Tilt, Launcher, Feeder, Timer, START (entra em Running).
-- **PAN / TILT** – Modo (LIVE, AUTO1, AUTO2, RANDOM), parâmetros (speed/step/min/max/pause), “Edit Target” em LIVE, Back.
-- **PAN_EDIT / TILT_EDIT** – Ajuste do alvo com joystick em tempo real; servos acompanham.
+- **WIZARD** – Pan, Tilt, Launcher, Feeder, Timer, START (enters Running).
+- **PAN / TILT** – Mode (LIVE, AUTO1, AUTO2, RANDOM), parameters (speed/step/min/max/pause), “Edit Target” in LIVE, Back.
+- **PAN_EDIT / TILT_EDIT** – Adjust target with joystick in real time; servos follow.
 - **LAUNCHER** – Power (0–255), Spin Config, Back.
-- **SPIN** – Direction (N/NE/E/…/NONE), Intensity (0–512; >255 permite reverso em um motor), Back.
-- **FEEDER** – Mode (CONT, P1/1, P2/1, P2/2, CUSTOM), Speed, On/Off em CUSTOM, Back.
+- **SPIN** – Direction (N/NE/E/…/NONE), Intensity (0–512; >255 allows one motor in reverse), Back.
+- **FEEDER** – Mode (CONT, P1/1, P2/1, P2/2, CUSTOM), Speed, On/Off for CUSTOM, Back.
 - **TIMER** – OFF, 15s, 30s, 1m, 2m, 5m, Back.
-- **RUNNING** – Mostra estado (timer, pan/tilt, power, spin); short press volta ao Wizard e para.
-- **INFO** – Versão e “Max played” em segundos.
-- **SETTINGS** – Servo 1, Servo 2, M1, M2, M3, M4 (teste individual), Back.
-- **SETTINGS_SERVO** – Ajuste MIN/MID/MAX do servo selecionado; Back grava na EEPROM.
-- **SETTINGS_MOTOR** – Teste de um motor (M1–M4) com barra de velocidade.
+- **RUNNING** – Shows state (timer, pan/tilt, power, spin); short press goes back to Wizard and stops.
+- **INFO** – Version and “Max played” in seconds.
+- **SETTINGS** – Servo 1, Servo 2, M1, M2, M3, M4 (individual test), Back.
+- **SETTINGS_SERVO** – Adjust MIN/MID/MAX for selected servo; Back saves to EEPROM.
+- **SETTINGS_MOTOR** – Test one motor (M1–M4) with speed bar.
 
-### Config e Bluetooth
+### Config and Bluetooth
 
-A struct `Config` guarda todos os parâmetros de treino (pan/tilt, launcher, spin, feeder, timer). Ela não é persistida na EEPROM pelo firmware atual; apenas os limites dos servos são. O app pode enviar uma linha `C,<26 valores>` para sincronizar a config inteira antes de enviar START.
-
----
-
-## Como compilar e gravar
-
-1. Abrir `firmware/ping-pong-robot/ping-pong-robot.ino` no Arduino IDE (ou PlatformIO).
-2. Placa: **Arduino Mega 2560**.
-3. Instalar bibliotecas: **Adafruit GFX**, **Adafruit SSD1306**, **AFMotor** (ou a variante **AFMotor_R4** usada no código).
-4. Compilar e gravar na Mega.
+The `Config` struct holds all training parameters (pan/tilt, launcher, spin, feeder, timer). It is not stored in EEPROM in the current firmware; only servo limits are. The app can send a line `C,<26 values>` to sync the full config before sending START.
 
 ---
 
-## App mobile
+## Build and upload
 
-O app React Native (pasta `mobile/`) conecta ao robô via Bluetooth e envia a mesma config e comandos (CONFIG/START/STOP). Documentação completa do app: ver **`../mobile/README.md`**.
+1. Open `firmware/ping-pong-robot/ping-pong-robot.ino` in Arduino IDE (or PlatformIO).
+2. Board: **Arduino Mega 2560**.
+3. Install libraries: **Adafruit GFX**, **Adafruit SSD1306**, **AFMotor** (or the **AFMotor_R4** variant used in the code).
+4. Build and upload to the Mega.
+
+---
+
+## Mobile app
+
+The React Native app in the `mobile/` folder connects to the robot over Bluetooth and sends the same config and commands (CONFIG/START/STOP). Full app documentation: **`../mobile/README.md`**.

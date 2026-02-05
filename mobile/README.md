@@ -1,47 +1,47 @@
-# Ping Pong Robot – App Mobile
+# Ping Pong Robot – Mobile App
 
-App React Native que controla o robô de ping-pong via **Bluetooth clássico (SPP)**. Replica e estende a experiência do display TFT do robô com interface mais rica e intuitiva.
+React Native app that controls the ping-pong robot via **classic Bluetooth (SPP)**. It replicates and extends the TFT display experience with a richer, more intuitive UI.
 
-**Plataforma:** apenas **Android** (Bluetooth clássico; iOS não é suportado pelo módulo HC-05 / stack atual).
+**Platform:** **Android only** (classic Bluetooth; iOS is not supported by the HC-05 module / current stack).
 
 ---
 
-## Conexão com o Arduino
+## Connecting to the Arduino
 
-### Requisitos
-- **Dispositivo Android** com Bluetooth.
-- **Robô ligado** e módulo **HC-05** pareado com o celular (modo pareamento do HC-05, se necessário).
-- **Permissões:** `BLUETOOTH`, `BLUETOOTH_CONNECT` (Android 12+). O app solicita em tempo de execução.
+### Requirements
+- **Android device** with Bluetooth.
+- **Robot powered on** and **HC-05** paired with the phone (pairing mode on HC-05 if needed).
+- **Permissions:** `BLUETOOTH`, `BLUETOOTH_CONNECT` (Android 12+). The app requests them at runtime.
 
-### Fluxo no app
-1. **Home** → toque em **Conectar** (ou equivalente).
-2. Tela **Connect** lista dispositivos **já pareados** (`getBondedDevices()`). Não há descoberta de dispositivos não pareados; o usuário deve parear o HC-05 nas configurações do Android antes.
-3. Usuário toca em um dispositivo → `setBluetoothTargetDevice(btDevice)` e `dataSource.connect()`. A lib usa **RFCOMM** com delimiter `\n` e charset UTF-8.
-4. Após conectado, o status fica “Conectado” e o app pode enviar **CONFIG**, **START** e **STOP**.
+### App flow
+1. **Home** → tap **Connect** (or equivalent).
+2. **Connect** screen lists **already paired** devices (`getBondedDevices()`). There is no discovery of unpaired devices; the user must pair the HC-05 in Android settings first.
+3. User taps a device → `setBluetoothTargetDevice(btDevice)` and `dataSource.connect()`. The library uses **RFCOMM** with delimiter `\n` and UTF-8.
+4. Once connected, status shows “Connected” and the app can send **CONFIG**, **START**, and **STOP**.
 
-### Biblioteca
+### Library
 - **react-native-bluetooth-classic** (1.73.0-rc.17). API: `getBondedDevices()`, `device.connect(options)`, `device.write(data, 'utf-8')`, `device.disconnect()`.
 
 ---
 
-## Protocolo de comunicação (app → Arduino)
+## Communication protocol (app → Arduino)
 
-Tudo é **texto por linha** (terminador `\n`). O Arduino **não envia respostas**; o app apenas envia comandos e assume que foram recebidos.
+Everything is **text, line-based** (terminator `\n`). The Arduino **does not send replies**; the app only sends commands and assumes they were received.
 
-### Comandos
+### Commands
 
-| Comando | Formato | Efeito no Arduino |
-|--------|---------|-------------------|
-| **Start** | `S\n` ou `START\n` | Chama `startRunning()`: inicia motores com velocidade reduzida e vai para tela RUNNING. |
-| **Stop** | `P\n` ou `STOP\n` | Para todos os motores, `isRunning = false`, `currentScreen = SCREEN_HOME`. |
-| **Config** | `C,v0,v1,...,v25\n` | Atualiza a struct `Config` no Arduino com 26 inteiros (ordem fixa). |
+| Command | Format | Effect on Arduino |
+|--------|--------|-------------------|
+| **Start** | `S\n` or `START\n` | Calls `startRunning()`: starts motors at reduced speed and goes to RUNNING screen. |
+| **Stop** | `P\n` or `STOP\n` | Stops all motors, `isRunning = false`, `currentScreen = SCREEN_HOME`. |
+| **Config** | `C,v0,v1,...,v25\n` | Updates the Arduino `Config` struct with 26 integers (fixed order). |
 
-### Formato da linha de config (`C,...`)
+### Config line format (`C,...`)
 
-26 valores inteiros separados por vírgula, na ordem abaixo. Valores float no app são enviados × 1000 (inteiro).
+26 comma-separated integers in the order below. Float values in the app are sent × 1000 (integer).
 
-| Índice | Significado no Arduino | Exemplo (app → Arduino) |
-|--------|------------------------|-------------------------|
+| Index | Meaning on Arduino | Example (app → Arduino) |
+|-------|--------------------|-------------------------|
 | 0 | panMode (0=LIVE, 1=AUTO1, 2=AUTO2, 3=RANDOM) | 0 |
 | 1 | tiltMode | 0 |
 | 2 | panTarget × 1000 | 0 |
@@ -66,103 +66,103 @@ Tudo é **texto por linha** (terminador `\n`). O Arduino **não envia respostas*
 | 24 | feederCustomOffMs | 750 |
 | 25 | timerIndex (0=OFF, 1=15s, … 5=5m) | 0 |
 
-A geração da linha no app está em **`src/data/btProtocol.ts`**: `configToConfigLine(config)` e `getStartCommand()` / `getStopCommand()`.
+Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLine(config)` and `getStartCommand()` / `getStopCommand()`.
 
 ---
 
-## Como o Arduino interpreta e “responde”
+## How the Arduino interprets and “replies”
 
-- **Não há canal de resposta.** O Arduino só lê de `Serial1` no `loop()` em `processBTInput()`.
-- Acumula caracteres até `\n` ou `\r`, monta uma linha e chama `processLine()`:
-  - **S** ou **START** → `startRunning()` (entra em RUNNING e liga motores).
-  - **P** ou **STOP** → para motores e volta para `SCREEN_HOME`.
-  - **C,v0,...,v25** → preenche `cfg` (struct global), com clamps nos valores.
-- O estado real (telas, motores, timer) existe só no Arduino. O app mantém um “espelho” local (config + run state) para UI e timer; se a conexão cair, o robô continua com a última config até receber STOP ou desligar.
+- **There is no reply channel.** The Arduino only reads from `Serial1` in `loop()` inside `processBTInput()`.
+- It buffers characters until `\n` or `\r`, builds a line and calls `processLine()`:
+  - **S** or **START** → `startRunning()` (enters RUNNING and starts motors).
+  - **P** or **STOP** → stops motors and goes to `SCREEN_HOME`.
+  - **C,v0,...,v25** → fills `cfg` (global struct), with value clamping.
+- Real state (screens, motors, timer) lives only on the Arduino. The app keeps a local “mirror” (config + run state) for UI and timer; if the connection drops, the robot keeps the last config until it receives STOP or is powered off.
 
 ---
 
-## Arquitetura do app (resumo)
+## App architecture (summary)
 
-- **MVVM** por tela: `index.tsx` (container), `*.viewModel.ts` (lógica), `*.view.tsx` (UI). Repositórios para dados; nenhuma chamada de API direta na viewModel.
-- **Navegação:** `RootStack.tsx` – stack com telas: Home, Connect, Wizard, Pan, Tilt, Launcher, Feeder, Timer, Running, TrainingComplete, Info, Settings, SettingsServoTilt, SettingsServoPan, SettingsMotorTest.
+- **MVVM** per screen: `index.tsx` (container), `*.viewModel.ts` (logic), `*.view.tsx` (UI). Repositories for data; no direct API calls in the viewModel.
+- **Navigation:** `RootStack.tsx` – stack with screens: Home, Connect, Wizard, Pan, Tilt, Launcher, Feeder, Timer, Running, TrainingComplete, Info, Settings, SettingsServoTilt, SettingsServoPan, SettingsMotorTest.
 
-### Camada de dados
+### Data layer
 
-| Artefato | Função |
-|----------|--------|
-| **RobotConfig** / **DEFAULT_CONFIG** | Tipo e valores padrão da config (pan, tilt, launcher, spin, feeder, timer). |
-| **RobotConfigRepository** | Config em memória; `getConfig`, `setConfig(partial)`, `subscribe`. Usado por Wizard e telas de ajuste. |
-| **RobotConnectionDataSource** | Interface: `connect`, `disconnect`, `sendConfig`, `start`, `stop`, estado de conexão. |
-| **BluetoothRobotConnectionDataSource** | Implementação real: usa `react-native-bluetooth-classic`, `setBluetoothTargetDevice`, `write(line)`. |
-| **RobotConnectionRepository** | `startRun(config)` = `sendConfig(config)` + `start()`; `stopRun()` = `stop()`; mantém `runStartTime` e `runConfig` para Running/TrainingComplete. |
-| **btProtocol.ts** | `configToConfigLine`, `getStartCommand`, `getStopCommand` – geração exata das linhas enviadas ao Arduino. |
-| **PresetsRepository** | Presets do Wizard (AsyncStorage); load/save/delete; não existe no Arduino. |
-| **HardwareSettingsRepository** (servos) | Limites de servos (min/mid/max) no app via AsyncStorage; **não são enviados ao Arduino**. No robô, os limites são ajustados no display e gravados em EEPROM. |
+| Artifact | Role |
+|----------|------|
+| **RobotConfig** / **DEFAULT_CONFIG** | Type and default values for config (pan, tilt, launcher, spin, feeder, timer). |
+| **RobotConfigRepository** | In-memory config; `getConfig`, `setConfig(partial)`, `subscribe`. Used by Wizard and adjustment screens. |
+| **RobotConnectionDataSource** | Interface: `connect`, `disconnect`, `sendConfig`, `start`, `stop`, connection state. |
+| **BluetoothRobotConnectionDataSource** | Real implementation: uses `react-native-bluetooth-classic`, `setBluetoothTargetDevice`, `write(line)`. |
+| **RobotConnectionRepository** | `startRun(config)` = `sendConfig(config)` + `start()`; `stopRun()` = `stop()`; holds `runStartTime` and `runConfig` for Running/TrainingComplete. |
+| **btProtocol.ts** | `configToConfigLine`, `getStartCommand`, `getStopCommand` – exact line generation sent to the Arduino. |
+| **PresetsRepository** | Wizard presets (AsyncStorage); load/save/delete; not present on the Arduino. |
+| **HardwareSettingsRepository** (servos) | Servo limits (min/mid/max) in the app via AsyncStorage; **not sent to the Arduino**. On the robot, limits are adjusted on the display and stored in EEPROM. |
 
-### Fluxo “Start” a partir do app
+### “Start” flow from the app
 
-1. Usuário no **Wizard** toca **Start**.
+1. User taps **Start** on **Wizard**.
 2. `RobotConnectionRepository.startRun(config)`:
-   - `dataSource.sendConfig(config)` → envia `C,<26 valores>\n`.
-   - `dataSource.start()` → envia `S\n`.
-3. Navegação para **Running**; o repositório guarda `runStartTime` e `runConfig`.
-4. Na tela **Running**, o app mostra tempo decorrido/restante e pode chamar `stopRun()` (envia `P\n`) e voltar.
+   - `dataSource.sendConfig(config)` → sends `C,<26 values>\n`.
+   - `dataSource.start()` → sends `S\n`.
+3. Navigate to **Running**; repository stores `runStartTime` and `runConfig`.
+4. On **Running**, the app shows elapsed/remaining time and can call `stopRun()` (sends `P\n`) and go back.
 
 ---
 
-## Telas principais e equivalência com o Arduino
+## Main screens and Arduino equivalence
 
-| App | Arduino (display) | Observação |
-|-----|-------------------|------------|
-| **Home** | HOME | App tem cards: Conectar, Start Wizard, Info, Settings. |
-| **Connect** | — | Só no app: listar pareados e conectar ao HC-05. |
-| **Wizard** | WIZARD | Pan, Tilt, Launcher, Feeder, Timer + Start. Preview visual rico (Aim, Feeder, Spin). |
-| **Pan / Tilt** | SCREEN_PAN / SCREEN_TILT | Mesmos modos (LIVE, AUTO1, AUTO2, RANDOM) e parâmetros. App tem sliders/inputs; Arduino usa joystick. |
-| **Launcher** | SCREEN_LAUNCHER + SCREEN_SPIN | Power e spin (direção + intensidade). |
-| **Feeder** | SCREEN_FEEDER | Modos e velocidade; CUSTOM com on/off em ms. |
+| App | Arduino (display) | Note |
+|-----|-------------------|------|
+| **Home** | HOME | App has cards: Connect, Start Wizard, Info, Settings. |
+| **Connect** | — | App only: list paired devices and connect to HC-05. |
+| **Wizard** | WIZARD | Pan, Tilt, Launcher, Feeder, Timer + Start. Rich visual preview (Aim, Feeder, Spin). |
+| **Pan / Tilt** | SCREEN_PAN / SCREEN_TILT | Same modes (LIVE, AUTO1, AUTO2, RANDOM) and parameters. App has sliders/inputs; Arduino uses joystick. |
+| **Launcher** | SCREEN_LAUNCHER + SCREEN_SPIN | Power and spin (direction + intensity). |
+| **Feeder** | SCREEN_FEEDER | Modes and speed; CUSTOM with on/off in ms. |
 | **Timer** | SCREEN_TIMER | OFF, 15s, 30s, 1m, 2m, 5m. |
-| **Running** | SCREEN_RUNNING | App mostra tempo, config atual, previews; botão Stop envia `P\n`. |
-| **TrainingComplete** | — | Só no app: tela ao fim do timer (vibração/notificação opcional). |
-| **Settings** | SCREEN_SETTINGS | Servo Tilt/Pan, teste M1–M4. Limites de servo no app ficam no app (AsyncStorage); no robô ficam na EEPROM. |
-| **Info** | SCREEN_INFO | Versão / estatísticas. |
+| **Running** | SCREEN_RUNNING | App shows time, current config, previews; Stop button sends `P\n`. |
+| **TrainingComplete** | — | App only: screen when timer ends (vibration/notification optional). |
+| **Settings** | SCREEN_SETTINGS | Servo Tilt/Pan, M1–M4 test. Servo limits in the app stay in the app (AsyncStorage); on the robot they are in EEPROM. |
+| **Info** | SCREEN_INFO | Version / stats. |
 
 ---
 
-## Diferenças importantes (app vs Arduino)
+## Important differences (app vs Arduino)
 
 1. **Spin “Random”**  
-   No app existe **spinRandom** e **spinRandomIntervalSec**. O protocolo envia **apenas uma direção de spin** (campo 19). O Arduino mantém essa direção fixa. O “random” no app é **só visual**: a cada N segundos o app troca a direção exibida na UI; o robô **não** recebe atualizações de spin durante o run. Para spin realmente aleatório no robô seria preciso enviar novas linhas `C,...` periodicamente (não implementado).
+   The app has **spinRandom** and **spinRandomIntervalSec**. The protocol sends **only one spin direction** (field 19). The Arduino keeps that direction fixed. “Random” in the app is **visual only**: every N seconds the app changes the direction shown in the UI; the robot **does not** receive spin updates during the run. For truly random spin on the robot you would need to send new `C,...` lines periodically (not implemented).
 
-2. **Timer e fim de treino**  
-   O Arduino usa `timerMsByIndex` e para sozinho ao atingir o tempo, voltando para HOME. O app também calcula tempo restante; ao chegar a zero dispara notificação/vibração (se habilitado) e chama `stopRun()` e navega para **TrainingComplete**.
+2. **Timer and end of session**  
+   The Arduino uses `timerMsByIndex` and stops by itself when the time is reached, going back to HOME. The app also computes remaining time; when it hits zero it can trigger notification/vibration (if enabled) and call `stopRun()`, then navigate to **TrainingComplete**.
 
-3. **Limites dos servos**  
-   No Arduino: editados na tela Settings e salvos em EEPROM. No app: **HardwareSettingsRepository** (ServoTilt/ServoPan) persiste no AsyncStorage; **não há envio desses valores para o robô**. São duas fontes de verdade independentes.
+3. **Servo limits**  
+   On the Arduino: edited on the Settings screen and saved to EEPROM. In the app: **HardwareSettingsRepository** (ServoTilt/ServoPan) persists to AsyncStorage; **these values are not sent to the robot**. Two independent sources of truth.
 
 4. **Presets**  
-   Só no app (PresetsRepository, Wizard menu “Save/Load preset”). O Arduino não conhece presets.
+   App only (PresetsRepository, Wizard menu “Save/Load preset”). The Arduino does not know about presets.
 
-5. **Conexão**  
-   O app precisa estar conectado para Start/Stop/Config terem efeito. O display e o joystick do robô funcionam mesmo sem app.
-
----
-
-## O que é necessário para conectar ao Arduino
-
-- **Android** (iOS não suportado).
-- HC-05 **já pareado** com o dispositivo.
-- App com permissão **Bluetooth (Connect)**.
-- Robô ligado e HC-05 em modo SPP (comunicação serial).
-- **Ordem recomendada:** 1) Conectar (tela Connect); 2) Configurar no Wizard; 3) Start (envia config + start). Para parar: Stop na tela Running ou no robô (long press para Home).
+5. **Connection**  
+   The app must be connected for Start/Stop/Config to take effect. The robot’s display and joystick work without the app.
 
 ---
 
-## Referência rápida para colaboradores e agentes
+## What you need to connect to the Arduino
 
-- **Protocolo:** linhas terminadas em `\n`. Comandos: `S`, `P`, `C,<26 ints>`. Código de geração: `src/data/btProtocol.ts`.
-- **Conexão:** `src/data/BluetoothRobotConnectionDataSource.ts` e `src/screens/Connect/`.
-- **Config global do treino:** `RobotConfigRepository` + `RobotConfig` em `src/data/RobotConfig.ts`.
-- **Início/fim de run:** `RobotConnectionRepository.startRun` / `stopRun`; telas Wizard e Running.
-- **Diferenças com o firmware:** spinRandom só na UI do app; limites de servo não sincronizados; presets e TrainingComplete só no app; Arduino não envia nada de volta.
+- **Android** (iOS not supported).
+- HC-05 **already paired** with the device.
+- App granted **Bluetooth (Connect)** permission.
+- Robot on and HC-05 in SPP (serial) mode.
+- **Recommended order:** 1) Connect (Connect screen); 2) Configure in Wizard; 3) Start (sends config + start). To stop: Stop on Running screen or on the robot (long press to Home).
 
-Documentação do hardware e do firmware (incluindo diagrama do HC-05): **`../firmware/README.md`**.
+---
+
+## Quick reference for contributors and agents
+
+- **Protocol:** Lines ending with `\n`. Commands: `S`, `P`, `C,<26 ints>`. Generation code: `src/data/btProtocol.ts`.
+- **Connection:** `src/data/BluetoothRobotConnectionDataSource.ts` and `src/screens/Connect/`.
+- **Global training config:** `RobotConfigRepository` + `RobotConfig` in `src/data/RobotConfig.ts`.
+- **Run start/stop:** `RobotConnectionRepository.startRun` / `stopRun`; Wizard and Running screens.
+- **Differences from firmware:** spinRandom only in app UI; servo limits not synced; presets and TrainingComplete only in app; Arduino never sends data back.
+
+Hardware and firmware documentation (including HC-05 diagram): **`../firmware/README.md`**.
