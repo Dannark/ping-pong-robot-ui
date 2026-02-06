@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   getAxisModes,
   getTiltState,
@@ -19,6 +20,13 @@ import { TiltView } from './Tilt.view';
 
 export function TiltScreen() {
   const [state, setState] = useState(() => getTiltState());
+  const [liveSliderKey, setLiveSliderKey] = useState(0);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLiveSliderKey((k) => k + 1);
+    }, [])
+  );
 
   useEffect(() => {
     return subscribeConfig((c) => {
@@ -71,6 +79,7 @@ export function TiltScreen() {
       onModeSelect={setTiltMode}
       onTiltTargetChange={setTiltTarget}
       onTiltSlidingComplete={flushTiltLiveSend}
+      liveSliderKey={liveSliderKey}
       onTiltMinChange={setTiltMin}
       onTiltMaxChange={setTiltMax}
       onTiltAuto1SpeedChange={setTiltAuto1Speed}

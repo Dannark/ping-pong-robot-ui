@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   getAxisModes,
   getPanState,
@@ -19,6 +20,13 @@ import { PanView } from './Pan.view';
 
 export function PanScreen() {
   const [state, setState] = useState(() => getPanState());
+  const [liveSliderKey, setLiveSliderKey] = useState(0);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLiveSliderKey((k) => k + 1);
+    }, [])
+  );
 
   useEffect(() => {
     return subscribeConfig((c) => {
@@ -71,6 +79,7 @@ export function PanScreen() {
       onModeSelect={setPanMode}
       onPanTargetChange={setPanTarget}
       onPanSlidingComplete={flushPanLiveSend}
+      liveSliderKey={liveSliderKey}
       onPanMinChange={setPanMin}
       onPanMaxChange={setPanMax}
       onPanAuto1SpeedChange={setPanAuto1Speed}

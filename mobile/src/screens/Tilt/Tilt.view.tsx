@@ -38,6 +38,7 @@ type TiltViewProps = {
   onTiltAuto3PauseMsChange: (value: number) => void;
   onReset: () => void;
   onTiltSlidingComplete?: () => void;
+  liveSliderKey?: number;
 };
 
 const PREVIEW_SIZE = 140;
@@ -73,6 +74,7 @@ export function TiltView({
   onTiltAuto3PauseMsChange,
   onReset,
   onTiltSlidingComplete,
+  liveSliderKey,
 }: TiltViewProps) {
   const { t } = useTranslation();
   const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2' || tiltMode === 'RANDOM';
@@ -134,10 +136,11 @@ export function TiltView({
             <Text style={styles.value}>{tiltTarget.toFixed(2)}</Text>
           </View>
           <Slider
+            key={liveSliderKey}
             style={styles.slider}
             minimumValue={-1}
             maximumValue={1}
-            step={0.01}
+            step={0.05}
             value={tiltTarget}
             onValueChange={onTiltTargetChange}
             onSlidingComplete={onTiltSlidingComplete}

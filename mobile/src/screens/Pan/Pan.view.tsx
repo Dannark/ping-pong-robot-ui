@@ -38,6 +38,7 @@ type PanViewProps = {
   onPanAuto3PauseMsChange: (value: number) => void;
   onReset: () => void;
   onPanSlidingComplete?: () => void;
+  liveSliderKey?: number;
 };
 
 const PREVIEW_SIZE = 140;
@@ -73,6 +74,7 @@ export function PanView({
   onPanAuto3PauseMsChange,
   onReset,
   onPanSlidingComplete,
+  liveSliderKey,
 }: PanViewProps) {
   const { t } = useTranslation();
   const isAuto = panMode === 'AUTO1' || panMode === 'AUTO2' || panMode === 'RANDOM';
@@ -134,10 +136,11 @@ export function PanView({
             <Text style={styles.value}>{panTarget.toFixed(2)}</Text>
           </View>
           <Slider
+            key={liveSliderKey}
             style={styles.slider}
             minimumValue={-1}
             maximumValue={1}
-            step={0.01}
+            step={0.05}
             value={panTarget}
             onValueChange={onPanTargetChange}
             onSlidingComplete={onPanSlidingComplete}
