@@ -64,3 +64,8 @@ export function getDeviceNameCommand(deviceName: string): string {
   return 'N,' + sanitized + '\n';
 }
 
+/** Notify robot that app is disconnecting; send before closing BLE so the display updates. */
+export function getDisconnectCommand(): string {
+  return 'D\n';
+}
+

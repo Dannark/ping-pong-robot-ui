@@ -8,6 +8,7 @@ import {
   getStartCommand,
   getStopCommand,
   getDeviceNameCommand,
+  getDisconnectCommand,
 } from './btProtocol';
 
 const HM10_SERVICE_UUID = '0000ffe0-0000-1000-8000-00805f9b34fb';
@@ -189,6 +190,13 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
   }
 
   async disconnect(): Promise<void> {
+    if (this.deviceId && this.state.status === 'connected') {
+      try {
+        await this.writeLine(getDisconnectCommand());
+      } catch {
+        // ignore
+      }
+    }
     this.clearConnectionListeners();
     if (this.deviceId) {
       try {

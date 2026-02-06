@@ -12,7 +12,8 @@
 #define JOY_SW 52
 
 // ================= Bluetooth (HM-10 BLE) =================
-#define BT_STATE_PIN 2   // STATE pin: HIGH when BLE connected, LOW when not
+#define BT_STATE_PIN 22
+#define BT_STATE_HIGH_WHEN_CONNECTED 1   // 1 = STATE HIGH when connected (your HM-10: LOW when idle, HIGH when app connected)
 #define BT_DEVICE_NAME_LEN 24
 
 // ================= Layout =================

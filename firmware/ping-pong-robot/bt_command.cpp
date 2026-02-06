@@ -12,6 +12,11 @@ static int lineLen = 0;
 
 volatile bool btConnected = false;
 char btDeviceName[BT_DEVICE_NAME_LEN + 1] = { '\0' };
+static unsigned long stateHighSinceMs = 0;
+static unsigned long stateNotConnectedSinceMs = 0;
+
+#define BT_STATE_SOLID_HIGH_MS 1500UL
+#define BT_STATE_DISCONNECT_MS 2000UL
 
 bool getBtConnected(void) {
   return btConnected;
@@ -21,9 +26,50 @@ const char* getBtDeviceName() {
   return btDeviceName;
 }
 
+static void setBTDisconnected(void) {
+  if (btConnected) {
+    btConnected = false;
+    btDeviceName[0] = '\0';
+    stateHighSinceMs = 0;
+    stateNotConnectedSinceMs = 0;
+    Serial.println(F("[BT] DISCONNECTED"));
+  }
+}
+
 void updateBTState() {
-  if (digitalRead(BT_STATE_PIN) == HIGH) {
+  const int raw = digitalRead(BT_STATE_PIN);
+  const unsigned long now = millis();
+
+  // Many HM-10 boards blink STATE while advertising and keep it solid when connected.
+  // So we consider "module connected" only when the pin stays in the connected level
+  // continuously for BT_STATE_SOLID_HIGH_MS.
+  const bool pinIsConnectedLevel =
+    (raw == HIGH) ? (BT_STATE_HIGH_WHEN_CONNECTED != 0) : (BT_STATE_HIGH_WHEN_CONNECTED == 0);
+
+  if (pinIsConnectedLevel) {
+    if (stateHighSinceMs == 0) stateHighSinceMs = now;
+  } else {
+    stateHighSinceMs = 0;
+  }
+
+  const bool moduleConnected = (stateHighSinceMs != 0) && ((now - stateHighSinceMs) >= BT_STATE_SOLID_HIGH_MS);
+
+  if (moduleConnected) {
+    stateNotConnectedSinceMs = 0;
     btConnected = true;
+    return;
+  }
+
+  // Not connected: only clear UI after it's been not-connected for BT_STATE_DISCONNECT_MS.
+  if (btConnected) {
+    if (stateNotConnectedSinceMs == 0) {
+      stateNotConnectedSinceMs = now;
+    } else if ((now - stateNotConnectedSinceMs) >= BT_STATE_DISCONNECT_MS) {
+      setBTDisconnected();
+      stateNotConnectedSinceMs = 0;
+    }
+  } else {
+    stateNotConnectedSinceMs = 0;
   }
 }
 
@@ -93,6 +139,11 @@ static void processLine() {
     lineLen = 0;
     return;
   }
+  if (lineBuf[0] == 'D' && (lineLen == 1 || (lineLen >= 8 && strncmp(lineBuf, "DISCONNECT", 8) == 0))) {
+    setBTDisconnected();
+    lineLen = 0;
+    return;
+  }
   const char* nCmd = strstr(lineBuf, "N,");
   if (nCmd != nullptr) {
     int i = 0;
@@ -102,6 +153,8 @@ static void processLine() {
     }
     btDeviceName[i] = '\0';
     btConnected = true;
+    stateHighSinceMs = 0;
+    stateNotConnectedSinceMs = 0;
     Serial.print(F("[BT] CONNECTED name="));
     Serial.println(btDeviceName[0] ? btDeviceName : "(none)");
   }

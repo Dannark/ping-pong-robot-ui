@@ -51,6 +51,8 @@ Voltage divider (Arduino TX → module RX):
 
 Module TX (TXD) → Arduino pin 19 (RX) — direct.
 
+**STATE pin** (optional but recommended): connect HM-10 **STATE** to Arduino **pin 22** (see `BT_STATE_PIN` in `config.h`). The display then shows connected/disconnected based on the module. Many HM-10 use **LOW = connected**; if yours uses HIGH when connected, set `BT_STATE_HIGH_WHEN_CONNECTED` to `1` in `config.h`.
+
 ---
 
 ## Firmware architecture
