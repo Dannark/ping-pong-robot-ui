@@ -29,9 +29,17 @@ const HARDWARE_ITEMS: HardwareItem[] = [
 
 type SettingsViewProps = {
   onHardwareItemPress: (item: HardwareItem) => void;
+  isConnected: boolean;
+  connectedDeviceName: string | null;
+  onDisconnect: () => void;
 };
 
-export function SettingsView({ onHardwareItemPress }: SettingsViewProps) {
+export function SettingsView({
+  onHardwareItemPress,
+  isConnected,
+  connectedDeviceName,
+  onDisconnect,
+}: SettingsViewProps) {
   const { t } = useTranslation();
   const [storedLng, setStoredLng] = useState<string | null>(null);
   const currentLng = i18n.language?.slice(0, 2) ?? 'en';
@@ -84,6 +92,33 @@ export function SettingsView({ onHardwareItemPress }: SettingsViewProps) {
         <Text style={styles.title}>{t('settings.title')}</Text>
         <Text style={styles.subtitle}>{t('settings.subtitle')}</Text>
       </View>
+
+      {isConnected && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.connectionSection')}</Text>
+          <TouchableOpacity
+            style={[styles.row, styles.disconnectRow]}
+            onPress={onDisconnect}
+            activeOpacity={0.8}
+          >
+            <View style={styles.rowLeft}>
+              <View style={styles.rowIconWrap}>
+                <MaterialCommunityIcons
+                  name="bluetooth-off"
+                  size={24}
+                  color={theme.colors.danger}
+                />
+              </View>
+              <Text style={styles.rowLabel}>{t('settings.disconnectFromRobot')}</Text>
+            </View>
+            {connectedDeviceName ? (
+              <Text style={styles.rowValue} numberOfLines={1}>{connectedDeviceName}</Text>
+            ) : (
+              <MaterialCommunityIcons name="chevron-right" size={24} color={theme.colors.textSecondary} />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
@@ -256,5 +291,9 @@ const styles = StyleSheet.create({
   rowValue: {
     ...theme.typography.caption,
     color: theme.colors.textSecondary,
+    maxWidth: 120,
+  },
+  disconnectRow: {
+    borderColor: theme.colors.danger + '40',
   },
 });

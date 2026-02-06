@@ -143,6 +143,8 @@
   "settings": {
     "title": "Ajustes",
     "subtitle": "Servos y motores (próximamente)",
+    "connectionSection": "Conexión",
+    "disconnectFromRobot": "Desconectar del robot",
     "language": "Idioma",
     "languageSystem": "Sistema",
     "configSection": "Configuración (TFT)",
@@ -164,6 +166,11 @@
     "langDe": "Deutsch",
     "langFr": "Français",
     "langZh": "中文"
+  },
+  "connect": {
+    "availableDevices": "Dispositivos disponibles",
+    "noDevices": "No se encontraron dispositivos. Asegúrate de que el robot esté encendido. La app seguirá buscando automáticamente.",
+    "errorConnectionFailed": "No se pudo conectar. El robot puede estar ya conectado a otro dispositivo."
   },
   "info": {
     "title": "SpinBot",

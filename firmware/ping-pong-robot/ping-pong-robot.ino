@@ -24,7 +24,8 @@ void setup() {
 }
 
 void loop() {
-  processBTInput();  // Comandos do app (CONFIG/START/STOP) via Bluetooth
+  processBTInput();
+  updateBTState();
   updateButton();
   updateRunningLogic();
   updateAxisPreviewTargets();

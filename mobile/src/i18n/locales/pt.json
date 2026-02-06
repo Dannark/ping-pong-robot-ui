@@ -20,7 +20,7 @@
     "heroTitle": "SpinBot",
     "heroSubtitle": "Controle pelo app",
     "cardConnect": "Conectar ao robô",
-    "cardConnectSubtitle": "Emparelhar Bluetooth (HC-05)",
+    "cardConnectSubtitle": "Conectar por BLE (HM-10)",
     "cardStart": "Iniciar",
     "cardStartSubtitle": "Configurar e lançar",
     "cardInfo": "Info",
@@ -148,6 +148,8 @@
   "settings": {
     "title": "Configurações",
     "subtitle": "Servos e motores (em breve)",
+    "connectionSection": "Conexão",
+    "disconnectFromRobot": "Desconectar do robô",
     "language": "Idioma",
     "languageSystem": "Sistema",
     "configSection": "Configuração (TFT)",
@@ -172,17 +174,22 @@
   },
   "connect": {
     "selectDevice": "Toque num dispositivo para conectar",
+    "scanning": "A procurar…",
     "connecting": "A conectar…",
     "connected": "Conectado a {{name}}",
     "disconnect": "Desligar",
     "retry": "Tentar outra vez",
     "pairedDevices": "Dispositivos emparelhados",
+    "availableDevices": "Dispositivos disponíveis",
     "noPairedDevices": "Nenhum dispositivo emparelhado. Emparelhe o HC-05 nas definições Bluetooth do telemóvel.",
+    "noDevices": "Nenhum dispositivo encontrado. Ligue o robô. O app continua a procurar automaticamente.",
+    "scanAgain": "Procurar de novo",
     "permissionTitle": "Permissão Bluetooth",
     "permissionMessage": "O SpinBot precisa de acesso Bluetooth para ligar ao robô.",
     "ok": "OK",
     "cancel": "Cancelar",
-    "unknownDevice": "Dispositivo"
+    "unknownDevice": "Dispositivo",
+    "errorConnectionFailed": "Não foi possível conectar. O robô pode já estar ligado a outro dispositivo."
   },
   "info": {
     "title": "SpinBot",

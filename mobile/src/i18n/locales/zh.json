@@ -143,6 +143,8 @@
   "settings": {
     "title": "设置",
     "subtitle": "舵机与电机（即将推出）",
+    "connectionSection": "连接",
+    "disconnectFromRobot": "断开与机器人的连接",
     "language": "语言",
     "languageSystem": "系统",
     "configSection": "配置（TFT）",
@@ -164,6 +166,11 @@
     "langDe": "Deutsch",
     "langFr": "Français",
     "langZh": "中文"
+  },
+  "connect": {
+    "availableDevices": "可用设备",
+    "noDevices": "未找到设备。请确保机器人已开机。应用将自动持续搜索。",
+    "errorConnectionFailed": "无法连接。机器人可能已连接到其他设备。"
   },
   "info": {
     "title": "SpinBot",

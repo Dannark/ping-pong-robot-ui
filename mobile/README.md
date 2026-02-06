@@ -166,3 +166,31 @@ Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLi
 - **Differences from firmware:** spinRandom only in app UI; servo limits not synced; presets and TrainingComplete only in app; Arduino never sends data back.
 
 Hardware and firmware documentation (including HC-05 diagram): **`../firmware/README.md`**.
+
+---
+
+## Building on iOS
+
+If `yarn ios` fails with **xcodebuild exited with error code 70**:
+
+1. **Clean and reinstall**
+   ```bash
+   cd ios
+   rm -rf build Pods Podfile.lock
+   cd ..
+   yarn install
+   cd ios && pod install && cd ..
+   ```
+
+2. **Clear Xcode DerivedData**
+   ```bash
+   rm -rf ~/Library/Developer/Xcode/DerivedData
+   ```
+
+3. **Try building for simulator** (to see the real error in the log)
+   ```bash
+   yarn ios --simulator="iPhone 16"
+   ```
+   If the simulator build works, the issue may be device-specific (e.g. signing or stale device UDID).
+
+4. **Build from Xcode** to get detailed errors: open `ios/PingPongRobotApp.xcworkspace` in Xcode, select your device/simulator, and run (⌘R). Check the Report navigator for the failing step.

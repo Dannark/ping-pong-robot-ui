@@ -3,17 +3,27 @@
 
 #include "config.h"
 
-// Serial1 (pinos 18 TX, 19 RX) - mesmo esquema do bt_pairing_test (1k+2k no TX->RXD do HC-05)
+// Serial1 (pin 18 TX, 19 RX) - HM-10 UART (1k+2k divider on TX -> module RX)
 #define BT_SERIAL Serial1
 #define BT_BAUD 9600
 
-// Buffer para uma linha de comando (ex: CONFIG:0,0,... ou START)
 #define BT_LINE_BUF_SIZE 256
 
-// Chama no setup() para inicializar Serial1
-void initBTCommand();
+// DSD TECH / Keyes HM-10: AT format is "without \r or \n" per datasheet.
+// AT+RENEW = factory restore, AT+RESET = reboot. Run at startup so module advertises.
+#define BT_AT_INIT_AT_STARTUP 1
 
-// Chama no loop(); lê dados do BT, acumula linha e executa comando (CONFIG/START/STOP)
+void initBTCommand();
 void processBTInput();
+
+// Call each loop; reads STATE pin (HM-10 connection status)
+void updateBTState();
+
+// TRUE when STATE pin is HIGH (BLE device connected)
+extern bool btConnected;
+
+// Device name sent by app (N,name); empty if never set
+extern char btDeviceName[BT_DEVICE_NAME_LEN + 1];
+const char* getBtDeviceName();
 
 #endif

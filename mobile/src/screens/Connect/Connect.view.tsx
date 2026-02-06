@@ -11,16 +11,18 @@ import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from '../../theme';
 
-export type BondedDevice = { address: string; name: string };
+export type BLEDeviceItem = { id: string; name: string | null; lastSeen?: number };
 
 type ConnectViewProps = {
-  devices: BondedDevice[];
-  status: 'disconnected' | 'connecting' | 'connected';
+  devices: BLEDeviceItem[];
+  status: 'disconnected' | 'connecting' | 'connected' | 'scanning';
   error?: string;
   connectedDeviceName: string | null;
-  onDevicePress: (device: BondedDevice) => void;
+  robotCount: number;
+  totalCount: number;
+  isRobotDevice: (device: BLEDeviceItem) => boolean;
+  onDevicePress: (device: BLEDeviceItem) => void;
   onDisconnect: () => void;
-  onRetry: () => void;
 };
 
 export function ConnectView({
@@ -28,20 +30,26 @@ export function ConnectView({
   status,
   error,
   connectedDeviceName,
+  robotCount,
+  totalCount,
+  isRobotDevice,
   onDevicePress,
   onDisconnect,
-  onRetry,
 }: ConnectViewProps) {
   const { t } = useTranslation();
 
   const statusText =
-    status === 'connecting'
-      ? t('connect.connecting')
-      : status === 'connected'
-        ? t('connect.connected', { name: connectedDeviceName || 'HC-05' })
-        : error
-          ? error
-          : t('connect.selectDevice');
+    status === 'scanning'
+      ? t('connect.scanning')
+      : status === 'connecting'
+        ? t('connect.connecting')
+        : status === 'connected'
+          ? t('connect.connected', { name: connectedDeviceName || 'HM-10' })
+          : error
+            ? error
+            : t('connect.selectDevice');
+
+  const showSearching = status === 'scanning' || status === 'connecting';
 
   return (
     <View style={styles.container}>
@@ -53,7 +61,7 @@ export function ConnectView({
             color={status === 'connected' ? theme.colors.primary : theme.colors.textSecondary}
           />
           <View style={styles.statusTextWrap}>
-            {status === 'connecting' ? (
+            {showSearching ? (
               <ActivityIndicator size="small" color={theme.colors.primary} style={styles.loader} />
             ) : null}
             <Text style={[styles.statusText, error && styles.statusError]}>{statusText}</Text>
@@ -63,44 +71,46 @@ export function ConnectView({
           <TouchableOpacity style={styles.disconnectButton} onPress={onDisconnect} activeOpacity={0.8}>
             <Text style={styles.disconnectLabel}>{t('connect.disconnect')}</Text>
           </TouchableOpacity>
-        ) : error ? (
-          <TouchableOpacity style={styles.retryButton} onPress={onRetry} activeOpacity={0.8}>
-            <Text style={styles.retryLabel}>{t('connect.retry')}</Text>
-          </TouchableOpacity>
         ) : null}
       </View>
 
-      <Text style={styles.sectionTitle}>{t('connect.pairedDevices')}</Text>
+      <View style={styles.sectionTitleRow}>
+        <Text style={styles.sectionTitle}>{t('connect.availableDevices')}</Text>
+        <Text style={styles.sectionCount}>{robotCount}/{totalCount}</Text>
+      </View>
       {devices.length === 0 ? (
-        <Text style={styles.empty}>{t('connect.noPairedDevices')}</Text>
+        <Text style={styles.empty}>{t('connect.noDevices')}</Text>
       ) : (
         <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
-          {devices.map((d) => (
-            <TouchableOpacity
-              key={d.address}
-              style={styles.row}
-              onPress={() => onDevicePress(d)}
-              disabled={status === 'connecting'}
-              activeOpacity={0.8}
-            >
-              <View style={styles.rowIconWrap}>
-                <MaterialCommunityIcons
-                  name="bluetooth"
-                  size={24}
-                  color={theme.colors.primary}
-                />
-              </View>
-              <View style={styles.rowText}>
-                <Text style={styles.rowName} numberOfLines={1}>{d.name || t('connect.unknownDevice')}</Text>
-                <Text style={styles.rowAddress} numberOfLines={1}>{d.address}</Text>
-              </View>
-              {connectedDeviceName && (d.name === connectedDeviceName || (d.name === '' && connectedDeviceName === 'HC-05')) ? (
-                <MaterialCommunityIcons name="check-circle" size={24} color={theme.colors.primary} />
-              ) : (
-                <MaterialCommunityIcons name="chevron-right" size={24} color={theme.colors.textSecondary} />
-              )}
-            </TouchableOpacity>
-          ))}
+          {devices.map((d) => {
+            const isRobot = isRobotDevice(d);
+            return (
+              <TouchableOpacity
+                key={d.id}
+                style={[styles.row, !isRobot && styles.rowNotRobot]}
+                onPress={() => isRobot && onDevicePress(d)}
+                disabled={status === 'connecting' || !isRobot}
+                activeOpacity={0.8}
+              >
+                <View style={[styles.rowIconWrap, !isRobot && styles.rowIconWrapNotRobot]}>
+                  <MaterialCommunityIcons
+                    name="bluetooth"
+                    size={24}
+                    color={isRobot ? theme.colors.primary : theme.colors.textSecondary}
+                  />
+                </View>
+                <View style={styles.rowText}>
+                  <Text style={[styles.rowName, !isRobot && styles.rowTextNotRobot]} numberOfLines={1}>{d.name || t('connect.unknownDevice')}</Text>
+                  <Text style={[styles.rowAddress, !isRobot && styles.rowTextNotRobot]} numberOfLines={1}>{d.id}</Text>
+                </View>
+                {connectedDeviceName && (d.name === connectedDeviceName || (!d.name && connectedDeviceName === 'HM-10')) ? (
+                  <MaterialCommunityIcons name="check-circle" size={24} color={theme.colors.primary} />
+                ) : (
+                  <MaterialCommunityIcons name="chevron-right" size={24} color={isRobot ? theme.colors.textSecondary : theme.colors.border} />
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       )}
     </View>
@@ -152,20 +162,19 @@ const styles = StyleSheet.create({
     color: theme.colors.danger,
     fontWeight: '600',
   },
-  retryButton: {
-    marginTop: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    alignItems: 'center',
-  },
-  retryLabel: {
-    ...theme.typography.body,
-    color: theme.colors.primary,
-    fontWeight: '600',
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.md,
   },
   sectionTitle: {
     ...theme.typography.header,
     color: theme.colors.text,
-    marginBottom: theme.spacing.md,
+  },
+  sectionCount: {
+    ...theme.typography.caption,
+    color: theme.colors.textSecondary,
   },
   empty: {
     ...theme.typography.caption,
@@ -188,6 +197,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
+  rowNotRobot: {
+    opacity: 0.7,
+    backgroundColor: theme.colors.background,
+  },
   rowIconWrap: {
     width: 44,
     height: 44,
@@ -196,6 +209,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.spacing.md,
+  },
+  rowIconWrapNotRobot: {
+    backgroundColor: theme.colors.border,
   },
   rowText: {
     flex: 1,
@@ -209,5 +225,8 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
     color: theme.colors.textSecondary,
     marginTop: 2,
+  },
+  rowTextNotRobot: {
+    color: theme.colors.textSecondary,
   },
 });

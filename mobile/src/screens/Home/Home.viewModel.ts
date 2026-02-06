@@ -9,11 +9,14 @@ export type HomeCard = {
   primary?: boolean;
 };
 
-export function getHomeCards(t: TFunction): HomeCard[] {
-  return [
+export function getHomeCards(t: TFunction, isConnected: boolean): HomeCard[] {
+  const cards: HomeCard[] = [
     { label: t('home.cardConnect'), subtitle: t('home.cardConnectSubtitle'), screen: 'Connect', icon: 'bluetooth' },
-    { label: t('home.cardStart'), subtitle: t('home.cardStartSubtitle'), screen: 'Wizard', icon: 'rocket-launch', primary: true },
     { label: t('home.cardInfo'), subtitle: t('home.cardInfoSubtitle'), screen: 'Info', icon: 'information-outline' },
     { label: t('home.cardSettings'), subtitle: t('home.cardSettingsSubtitle'), screen: 'Settings', icon: 'cog-outline' },
   ];
+  if (isConnected) {
+    cards.splice(1, 0, { label: t('home.cardStart'), subtitle: t('home.cardStartSubtitle'), screen: 'Wizard', icon: 'rocket-launch', primary: true });
+  }
+  return cards;
 }

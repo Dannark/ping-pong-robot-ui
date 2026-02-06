@@ -1,6 +1,6 @@
 import type { RobotConfig } from './RobotConfig';
 import type { RobotConnectionDataSource } from './RobotConnectionDataSource';
-import { BluetoothRobotConnectionDataSource } from './BluetoothRobotConnectionDataSource';
+import { BLERobotConnectionDataSource } from './BLERobotConnectionDataSource';
 
 export type RunState = {
   runStartTime: number | null;
@@ -60,4 +60,4 @@ function createRepository(dataSource: RobotConnectionDataSource) {
   };
 }
 
-export const RobotConnectionRepository = createRepository(new BluetoothRobotConnectionDataSource());
+export const RobotConnectionRepository = createRepository(new BLERobotConnectionDataSource());

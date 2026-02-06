@@ -3,9 +3,32 @@
 #include "logic.h"
 #include "motors.h"
 #include <Arduino.h>
+#include <string.h>
 
 static char lineBuf[BT_LINE_BUF_SIZE];
 static int lineLen = 0;
+
+bool btConnected = false;
+char btDeviceName[BT_DEVICE_NAME_LEN + 1] = { '\0' };
+static bool pinEverHigh = false;
+static unsigned long lastBtReceivedMs = 0;
+
+const char* getBtDeviceName() {
+  return btDeviceName;
+}
+
+void updateBTState() {
+  if (digitalRead(BT_STATE_PIN) == HIGH) {
+    pinEverHigh = true;
+    btConnected = true;
+  } else if (pinEverHigh && (millis() - lastBtReceivedMs > 5000UL)) {
+    btConnected = false;
+    btDeviceName[0] = '\0';
+  } else if (btConnected && (millis() - lastBtReceivedMs > 30000UL)) {
+    btConnected = false;
+    btDeviceName[0] = '\0';
+  }
+}
 
 static void clampFloat(float &v, float lo, float hi) {
   if (v < lo) v = lo;
@@ -59,6 +82,17 @@ static void processLine() {
       }
       currentScreen = SCREEN_HOME;  // Volta à tela principal no display do robô
     }
+    lineLen = 0;
+    return;
+  }
+  if (lineBuf[0] == 'N' && lineBuf[1] == ',') {
+    int i = 0;
+    const char* src = lineBuf + 2;
+    while (*src && *src != '\r' && *src != '\n' && i < BT_DEVICE_NAME_LEN) {
+      btDeviceName[i++] = *src++;
+    }
+    btDeviceName[i] = '\0';
+    btConnected = true;
     lineLen = 0;
     return;
   }
@@ -138,12 +172,24 @@ static void processLine() {
 }
 
 void initBTCommand() {
+  pinMode(BT_STATE_PIN, INPUT);
   BT_SERIAL.begin(BT_BAUD);
   lineLen = 0;
+
+#if BT_AT_INIT_AT_STARTUP
+  delay(500);
+  for (int i = 0; i < 10; i++) BT_SERIAL.print(F("xxxxxxxx"));
+  delay(100);
+  BT_SERIAL.print(F("AT+NAMESpinRobot"));
+  delay(200);
+  BT_SERIAL.print(F("AT+RESET"));
+  delay(2500);
+#endif
 }
 
 void processBTInput() {
   while (BT_SERIAL.available()) {
+    lastBtReceivedMs = millis();
     char c = (char)BT_SERIAL.read();
     if (c == '\n' || c == '\r') {
       if (lineLen > 0) processLine();

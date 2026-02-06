@@ -11,6 +11,10 @@
 #define JOY_Y A9
 #define JOY_SW 52
 
+// ================= Bluetooth (HM-10 BLE) =================
+#define BT_STATE_PIN 2   // STATE pin: HIGH when BLE connected, LOW when not
+#define BT_DEVICE_NAME_LEN 24
+
 // ================= Layout =================
 #define BODY_Y 16
 

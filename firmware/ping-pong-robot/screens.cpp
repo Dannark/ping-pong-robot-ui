@@ -4,6 +4,7 @@
 #include "config.h"
 #include "motors.h"
 #include "servos.h"
+#include "bt_command.h"
 #include <Arduino.h>
 #include <stdio.h>
 
@@ -37,8 +38,14 @@ void renderInfo() {
   display.print(maxPlayedMs / 1000);
   display.println("s");
 
-  display.setCursor(0, 56);
-  display.println("SW=Back");
+  display.setCursor(0, BODY_Y + 24);
+  display.print("BT: ");
+  display.println(btConnected ? "Connected" : "Off");
+  const char* name = getBtDeviceName();
+  if (btConnected && name[0] != '\0') {
+    display.setCursor(0, BODY_Y + 36);
+    display.println(name);
+  }
 
   display.display();
 }
@@ -267,9 +274,7 @@ void renderRunning() {
   display.clearDisplay();
 
   bool blink = ((millis() / 350) % 2) == 0;
-  display.setCursor(0, 0);
-  if (blink) display.println("RUNNING");
-  else display.println("       ");
+  drawHeader(blink ? "RUNNING" : "       ");
 
   display.drawLine(0, 11, 127, 11, SSD1306_WHITE);
 

@@ -1,5 +1,6 @@
 #include "display.h"
 #include "config.h"
+#include "bt_command.h"
 #include <Wire.h>
 #include <Arduino.h>
 #include <math.h>
@@ -25,7 +26,15 @@ void initDisplay() {
 
 void drawHeader(const char* title) {
   display.setCursor(0, 0);
-  display.println(title);
+  display.print(title);
+  if (btConnected) {
+    int cx = SCREEN_WIDTH - 18;
+    display.setCursor(cx, 0);
+    display.print("B");
+    display.fillTriangle(cx + 8, 0, cx + 14, 0, cx + 11, 4, SSD1306_WHITE);
+    display.fillTriangle(cx + 8, 8, cx + 14, 8, cx + 11, 4, SSD1306_WHITE);
+  }
+  display.println();
   display.drawLine(0, 11, 127, 11, SSD1306_WHITE);
 }
 
