@@ -38,9 +38,10 @@ Shots are **stable**. At **7.5 V**, the rate is around **65–69 balls per minut
 | **Arduino Mega 2560** | Main controller. |
 | **Motor shield** | AFMotor-compatible (e.g. L293D). V1 is not a strict requirement; it’s what was used. |
 | **4× DC 130 motors** | One **with 1:48 gearbox** (yellow double-shaft type; one shaft is cut) — that’s the **feeder** motor. The other three are for the **launcher** (spin). Prefer quality motors that work with the shield. |
-| **4× 6700zz bearings** | Two on the launcher head (pan/tilt) to reduce friction; two in the feeder motor reduction. |
+| **6× 6700zz bearings** | Four on the launcher head (pan/tilt) to reduce friction; two in the feeder motor reduction. |
 | **EVA sheet** | For the friction wheels. |
 | **Flexible filament** (recommended) | For printing the wheels. |
+| **2× servo extension cable (15 cm)** | To connect the pan and tilt servos to the Arduino. |
 
 ### Interface (at least one)
 
