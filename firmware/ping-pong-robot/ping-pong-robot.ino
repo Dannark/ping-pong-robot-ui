@@ -163,10 +163,12 @@ void loop() {
       if (swPressedEvent) {
         if (settingsServoEditIndex == 3) {
           saveServoLimitsToEEPROM();
+          servosGoToMid();
           currentScreen = SCREEN_SETTINGS;
         }
       }
 
+      updateServosForSettingsPreview(settingsServoSelected, settingsServoEditIndex);
       renderSettingsServo();
       break;
     }

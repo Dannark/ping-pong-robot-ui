@@ -29,7 +29,7 @@
     "cardSettingsSubtitle": "Servos e motores"
   },
   "wizard": {
-    "robotConnected": "Robô ligado",
+    "robotConnected": "Robô conectado",
     "robotDisconnected": "Robô não ligado",
     "preview": "Preview",
     "aim": "Aim",

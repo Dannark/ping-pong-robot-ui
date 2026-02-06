@@ -78,3 +78,24 @@ void updateServos(float panNormalized, float tiltNormalized) {
   tiltServo.write(tiltAngle);
   panServo.write(panAngle);
 }
+
+void updateServosForSettingsPreview(int selectedServo, int editIndex) {
+  if (editIndex == 3) {
+    servosGoToMid();
+    return;
+  }
+  if (selectedServo == 0) {
+    int tiltAngle = (editIndex == 0) ? servo_tilt_up : (editIndex == 1) ? servo_tilt_mid : servo_tilt_down;
+    tiltServo.write(tiltAngle);
+    panServo.write(servo_pan_mid);
+  } else {
+    int panAngle = (editIndex == 0) ? servo_pan_left : (editIndex == 1) ? servo_pan_mid : servo_pan_right;
+    panServo.write(panAngle);
+    tiltServo.write(servo_tilt_mid);
+  }
+}
+
+void servosGoToMid() {
+  tiltServo.write(servo_tilt_mid);
+  panServo.write(servo_pan_mid);
+}

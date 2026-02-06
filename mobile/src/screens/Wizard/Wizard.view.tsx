@@ -36,8 +36,8 @@ export function WizardView({ items, config, displaySpin, connectionStatus, onIte
     <View style={styles.container}>
       <View style={styles.robotStatus}>
         <MaterialCommunityIcons
-          name={connectionStatus === 'connected' ? 'bluetooth-connected' : 'bluetooth'}
-          size={18}
+          name={connectionStatus === 'connected' ? 'bluetooth-connect' : 'bluetooth'}
+          size={20}
           color={connectionStatus === 'connected' ? theme.colors.primary : theme.colors.textSecondary}
         />
         <Text style={[styles.robotStatusText, connectionStatus === 'connected' && styles.robotStatusConnected]}>

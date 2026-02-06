@@ -56,7 +56,7 @@ export function ConnectView({
       <View style={styles.statusCard}>
         <View style={styles.statusRow}>
           <MaterialCommunityIcons
-            name={status === 'connected' ? 'bluetooth-connected' : 'bluetooth'}
+            name={status === 'connected' ? 'bluetooth-connect' : 'bluetooth'}
             size={28}
             color={status === 'connected' ? theme.colors.primary : theme.colors.textSecondary}
           />
@@ -94,7 +94,7 @@ export function ConnectView({
               >
                 <View style={[styles.rowIconWrap, !isRobot && styles.rowIconWrapNotRobot]}>
                   <MaterialCommunityIcons
-                    name="bluetooth"
+                    name={isRobot ? 'robot' : 'bluetooth'}
                     size={24}
                     color={isRobot ? theme.colors.primary : theme.colors.textSecondary}
                   />
