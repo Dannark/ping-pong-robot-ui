@@ -126,6 +126,7 @@ type PendingAck = { resolve: () => void; reject: (err: Error) => void; timeoutId
 export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
   private state: ConnectionState = { status: 'disconnected' };
   private listeners = new Set<(s: ConnectionState) => void>();
+  private liveAimListeners = new Set<(pan: number, tilt: number) => void>();
   private deviceId: string | null = null;
   private deviceDisplayName: string | null = null;
   private disconnectionSubscription: { remove: () => void } | null = null;
@@ -159,6 +160,15 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
 
   private onAckLine(line: string): void {
     const t = line.trim();
+    if (t.startsWith('A,')) {
+      const parts = t.slice(2).split(',');
+      const pan = parts.length >= 1 ? parseInt(parts[0], 10) / 1000 : 0;
+      const tilt = parts.length >= 2 ? parseInt(parts[1], 10) / 1000 : 0;
+      if (!Number.isNaN(pan) && !Number.isNaN(tilt)) {
+        this.liveAimListeners.forEach((fn) => fn(pan, tilt));
+      }
+      return;
+    }
     if (t.startsWith('OK,C')) {
       const p = this.pendingConfigAck;
       this.pendingConfigAck = null;
@@ -381,5 +391,10 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
     this.listeners.add(listener);
     listener(this.getConnectionState());
     return () => this.listeners.delete(listener);
+  }
+
+  subscribeLiveAimFromRobot(listener: (pan: number, tilt: number) => void): () => void {
+    this.liveAimListeners.add(listener);
+    return () => this.liveAimListeners.delete(listener);
   }
 }

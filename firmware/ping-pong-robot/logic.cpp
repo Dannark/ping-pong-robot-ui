@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "servos.h"
 #include "motors.h"
+#include "bt_command.h"
 #include <Arduino.h>
 
 // Forward declaration para acessar os motores diretamente
@@ -108,9 +109,10 @@ void updateRunningLogic() {
     return;
   }
 
+  float stickX = 0.0f, stickY = 0.0f;
   // PAN
   if (cfg.panMode == AXIS_LIVE) {
-    float stickX = joyToNorm(analogRead(JOY_X));
+    stickX = joyToNorm(analogRead(JOY_X));
     applyIncremental(livePan, stickX);
   } else {
     applyAuto(livePan, cfg.panMode, panDir, panLastStepMs, cfg.panAuto1Speed, cfg.panAuto2Step, cfg.panAuto2PauseMs,
@@ -119,11 +121,25 @@ void updateRunningLogic() {
 
   // TILT
   if (cfg.tiltMode == AXIS_LIVE) {
-    float stickY = joyToNorm(analogRead(JOY_Y));
+    stickY = joyToNorm(analogRead(JOY_Y));
     applyIncremental(liveTilt, stickY);
   } else {
     applyAuto(liveTilt, cfg.tiltMode, tiltDir, tiltLastStepMs, cfg.tiltAuto1Speed, cfg.tiltAuto2Step, cfg.tiltAuto2PauseMs,
               cfg.tiltMin, cfg.tiltMax, cfg.tiltRandomPauseMs, cfg.tiltRandomMinDist);
+  }
+
+  if (cfg.panMode == AXIS_LIVE || cfg.tiltMode == AXIS_LIVE) {
+    static unsigned long lastStickActiveMs = 0;
+    static bool liveAimSentSinceRelease = false;
+    const unsigned long now = millis();
+    const float dead = 0.05f;
+    if (fabs(stickX) >= dead || fabs(stickY) >= dead) {
+      lastStickActiveMs = now;
+      liveAimSentSinceRelease = false;
+    } else if (lastStickActiveMs != 0 && (now - lastStickActiveMs) >= 300 && !liveAimSentSinceRelease) {
+      notifyLiveAimToApp(livePan, liveTilt);
+      liveAimSentSinceRelease = true;
+    }
   }
 
   // Atualizar servos com os valores normalizados

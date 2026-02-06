@@ -258,6 +258,16 @@ static void processLine() {
   lineLen = 0;
 }
 
+void notifyLiveAimToApp(float pan, float tilt) {
+  int p1000 = (int)(pan * 1000.0f);
+  int t1000 = (int)(tilt * 1000.0f);
+  BT_SERIAL.print(F("A,"));
+  BT_SERIAL.print(p1000);
+  BT_SERIAL.print(F(","));
+  BT_SERIAL.print(t1000);
+  BT_SERIAL.print('\n');
+}
+
 void initBTCommand() {
   pinMode(BT_STATE_PIN, INPUT);
   BT_SERIAL.begin(BT_BAUD);

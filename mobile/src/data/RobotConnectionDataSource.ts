@@ -23,6 +23,7 @@ export interface RobotConnectionDataSource {
   stop(): Promise<void>;
   getConnectionState(): ConnectionState;
   subscribeConnectionState(listener: (state: ConnectionState) => void): () => void;
+  subscribeLiveAimFromRobot(listener: (pan: number, tilt: number) => void): () => void;
 }
 
 export class StubRobotConnectionDataSource implements RobotConnectionDataSource {
@@ -71,6 +72,10 @@ export class StubRobotConnectionDataSource implements RobotConnectionDataSource 
     this.listeners.add(listener);
     listener(this.getConnectionState());
     return () => this.listeners.delete(listener);
+  }
+
+  subscribeLiveAimFromRobot(_listener: (pan: number, tilt: number) => void): () => void {
+    return () => {};
   }
 
   private setState(next: Partial<ConnectionState>) {

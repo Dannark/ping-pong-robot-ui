@@ -85,6 +85,10 @@ function createRepository(dataSource: RobotConnectionDataSource) {
       return () => runListeners.delete(listener);
     },
 
+    subscribeLiveAimFromRobot(listener: (pan: number, tilt: number) => void): () => void {
+      return dataSource.subscribeLiveAimFromRobot(listener);
+    },
+
     getDataSource(): RobotConnectionDataSource {
       return dataSource;
     },

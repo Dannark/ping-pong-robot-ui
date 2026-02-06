@@ -20,4 +20,6 @@ void updateBTState();
 bool getBtConnected(void);
 const char* getBtDeviceName();
 
+void notifyLiveAimToApp(float pan, float tilt);
+
 #endif

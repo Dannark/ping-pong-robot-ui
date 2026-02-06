@@ -130,10 +130,10 @@ export function ConnectScreen({ navigation: _navigation }: ConnectScreenProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const handleDevicePress = useCallback(async (device: BLEDeviceItem) => {
+  const handleDevicePress = useCallback((device: BLEDeviceItem) => {
     if (!isRobotDevice(device)) return;
     setBLETargetDevice({ id: device.id, name: device.name });
-    await RobotConnectionRepository.getDataSource().connect();
+    RobotConnectionRepository.getDataSource().connect().catch(() => {});
   }, []);
 
   const robotCount = devices.filter((d) => isRobotDevice(d)).length;

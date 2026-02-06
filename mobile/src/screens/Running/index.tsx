@@ -8,6 +8,7 @@ import type { SpinDirection } from '../../data/RobotConfig';
 import {
   getRunState,
   subscribeRunState,
+  subscribeLiveAimFromRobot,
   stopRun,
   getElapsedSeconds,
   getLeftSeconds,
@@ -51,6 +52,11 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
   useEffect(() => {
     return subscribeRunState((s) => setRunState(s));
   }, []);
+
+  useEffect(() => {
+    if (runState.runConfig?.panMode !== 'LIVE' || runState.runConfig?.tiltMode !== 'LIVE') return;
+    return subscribeLiveAimFromRobot((pan, tilt) => setLiveAim({ pan, tilt }));
+  }, [runState.runConfig?.panMode, runState.runConfig?.tiltMode]);
 
   useEffect(() => {
     if (runState.runStartTime == null) return;

@@ -14,6 +14,10 @@ export function subscribeRunState(listener: (s: RunState) => void): () => void {
   return RobotConnectionRepository.subscribeRunState(listener);
 }
 
+export function subscribeLiveAimFromRobot(listener: (pan: number, tilt: number) => void): () => void {
+  return RobotConnectionRepository.subscribeLiveAimFromRobot(listener);
+}
+
 export function stopRun(): Promise<void> {
   return RobotConnectionRepository.stopRun();
 }
