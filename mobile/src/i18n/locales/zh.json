@@ -74,7 +74,8 @@
     "soundAlert": "声音提醒",
     "soundOn": "开",
     "soundOff": "关",
-    "spinInterval": "旋转间隔"
+    "spinInterval": "旋转间隔",
+    "manualAim": "手动控制（平移+倾斜）"
   },
   "trainingComplete": {
     "title": "训练完成",

@@ -6,6 +6,10 @@ export function getRunState(): RunState {
   return RobotConnectionRepository.getRunState();
 }
 
+export function sendLiveAim(pan: number, tilt: number): Promise<void> {
+  return RobotConnectionRepository.sendLiveAim(pan, tilt);
+}
+
 export function subscribeRunState(listener: (s: RunState) => void): () => void {
   return RobotConnectionRepository.subscribeRunState(listener);
 }

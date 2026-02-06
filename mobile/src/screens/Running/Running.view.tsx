@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Slider from '@react-native-community/slider';
 import { theme } from '../../theme';
 import { AimPreview } from '../../components/AimPreview/AimPreview';
 import { SpinVisualization } from '../../components/SpinVisualization/SpinVisualization';
 import { FeederVisualization } from '../../components/FeederVisualization/FeederVisualization';
 import { getFeederOnOffMs, type RobotConfig, type SpinDirection } from '../../data/RobotConfig';
+
+export type LiveAim = { pan: number; tilt: number };
 
 type RunningViewProps = {
   elapsedSeconds: number;
@@ -16,6 +19,9 @@ type RunningViewProps = {
   spinRandom: boolean;
   timerLabel: string;
   onStop: () => void;
+  liveAim: LiveAim | null;
+  onLiveAimChange: (pan: number, tilt: number) => void;
+  onLiveAimRelease?: (pan: number, tilt: number) => void;
 };
 
 const PREVIEW_SIZE = 72;
@@ -28,9 +34,21 @@ export function RunningView({
   spinRandom,
   timerLabel,
   onStop,
+  liveAim,
+  onLiveAimChange,
+  onLiveAimRelease,
 }: RunningViewProps) {
   const { t } = useTranslation();
   const [blink, setBlink] = useState(true);
+
+  const isLiveAim = runConfig?.panMode === 'LIVE' && runConfig?.tiltMode === 'LIVE';
+  const panMin = runConfig?.panMin ?? -1;
+  const panMax = runConfig?.panMax ?? 1;
+  const tiltMin = runConfig?.tiltMin ?? -1;
+  const tiltMax = runConfig?.tiltMax ?? 1;
+
+  const aimPan = isLiveAim && liveAim ? liveAim.pan : (runConfig?.panTarget ?? 0);
+  const aimTilt = isLiveAim && liveAim ? liveAim.tilt : (runConfig?.tiltTarget ?? 0);
 
   useEffect(() => {
     const id = setInterval(() => setBlink((b) => !b), 350);
@@ -53,6 +71,9 @@ export function RunningView({
     );
   }
 
+  const timeText =
+    leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -60,18 +81,18 @@ export function RunningView({
         <Text style={[styles.runningTitle, !blink && styles.runningTitleDim]}>
           {blink ? 'RUNNING' : '       '}
         </Text>
-      </View>
-
-      <View style={styles.timeCard}>
-        <Text style={styles.timeLabel}>
-          {leftSeconds !== null ? t('running.timeRemaining') : t('running.elapsed')}
-        </Text>
-        <Text style={styles.timeValue}>
-          {leftSeconds !== null ? `${leftSeconds}s` : `${elapsedSeconds}s`}
+        <View style={styles.headerSpacer} />
+        <Text style={styles.headerTime}>
+          {timeText}
         </Text>
       </View>
 
       <View style={styles.body}>
+        <ScrollView
+          style={styles.bodyScroll}
+          contentContainerStyle={styles.bodyScrollContent}
+          showsVerticalScrollIndicator={false}
+        >
         <View style={styles.detailGrid}>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>{t('running.pan')}</Text>
@@ -122,8 +143,8 @@ export function RunningView({
             <Text style={styles.radarLabel}>{t('wizard.aim')}</Text>
             <AimPreview
               size={PREVIEW_SIZE}
-              pan={runConfig.panTarget}
-              tilt={runConfig.tiltTarget}
+              pan={aimPan}
+              tilt={aimTilt}
               panMode={runConfig.panMode}
               tiltMode={runConfig.tiltMode}
               panMin={runConfig.panMin}
@@ -172,6 +193,51 @@ export function RunningView({
             />
           </View>
         </View>
+
+        {isLiveAim && (() => {
+          const panRange = panMax - panMin;
+          const tiltRange = tiltMax - tiltMin;
+          const panNorm = panRange > 0 ? (aimPan - panMin) / panRange : 0;
+          const tiltNorm = tiltRange > 0 ? (aimTilt - tiltMin) / tiltRange : 0;
+          return (
+          <View style={styles.manualAimSection}>
+            <Text style={styles.manualAimLabel}>{t('running.manualAim')}</Text>
+            <View style={styles.sliderRow}>
+              <Text style={styles.sliderLabel}>{t('running.pan')}</Text>
+              <Text style={styles.sliderValue}>{aimPan.toFixed(2)}</Text>
+            </View>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={1}
+              step={panRange > 0 ? 0.05 / panRange : 0.01}
+              value={panNorm}
+              onValueChange={(v) => onLiveAimChange(panMin + v * panRange, aimTilt)}
+              onSlidingComplete={() => onLiveAimRelease?.(aimPan, aimTilt)}
+              minimumTrackTintColor={theme.colors.primary}
+              maximumTrackTintColor={theme.colors.border}
+              thumbTintColor={theme.colors.primary}
+            />
+            <View style={styles.sliderRow}>
+              <Text style={styles.sliderLabel}>{t('running.tilt')}</Text>
+              <Text style={styles.sliderValue}>{aimTilt.toFixed(2)}</Text>
+            </View>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={1}
+              step={tiltRange > 0 ? 0.05 / tiltRange : 0.01}
+              value={tiltNorm}
+              onValueChange={(v) => onLiveAimChange(aimPan, tiltMin + v * tiltRange)}
+              onSlidingComplete={() => onLiveAimRelease?.(aimPan, aimTilt)}
+              minimumTrackTintColor={theme.colors.primary}
+              maximumTrackTintColor={theme.colors.border}
+              thumbTintColor={theme.colors.primary}
+            />
+          </View>
+          );
+        })()}
+        </ScrollView>
       </View>
 
       <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.85}>
@@ -196,6 +262,14 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
     gap: theme.spacing.sm,
   },
+  headerSpacer: {
+    flex: 1,
+  },
+  headerTime: {
+    ...theme.typography.title,
+    color: theme.colors.primary,
+    fontSize: 18,
+  },
   statusDot: {
     width: 10,
     height: 10,
@@ -215,36 +289,21 @@ const styles = StyleSheet.create({
   runningTitleDim: {
     color: 'transparent',
   },
-  timeCard: {
-    backgroundColor: theme.colors.surfaceElevated,
-    borderRadius: theme.borderRadius.md,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-    marginBottom: theme.spacing.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    alignItems: 'center',
-  },
-  timeLabel: {
-    ...theme.typography.label,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xs,
-    textTransform: 'uppercase',
-  },
-  timeValue: {
-    ...theme.typography.hero,
-    color: theme.colors.primary,
-    fontSize: 32,
-  },
   body: {
     flex: 1,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.lg,
     borderWidth: 1,
     borderColor: theme.colors.border,
     marginBottom: theme.spacing.lg,
     ...theme.shadow.sm,
+  },
+  bodyScroll: {
+    flex: 1,
+  },
+  bodyScrollContent: {
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   detailGrid: {
     flexDirection: 'row',
@@ -286,6 +345,36 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing.sm,
     textTransform: 'uppercase',
+  },
+  manualAimSection: {
+    marginTop: theme.spacing.lg,
+    alignItems: 'center',
+  },
+  manualAimLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.sm,
+    textTransform: 'uppercase',
+  },
+  sliderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.xs,
+  },
+  sliderLabel: {
+    ...theme.typography.label,
+    color: theme.colors.textSecondary,
+  },
+  sliderValue: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+    fontWeight: '600',
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+    marginBottom: theme.spacing.sm,
   },
   emptyCard: {
     flex: 1,

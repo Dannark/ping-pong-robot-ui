@@ -74,7 +74,8 @@
     "soundAlert": "Alerte sonore",
     "soundOn": "Oui",
     "soundOff": "Non",
-    "spinInterval": "Intervalle effet"
+    "spinInterval": "Intervalle effet",
+    "manualAim": "Contrôle manuel (pan + tilt)"
   },
   "trainingComplete": {
     "title": "Entraînement terminé",

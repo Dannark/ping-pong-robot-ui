@@ -138,11 +138,11 @@ export function TiltView({
           <Slider
             key={liveSliderKey}
             style={styles.slider}
-            minimumValue={-1}
+            minimumValue={0}
             maximumValue={1}
-            step={0.05}
-            value={tiltTarget}
-            onValueChange={onTiltTargetChange}
+            step={0.025}
+            value={(tiltTarget + 1) / 2}
+            onValueChange={(v) => onTiltTargetChange(v * 2 - 1)}
             onSlidingComplete={onTiltSlidingComplete}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}

@@ -138,11 +138,11 @@ export function PanView({
           <Slider
             key={liveSliderKey}
             style={styles.slider}
-            minimumValue={-1}
+            minimumValue={0}
             maximumValue={1}
-            step={0.05}
-            value={panTarget}
-            onValueChange={onPanTargetChange}
+            step={0.025}
+            value={(panTarget + 1) / 2}
+            onValueChange={(v) => onPanTargetChange(v * 2 - 1)}
             onSlidingComplete={onPanSlidingComplete}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}

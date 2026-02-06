@@ -77,7 +77,8 @@
     "soundAlert": "Sound alert",
     "soundOn": "On",
     "soundOff": "Off",
-    "spinInterval": "Spin interval"
+    "spinInterval": "Spin interval",
+    "manualAim": "Manual control (pan + tilt)"
   },
   "trainingComplete": {
     "title": "Training complete",

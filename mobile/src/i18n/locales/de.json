@@ -74,7 +74,8 @@
     "soundAlert": "Ton-Alert",
     "soundOn": "An",
     "soundOff": "Aus",
-    "spinInterval": "Drall-Intervall"
+    "spinInterval": "Drall-Intervall",
+    "manualAim": "Manuelle Steuerung (Pan + Tilt)"
   },
   "trainingComplete": {
     "title": "Training abgeschlossen",

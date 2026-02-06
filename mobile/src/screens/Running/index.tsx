@@ -11,8 +11,9 @@ import {
   stopRun,
   getElapsedSeconds,
   getLeftSeconds,
+  sendLiveAim,
 } from './Running.viewModel';
-import { RunningView } from './Running.view';
+import { RunningView, type LiveAim } from './Running.view';
 
 const RANDOM_SPIN_POOL: SpinDirection[] = SPIN_DIRECTIONS.filter((d) => d !== 'NONE');
 
@@ -24,10 +25,35 @@ type RunningScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Running'>;
 };
 
+const LIVE_AIM_THROTTLE_MS = 80;
+
 export function RunningScreen({ navigation }: RunningScreenProps) {
   const [runState, setRunState] = useState(() => getRunState());
   const [, setTick] = useState(0);
   const [currentRandomSpin, setCurrentRandomSpin] = useState<SpinDirection>(() => pickRandomSpin());
+  const [liveAim, setLiveAim] = useState<LiveAim | null>(null);
+  const liveAimLastSendRef = useRef(0);
+
+  useEffect(() => {
+    const cfg = runState.runConfig;
+    if (cfg?.panMode === 'LIVE' && cfg?.tiltMode === 'LIVE') {
+      setLiveAim({ pan: cfg.panTarget, tilt: cfg.tiltTarget });
+    } else {
+      setLiveAim(null);
+    }
+  }, [runState.runConfig]);
+
+  const handleLiveAimChange = useCallback((pan: number, tilt: number) => {
+    setLiveAim({ pan, tilt });
+    const now = Date.now();
+    if (now - liveAimLastSendRef.current < LIVE_AIM_THROTTLE_MS) return;
+    liveAimLastSendRef.current = now;
+    sendLiveAim(pan, tilt).catch(() => {});
+  }, []);
+
+  const handleLiveAimRelease = useCallback((pan: number, tilt: number) => {
+    sendLiveAim(pan, tilt).catch(() => {});
+  }, []);
 
   useEffect(() => {
     return subscribeRunState((s) => setRunState(s));
@@ -91,6 +117,9 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
       spinRandom={runState.runConfig?.spinRandom ?? false}
       timerLabel={timerLabel}
       onStop={handleStop}
+      liveAim={liveAim}
+      onLiveAimChange={handleLiveAimChange}
+      onLiveAimRelease={handleLiveAimRelease}
     />
   );
 }
