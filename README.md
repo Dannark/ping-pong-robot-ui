@@ -49,7 +49,7 @@ Without an interface you can’t control the robot. You need **one** of the foll
 | Option | Items |
 |--------|--------|
 | **Display + joystick** | **0.96" OLED** display (128×64, I²C) + analog **joystick**. Menu on display, navigation with joystick. |
-| **Bluetooth** | **HC-05** (or similar) module. Control via **Android app** (iOS not supported). |
+| **Bluetooth** | **HM-10** (BLE) module. Control via **iOS/Android app**. |
 
 ### Optional
 
@@ -64,8 +64,8 @@ This repository contains the **firmware** (Arduino) and the **mobile app** (Reac
 
 | Folder | Contents | Documentation |
 |--------|----------|---------------|
-| **[firmware/](firmware/)** | Arduino Mega code: display, joystick, motors, servos, Bluetooth. Pinout, modules, display screens, HC-05 wiring (with diagram). | **[firmware/README.md](firmware/README.md)** — firmware and robot hardware guide |
-| **[mobile/](mobile/)** | Android app (React Native): Bluetooth connection, protocol (CONFIG/START/STOP), screens, differences from the display. | **[mobile/README.md](mobile/README.md)** — app and robot communication guide |
+| **[firmware/](firmware/)** | Arduino Mega code: display, joystick, motors, servos, Bluetooth. Pinout, modules, display screens, HM-10 wiring (with diagram). | **[firmware/README.md](firmware/README.md)** — firmware and robot hardware guide |
+| **[mobile/](mobile/)** | iOS/Android app (React Native): BLE connection, protocol (CONFIG/START/STOP), screens, differences from the display. | **[mobile/README.md](mobile/README.md)** — app and robot communication guide |
 
 Suggested reading order:
 

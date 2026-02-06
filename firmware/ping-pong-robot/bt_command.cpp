@@ -8,10 +8,14 @@
 static char lineBuf[BT_LINE_BUF_SIZE];
 static int lineLen = 0;
 
-bool btConnected = false;
+#define BT_LOG_LINE_MAX 64
+
+volatile bool btConnected = false;
 char btDeviceName[BT_DEVICE_NAME_LEN + 1] = { '\0' };
-static bool pinEverHigh = false;
-static unsigned long lastBtReceivedMs = 0;
+
+bool getBtConnected(void) {
+  return btConnected;
+}
 
 const char* getBtDeviceName() {
   return btDeviceName;
@@ -19,14 +23,7 @@ const char* getBtDeviceName() {
 
 void updateBTState() {
   if (digitalRead(BT_STATE_PIN) == HIGH) {
-    pinEverHigh = true;
     btConnected = true;
-  } else if (pinEverHigh && (millis() - lastBtReceivedMs > 5000UL)) {
-    btConnected = false;
-    btDeviceName[0] = '\0';
-  } else if (btConnected && (millis() - lastBtReceivedMs > 30000UL)) {
-    btConnected = false;
-    btDeviceName[0] = '\0';
   }
 }
 
@@ -61,11 +58,22 @@ static SpinMode intToSpinMode(int v) {
   return (SpinMode)v;
 }
 
-// Processa uma linha: S/START = start, P/STOP = stop, C,... = config
+static void logLineReceived(void) {
+  Serial.print(F("[BT RX] "));
+  for (int i = 0; i < lineLen && i < BT_LOG_LINE_MAX; i++) {
+    char c = lineBuf[i];
+    Serial.print((c >= 32 && c < 127) ? c : '.');
+  }
+  if (lineLen > BT_LOG_LINE_MAX) Serial.print(F("..."));
+  Serial.println();
+}
+
+// Processa uma linha: S/START = start, P/STOP = stop, N,name = device name, C,... = config
 static void processLine() {
   if (lineLen <= 0) return;
 
   lineBuf[lineLen] = '\0';
+  logLineReceived();
 
   if (lineBuf[0] == 'S') {
     if (lineLen == 1 || (lineLen >= 5 && strncmp(lineBuf, "START", 5) == 0)) {
@@ -80,19 +88,24 @@ static void processLine() {
         isRunning = false;
         stopAllMotors();
       }
-      currentScreen = SCREEN_HOME;  // Volta à tela principal no display do robô
+      currentScreen = SCREEN_HOME;
     }
     lineLen = 0;
     return;
   }
-  if (lineBuf[0] == 'N' && lineBuf[1] == ',') {
+  const char* nCmd = strstr(lineBuf, "N,");
+  if (nCmd != nullptr) {
     int i = 0;
-    const char* src = lineBuf + 2;
-    while (*src && *src != '\r' && *src != '\n' && i < BT_DEVICE_NAME_LEN) {
+    const char* src = nCmd + 2;
+    while (*src && *src != '\r' && *src != '\n' && *src != ',' && i < BT_DEVICE_NAME_LEN) {
       btDeviceName[i++] = *src++;
     }
     btDeviceName[i] = '\0';
     btConnected = true;
+    Serial.print(F("[BT] CONNECTED name="));
+    Serial.println(btDeviceName[0] ? btDeviceName : "(none)");
+  }
+  if (nCmd != nullptr && lineBuf[0] != 'S' && lineBuf[0] != 'P' && lineBuf[0] != 'C') {
     lineLen = 0;
     return;
   }
@@ -189,7 +202,6 @@ void initBTCommand() {
 
 void processBTInput() {
   while (BT_SERIAL.available()) {
-    lastBtReceivedMs = millis();
     char c = (char)BT_SERIAL.read();
     if (c == '\n' || c == '\r') {
       if (lineLen > 0) processLine();

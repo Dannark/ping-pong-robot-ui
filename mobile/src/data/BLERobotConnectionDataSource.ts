@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
+import { BleManager, Device } from 'react-native-ble-plx';
 import { getDeviceName } from 'react-native-device-info';
 import type { RobotConfig } from './RobotConfig';
 import type { RobotConnectionDataSource, ConnectionState } from './RobotConnectionDataSource';
@@ -114,10 +114,31 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
   private listeners = new Set<(s: ConnectionState) => void>();
   private deviceId: string | null = null;
   private deviceDisplayName: string | null = null;
+  private disconnectionSubscription: { remove: () => void } | null = null;
 
   private setState(next: Partial<ConnectionState>) {
     this.state = { ...this.state, ...next };
     this.listeners.forEach((fn) => fn(this.getConnectionState()));
+  }
+
+  private clearConnectionListeners(): void {
+    if (this.disconnectionSubscription != null) {
+      this.disconnectionSubscription.remove();
+      this.disconnectionSubscription = null;
+    }
+  }
+
+  private onBleDisconnected(): void {
+    this.clearConnectionListeners();
+    this.deviceId = null;
+    this.deviceDisplayName = null;
+    this.setState({ status: 'disconnected', error: undefined, deviceName: null });
+  }
+
+  private subscribeDisconnect(deviceObj: Device): void {
+    this.disconnectionSubscription = deviceObj.onDisconnected(() => {
+      this.onBleDisconnected();
+    });
   }
 
   async connect(): Promise<void> {
@@ -126,8 +147,12 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
       return;
     }
     const device = targetDevice;
-    this.setState({ status: 'connecting', error: undefined });
     const manager = getManager();
+    if (this.state.status === 'connected' && this.deviceId === device.id) {
+      await this.disconnect();
+      await new Promise<void>((r) => setTimeout(() => r(), 400));
+    }
+    this.setState({ status: 'connecting', error: undefined });
     try {
       const deviceObj = await manager.connectToDevice(device.id, {
         autoConnect: false,
@@ -150,7 +175,9 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
         nameToSend = Platform.OS === 'ios' ? 'iPhone' : Platform.OS === 'android' ? 'Android' : 'Phone';
       }
       await this.writeLine(getDeviceNameCommand(nameToSend.trim()));
+      this.subscribeDisconnect(deviceObj);
     } catch (e) {
+      this.clearConnectionListeners();
       this.setState({
         status: 'disconnected',
         error: 'CONNECTION_FAILED',
@@ -162,6 +189,7 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
   }
 
   async disconnect(): Promise<void> {
+    this.clearConnectionListeners();
     if (this.deviceId) {
       try {
         await getManager().cancelDeviceConnection(this.deviceId);

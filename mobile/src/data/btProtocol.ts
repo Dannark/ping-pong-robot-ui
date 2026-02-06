@@ -63,3 +63,4 @@ export function getDeviceNameCommand(deviceName: string): string {
   const sanitized = deviceName.replace(/[\n\r,]/g, '').slice(0, 24);
   return 'N,' + sanitized + '\n';
 }
+

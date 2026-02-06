@@ -1,6 +1,6 @@
 # Ping Pong Robot – Firmware
 
-Firmware for the ping-pong ball launcher robot. Controlled by a 0.96" TFT/OLED display, joystick, and (optionally) by the mobile app via HC-05 Bluetooth.
+Firmware for the ping-pong ball launcher robot. Controlled by a 0.96" TFT/OLED display, joystick, and (optionally) by the mobile app via HM-10 BLE.
 
 ---
 
@@ -31,18 +31,18 @@ Total reduction at the “propeller” (3-hole disc) shaft: **1:48 × 1:3 × 1:4
 
 Limits (MIN/MID/MAX) are configurable in the Settings screen and stored in EEPROM.
 
-### Bluetooth (HC-05)
-- **HC-05 module** – connected to **Serial1** (TX pin 18, RX pin 19), **9600 baud**. Sends app commands (CONFIG/START/STOP). **Android only**; the mobile app does not support iOS for classic Bluetooth (SPP).
+### Bluetooth (HM-10)
+- **HM-10 module** (BLE) – connected to **Serial1** (TX pin 18, RX pin 19), **9600 baud**. Receives app commands (CONFIG/START/STOP, device name). Works with the **iOS/Android** app (BLE; no classic pairing required).
 
-Wiring between Arduino Mega and HC-05. The module’s **RX** needs a voltage divider from 5 V to ~3.3 V:
+Wiring between Arduino Mega and HM-10. The module’s **RX** is 3.3 V; Arduino TX is 5 V, so use a voltage divider:
 
-- **Arduino TX (pin 18)** is 5 V. Use a **1 kΩ** resistor from TX to the module’s **RX**; at that same junction, a **2 kΩ** resistor to **GND**. The module RX then sees ~3.3 V (5 V × 2k/(1k+2k)).
-- **Module TX** → **Arduino RX (pin 19)**. HC-05 is 3.3 V; Mega RX accepts 3.3 V, so usually a direct connection.
+- **Arduino TX (pin 18)** → **1 kΩ** resistor to module **RX**; from that junction, **2 kΩ** to **GND**. Module RX sees ~3.3 V (5 V × 2k/(1k+2k)).
+- **Module TX** → **Arduino RX (pin 19)**. HM-10 TX is 3.3 V; Mega RX accepts 3.3 V, so direct connection is fine.
 
 Voltage divider (Arduino TX → module RX):
 
 ```
-5V (Arduino pin 18 TX) ── 1k ──●── Module RX (HC-05 RXD)
+5V (Arduino pin 18 TX) ── 1k ──●── Module RX (HM-10 RXD)
                               │
                              2k
                               │

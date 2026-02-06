@@ -1,26 +1,26 @@
 # Ping Pong Robot – Mobile App
 
-React Native app that controls the ping-pong robot via **classic Bluetooth (SPP)**. It replicates and extends the TFT display experience with a richer, more intuitive UI.
+React Native app that controls the ping-pong robot via **BLE** (HM-10 module). It replicates and extends the TFT display experience with a richer, more intuitive UI.
 
-**Platform:** **Android only** (classic Bluetooth; iOS is not supported by the HC-05 module / current stack).
+**Platform:** **iOS and Android** (Bluetooth Low Energy).
 
 ---
 
-## Connecting to the Arduino
+## Connecting to the robot
 
 ### Requirements
-- **Android device** with Bluetooth.
-- **Robot powered on** and **HC-05** paired with the phone (pairing mode on HC-05 if needed).
-- **Permissions:** `BLUETOOTH`, `BLUETOOTH_CONNECT` (Android 12+). The app requests them at runtime.
+- **iOS or Android** device with Bluetooth.
+- **Robot powered on** with **HM-10** module (BLE). No prior pairing needed; the app scans for BLE devices.
+- **Permissions:** Bluetooth and (on Android 12+) `BLUETOOTH_SCAN` / `BLUETOOTH_CONNECT`. The app requests them at runtime.
 
 ### App flow
-1. **Home** → tap **Connect** (or equivalent).
-2. **Connect** screen lists **already paired** devices (`getBondedDevices()`). There is no discovery of unpaired devices; the user must pair the HC-05 in Android settings first.
-3. User taps a device → `setBluetoothTargetDevice(btDevice)` and `dataSource.connect()`. The library uses **RFCOMM** with delimiter `\n` and UTF-8.
+1. **Home** → tap **Connect**.
+2. **Connect** screen starts a **BLE scan** and lists discovered devices (e.g. SpinRobot / HM-10).
+3. User taps a device → `setBLETargetDevice(device)` and `dataSource.connect()`. The app connects via BLE, discovers services/characteristics, then sends the device name (`N,<name>\n`) so the robot display shows “connected”.
 4. Once connected, status shows “Connected” and the app can send **CONFIG**, **START**, and **STOP**.
 
 ### Library
-- **react-native-bluetooth-classic** (1.73.0-rc.17). API: `getBondedDevices()`, `device.connect(options)`, `device.write(data, 'utf-8')`, `device.disconnect()`.
+- **react-native-ble-plx**. Write to HM-10 characteristic (0xFFE1); line-based protocol with `\n`, UTF-8. The robot does not send data back; the app only sends commands.
 
 ---
 
@@ -30,11 +30,12 @@ Everything is **text, line-based** (terminator `\n`). The Arduino **does not sen
 
 ### Commands
 
-| Command | Format | Effect on Arduino |
+| Command | Format | Effect on robot |
 |--------|--------|-------------------|
+| **Device name** | `N,<name>\n` | Sent after BLE connect; robot shows “connected” and the name on the display (max 24 chars). |
 | **Start** | `S\n` or `START\n` | Calls `startRunning()`: starts motors at reduced speed and goes to RUNNING screen. |
 | **Stop** | `P\n` or `STOP\n` | Stops all motors, `isRunning = false`, `currentScreen = SCREEN_HOME`. |
-| **Config** | `C,v0,v1,...,v25\n` | Updates the Arduino `Config` struct with 26 integers (fixed order). |
+| **Config** | `C,v0,v1,...,v25\n` | Updates the robot `Config` struct with 26 integers (fixed order). |
 
 ### Config line format (`C,...`)
 
@@ -66,7 +67,7 @@ Everything is **text, line-based** (terminator `\n`). The Arduino **does not sen
 | 24 | feederCustomOffMs | 750 |
 | 25 | timerIndex (0=OFF, 1=15s, … 5=5m) | 0 |
 
-Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLine(config)` and `getStartCommand()` / `getStopCommand()`.
+Line generation in the app is in **`src/data/btProtocol.ts`**: `getDeviceNameCommand(name)`, `configToConfigLine(config)`, `getStartCommand()`, `getStopCommand()`.
 
 ---
 
@@ -93,7 +94,7 @@ Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLi
 | **RobotConfig** / **DEFAULT_CONFIG** | Type and default values for config (pan, tilt, launcher, spin, feeder, timer). |
 | **RobotConfigRepository** | In-memory config; `getConfig`, `setConfig(partial)`, `subscribe`. Used by Wizard and adjustment screens. |
 | **RobotConnectionDataSource** | Interface: `connect`, `disconnect`, `sendConfig`, `start`, `stop`, connection state. |
-| **BluetoothRobotConnectionDataSource** | Real implementation: uses `react-native-bluetooth-classic`, `setBluetoothTargetDevice`, `write(line)`. |
+| **BLERobotConnectionDataSource** | Real implementation: uses `react-native-ble-plx`, `setBLETargetDevice`, `write(line)` to HM-10 characteristic. |
 | **RobotConnectionRepository** | `startRun(config)` = `sendConfig(config)` + `start()`; `stopRun()` = `stop()`; holds `runStartTime` and `runConfig` for Running/TrainingComplete. |
 | **btProtocol.ts** | `configToConfigLine`, `getStartCommand`, `getStopCommand` – exact line generation sent to the Arduino. |
 | **PresetsRepository** | Wizard presets (AsyncStorage); load/save/delete; not present on the Arduino. |
@@ -115,7 +116,7 @@ Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLi
 | App | Arduino (display) | Note |
 |-----|-------------------|------|
 | **Home** | HOME | App has cards: Connect, Start Wizard, Info, Settings. |
-| **Connect** | — | App only: list paired devices and connect to HC-05. |
+| **Connect** | — | App only: scan BLE devices and connect to HM-10. |
 | **Wizard** | WIZARD | Pan, Tilt, Launcher, Feeder, Timer + Start. Rich visual preview (Aim, Feeder, Spin). |
 | **Pan / Tilt** | SCREEN_PAN / SCREEN_TILT | Same modes (LIVE, AUTO1, AUTO2, RANDOM) and parameters. App has sliders/inputs; Arduino uses joystick. |
 | **Launcher** | SCREEN_LAUNCHER + SCREEN_SPIN | Power and spin (direction + intensity). |
@@ -147,25 +148,24 @@ Line generation in the app is in **`src/data/btProtocol.ts`**: `configToConfigLi
 
 ---
 
-## What you need to connect to the Arduino
+## What you need to connect to the robot
 
-- **Android** (iOS not supported).
-- HC-05 **already paired** with the device.
-- App granted **Bluetooth (Connect)** permission.
-- Robot on and HC-05 in SPP (serial) mode.
-- **Recommended order:** 1) Connect (Connect screen); 2) Configure in Wizard; 3) Start (sends config + start). To stop: Stop on Running screen or on the robot (long press to Home).
+- **iOS or Android** with Bluetooth.
+- App granted **Bluetooth** (and location on Android if required for BLE scan).
+- Robot on with **HM-10** powered (BLE advertising).
+- **Recommended order:** 1) Connect (Connect screen, select the robot in the list); 2) Configure in Wizard; 3) Start (sends config + start). To stop: Stop on Running screen or on the robot (long press to Home).
 
 ---
 
 ## Quick reference for contributors and agents
 
 - **Protocol:** Lines ending with `\n`. Commands: `S`, `P`, `C,<26 ints>`. Generation code: `src/data/btProtocol.ts`.
-- **Connection:** `src/data/BluetoothRobotConnectionDataSource.ts` and `src/screens/Connect/`.
+- **Connection:** `src/data/BLERobotConnectionDataSource.ts` and `src/screens/Connect/`.
 - **Global training config:** `RobotConfigRepository` + `RobotConfig` in `src/data/RobotConfig.ts`.
 - **Run start/stop:** `RobotConnectionRepository.startRun` / `stopRun`; Wizard and Running screens.
 - **Differences from firmware:** spinRandom only in app UI; servo limits not synced; presets and TrainingComplete only in app; Arduino never sends data back.
 
-Hardware and firmware documentation (including HC-05 diagram): **`../firmware/README.md`**.
+Hardware and firmware documentation (including HM-10 diagram): **`../firmware/README.md`**.
 
 ---
 

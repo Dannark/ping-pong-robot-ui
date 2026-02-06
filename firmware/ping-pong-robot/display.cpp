@@ -27,7 +27,7 @@ void initDisplay() {
 void drawHeader(const char* title) {
   display.setCursor(0, 0);
   display.print(title);
-  if (btConnected) {
+  if (getBtConnected()) {
     int cx = SCREEN_WIDTH - 18;
     display.setCursor(cx, 0);
     display.print("B");

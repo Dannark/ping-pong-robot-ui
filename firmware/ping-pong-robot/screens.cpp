@@ -40,9 +40,9 @@ void renderInfo() {
 
   display.setCursor(0, BODY_Y + 24);
   display.print("BT: ");
-  display.println(btConnected ? "Connected" : "Off");
+  display.println(getBtConnected() ? "Connected" : "Off");
   const char* name = getBtDeviceName();
-  if (btConnected && name[0] != '\0') {
+  if (getBtConnected() && name[0] != '\0') {
     display.setCursor(0, BODY_Y + 36);
     display.println(name);
   }
