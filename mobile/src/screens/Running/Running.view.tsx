@@ -198,7 +198,6 @@ export function RunningView({
           const panRange = panMax - panMin;
           const tiltRange = tiltMax - tiltMin;
           const panNorm = panRange > 0 ? (aimPan - panMin) / panRange : 0;
-          const tiltNorm = tiltRange > 0 ? (aimTilt - tiltMin) / tiltRange : 0;
           return (
           <View style={styles.manualAimSection}>
             <Text style={styles.manualAimLabel}>{t('running.manualAim')}</Text>
@@ -227,8 +226,8 @@ export function RunningView({
               minimumValue={0}
               maximumValue={1}
               step={tiltRange > 0 ? 0.05 / tiltRange : 0.01}
-              value={tiltNorm}
-              onValueChange={(v) => onLiveAimChange(aimPan, tiltMin + v * tiltRange)}
+              value={tiltRange > 0 ? (tiltMax - aimTilt) / tiltRange : 0}
+              onValueChange={(v) => onLiveAimChange(aimPan, tiltMax - v * tiltRange)}
               onSlidingComplete={() => onLiveAimRelease?.(aimPan, aimTilt)}
               minimumTrackTintColor={theme.colors.primary}
               maximumTrackTintColor={theme.colors.border}
