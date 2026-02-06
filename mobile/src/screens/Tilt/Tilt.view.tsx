@@ -37,6 +37,7 @@ type TiltViewProps = {
   onTiltAuto3MinDistChange: (value: number) => void;
   onTiltAuto3PauseMsChange: (value: number) => void;
   onReset: () => void;
+  onTiltSlidingComplete?: () => void;
 };
 
 const PREVIEW_SIZE = 140;
@@ -71,6 +72,7 @@ export function TiltView({
   onTiltAuto3MinDistChange,
   onTiltAuto3PauseMsChange,
   onReset,
+  onTiltSlidingComplete,
 }: TiltViewProps) {
   const { t } = useTranslation();
   const isAuto = tiltMode === 'AUTO1' || tiltMode === 'AUTO2' || tiltMode === 'RANDOM';
@@ -138,6 +140,7 @@ export function TiltView({
             step={0.01}
             value={tiltTarget}
             onValueChange={onTiltTargetChange}
+            onSlidingComplete={onTiltSlidingComplete}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary}

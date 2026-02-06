@@ -5,6 +5,7 @@ import type { RobotConfig } from './RobotConfig';
 import type { RobotConnectionDataSource, ConnectionState } from './RobotConnectionDataSource';
 import {
   configToConfigLine,
+  getLiveAimLine,
   getStartCommand,
   getStopCommand,
   getDeviceNameCommand,
@@ -227,6 +228,10 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
 
   async sendConfig(config: RobotConfig): Promise<void> {
     await this.writeLine(configToConfigLine(config));
+  }
+
+  async sendLiveAim(pan: number, tilt: number): Promise<void> {
+    await this.writeLine(getLiveAimLine(pan, tilt));
   }
 
   async start(): Promise<void> {

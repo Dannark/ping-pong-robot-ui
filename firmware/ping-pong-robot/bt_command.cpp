@@ -2,6 +2,7 @@
 #include "config.h"
 #include "logic.h"
 #include "motors.h"
+#include "servos.h"
 #include <Arduino.h>
 #include <string.h>
 
@@ -158,7 +159,22 @@ static void processLine() {
     Serial.print(F("[BT] CONNECTED name="));
     Serial.println(btDeviceName[0] ? btDeviceName : "(none)");
   }
-  if (nCmd != nullptr && lineBuf[0] != 'S' && lineBuf[0] != 'P' && lineBuf[0] != 'C') {
+  if (nCmd != nullptr && lineBuf[0] != 'S' && lineBuf[0] != 'P' && lineBuf[0] != 'C' && lineBuf[0] != 'A') {
+    lineLen = 0;
+    return;
+  }
+  if (lineBuf[0] == 'A' && lineBuf[1] == ',') {
+    int p1000 = 0, t1000 = 0;
+    char* q = lineBuf + 2;
+    if (*q) { p1000 = atoi(q); while (*q && *q != ',') q++; if (*q == ',') q++; }
+    if (*q) t1000 = atoi(q);
+    cfg.panTarget = (float)p1000 / 1000.0f;
+    cfg.tiltTarget = (float)t1000 / 1000.0f;
+    clampFloat(cfg.panTarget, -1.0f, 1.0f);
+    clampFloat(cfg.tiltTarget, -1.0f, 1.0f);
+    if (!isRunning) {
+      updateServos(cfg.panTarget, cfg.tiltTarget);
+    }
     lineLen = 0;
     return;
   }
@@ -229,6 +245,10 @@ static void processLine() {
       clampInt(cfg.timerIndex, 0, 5);
       clampUL(cfg.feederCustomOnMs, 100UL, 10000UL);
       clampUL(cfg.feederCustomOffMs, 100UL, 10000UL);
+
+      if (!isRunning) {
+        updateServos(cfg.panTarget, cfg.tiltTarget);
+      }
     }
     lineLen = 0;
     return;

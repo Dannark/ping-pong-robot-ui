@@ -32,6 +32,14 @@ function createRepository(dataSource: RobotConnectionDataSource) {
   });
 
   return {
+    async sendConfig(config: RobotConfig): Promise<void> {
+      await dataSource.sendConfig(config);
+    },
+
+    async sendLiveAim(pan: number, tilt: number): Promise<void> {
+      await dataSource.sendLiveAim(pan, tilt);
+    },
+
     async startRun(config: RobotConfig): Promise<void> {
       await dataSource.sendConfig(config);
       await dataSource.start();

@@ -69,3 +69,8 @@ export function getDisconnectCommand(): string {
   return 'D\n';
 }
 
+/** Short live-aim line (pan/tilt only) to avoid BLE truncation. Values *1000. */
+export function getLiveAimLine(pan: number, tilt: number): string {
+  return `A,${Math.round(pan * 1000)},${Math.round(tilt * 1000)}\n`;
+}
+

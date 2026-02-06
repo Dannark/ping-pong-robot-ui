@@ -5,6 +5,7 @@ import {
   resetTilt,
   setTiltMode,
   setTiltTarget,
+  flushTiltLiveSend,
   setTiltMin,
   setTiltMax,
   setTiltAuto1Speed,
@@ -69,6 +70,7 @@ export function TiltScreen() {
       axisModes={axisModes}
       onModeSelect={setTiltMode}
       onTiltTargetChange={setTiltTarget}
+      onTiltSlidingComplete={flushTiltLiveSend}
       onTiltMinChange={setTiltMin}
       onTiltMaxChange={setTiltMax}
       onTiltAuto1SpeedChange={setTiltAuto1Speed}

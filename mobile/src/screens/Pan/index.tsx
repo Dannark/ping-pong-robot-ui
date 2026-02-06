@@ -5,6 +5,7 @@ import {
   resetPan,
   setPanMode,
   setPanTarget,
+  flushPanLiveSend,
   setPanMin,
   setPanMax,
   setPanAuto1Speed,
@@ -69,6 +70,7 @@ export function PanScreen() {
       axisModes={axisModes}
       onModeSelect={setPanMode}
       onPanTargetChange={setPanTarget}
+      onPanSlidingComplete={flushPanLiveSend}
       onPanMinChange={setPanMin}
       onPanMaxChange={setPanMax}
       onPanAuto1SpeedChange={setPanAuto1Speed}

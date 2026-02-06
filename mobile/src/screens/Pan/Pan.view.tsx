@@ -37,6 +37,7 @@ type PanViewProps = {
   onPanAuto3MinDistChange: (value: number) => void;
   onPanAuto3PauseMsChange: (value: number) => void;
   onReset: () => void;
+  onPanSlidingComplete?: () => void;
 };
 
 const PREVIEW_SIZE = 140;
@@ -71,6 +72,7 @@ export function PanView({
   onPanAuto3MinDistChange,
   onPanAuto3PauseMsChange,
   onReset,
+  onPanSlidingComplete,
 }: PanViewProps) {
   const { t } = useTranslation();
   const isAuto = panMode === 'AUTO1' || panMode === 'AUTO2' || panMode === 'RANDOM';
@@ -138,6 +140,7 @@ export function PanView({
             step={0.01}
             value={panTarget}
             onValueChange={onPanTargetChange}
+            onSlidingComplete={onPanSlidingComplete}
             minimumTrackTintColor={theme.colors.primary}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary}

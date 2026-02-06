@@ -1,6 +1,10 @@
 import type { AxisMode } from '../../data/RobotConfig';
 import { AXIS_MODES, DEFAULT_CONFIG } from '../../data/RobotConfig';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
+import { RobotConnectionRepository } from '../../data/RobotConnectionRepository';
+
+const LIVE_SEND_DEBOUNCE_MS = 400;
+let tiltLiveSendTimeout: ReturnType<typeof setTimeout> | null = null;
 
 export function getAxisModes(): AxisMode[] {
   return AXIS_MODES;
@@ -36,6 +40,32 @@ export function setTiltMode(mode: AxisMode) {
 
 export function setTiltTarget(value: number) {
   RobotConfigRepository.setConfig({ tiltTarget: value });
+  const c = RobotConfigRepository.getConfig();
+  if (c.tiltMode !== 'LIVE') {
+    if (tiltLiveSendTimeout !== null) {
+      clearTimeout(tiltLiveSendTimeout);
+      tiltLiveSendTimeout = null;
+    }
+    return;
+  }
+  if (tiltLiveSendTimeout !== null) clearTimeout(tiltLiveSendTimeout);
+  tiltLiveSendTimeout = setTimeout(() => {
+    tiltLiveSendTimeout = null;
+    sendLiveAimNow();
+  }, LIVE_SEND_DEBOUNCE_MS);
+}
+
+function sendLiveAimNow() {
+  const c = RobotConfigRepository.getConfig();
+  RobotConnectionRepository.sendLiveAim(c.panTarget, c.tiltTarget).catch(() => {});
+}
+
+export function flushTiltLiveSend() {
+  if (tiltLiveSendTimeout !== null) {
+    clearTimeout(tiltLiveSendTimeout);
+    tiltLiveSendTimeout = null;
+  }
+  sendLiveAimNow();
 }
 
 export function setTiltMin(value: number) {
@@ -82,4 +112,6 @@ export function resetTilt() {
     tiltRandomMinDist: DEFAULT_CONFIG.tiltRandomMinDist,
     tiltRandomPauseMs: DEFAULT_CONFIG.tiltRandomPauseMs,
   });
+  const c = RobotConfigRepository.getConfig();
+  RobotConnectionRepository.sendLiveAim(c.panTarget, c.tiltTarget).catch(() => {});
 }

@@ -16,6 +16,7 @@ export interface RobotConnectionDataSource {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   sendConfig(config: RobotConfig): Promise<void>;
+  sendLiveAim(pan: number, tilt: number): Promise<void>;
   start(): Promise<void>;
   stop(): Promise<void>;
   getConnectionState(): ConnectionState;
@@ -37,6 +38,10 @@ export class StubRobotConnectionDataSource implements RobotConnectionDataSource 
   }
 
   async sendConfig(_config: RobotConfig): Promise<void> {
+    await Promise.resolve();
+  }
+
+  async sendLiveAim(_pan: number, _tilt: number): Promise<void> {
     await Promise.resolve();
   }
 
