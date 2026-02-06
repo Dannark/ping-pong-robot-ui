@@ -9,8 +9,6 @@
 static char lineBuf[BT_LINE_BUF_SIZE];
 static int lineLen = 0;
 
-#define BT_LOG_LINE_MAX 64
-
 volatile bool btConnected = false;
 char btDeviceName[BT_DEVICE_NAME_LEN + 1] = { '\0' };
 static unsigned long stateHighSinceMs = 0;
@@ -107,11 +105,10 @@ static SpinMode intToSpinMode(int v) {
 
 static void logLineReceived(void) {
   Serial.print(F("[BT RX] "));
-  for (int i = 0; i < lineLen && i < BT_LOG_LINE_MAX; i++) {
+  for (int i = 0; i < lineLen; i++) {
     char c = lineBuf[i];
     Serial.print((c >= 32 && c < 127) ? c : '.');
   }
-  if (lineLen > BT_LOG_LINE_MAX) Serial.print(F("..."));
   Serial.println();
 }
 
@@ -125,6 +122,7 @@ static void processLine() {
   if (lineBuf[0] == 'S') {
     if (lineLen == 1 || (lineLen >= 5 && strncmp(lineBuf, "START", 5) == 0)) {
       startRunning();
+      BT_SERIAL.print(F("OK,S\n"));
     }
     lineLen = 0;
     return;
@@ -172,9 +170,9 @@ static void processLine() {
     cfg.tiltTarget = (float)t1000 / 1000.0f;
     clampFloat(cfg.panTarget, -1.0f, 1.0f);
     clampFloat(cfg.tiltTarget, -1.0f, 1.0f);
-    if (!isRunning) {
-      updateServos(cfg.panTarget, cfg.tiltTarget);
-    }
+    livePan = cfg.panTarget;
+    liveTilt = cfg.tiltTarget;
+    updateServos(cfg.panTarget, cfg.tiltTarget);
     lineLen = 0;
     return;
   }
@@ -249,6 +247,9 @@ static void processLine() {
       if (!isRunning) {
         updateServos(cfg.panTarget, cfg.tiltTarget);
       }
+      BT_SERIAL.print(F("OK,C\n"));
+    } else {
+      BT_SERIAL.print(F("ERR,C\n"));
     }
     lineLen = 0;
     return;

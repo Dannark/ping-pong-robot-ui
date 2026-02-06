@@ -21,6 +21,7 @@ type WizardViewProps = {
   displaySpin: SpinDirection;
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
   willTryReconnect?: boolean;
+  isStarting?: boolean;
   onItemPress: (screen: WizardItem['screen']) => void;
   onStartPress: () => void;
 };
@@ -28,7 +29,7 @@ type WizardViewProps = {
 const PREVIEW_SIZE = 90;
 const SPIN_PREVIEW_SIZE = 90;
 
-export function WizardView({ items, config, displaySpin, connectionStatus, willTryReconnect, onItemPress, onStartPress }: WizardViewProps) {
+export function WizardView({ items, config, displaySpin, connectionStatus, willTryReconnect, isStarting, onItemPress, onStartPress }: WizardViewProps) {
   const { t } = useTranslation();
   const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
   const showReconnectingMessage =
@@ -145,18 +146,18 @@ export function WizardView({ items, config, displaySpin, connectionStatus, willT
         </View>
 
         <TouchableOpacity
-          style={[styles.startButton, connectionStatus !== 'connected' && styles.startButtonDisabled]}
+          style={[styles.startButton, (connectionStatus !== 'connected' || isStarting) && styles.startButtonDisabled]}
           onPress={onStartPress}
           activeOpacity={0.85}
-          disabled={connectionStatus !== 'connected'}
+          disabled={connectionStatus !== 'connected' || isStarting}
         >
           <MaterialCommunityIcons
             name="play"
             size={28}
-            color={connectionStatus === 'connected' ? theme.colors.background : theme.colors.textSecondary}
+            color={connectionStatus === 'connected' && !isStarting ? theme.colors.background : theme.colors.textSecondary}
           />
-          <Text style={[styles.startLabel, connectionStatus !== 'connected' && styles.startLabelDisabled]}>
-            {t('wizard.start')}
+          <Text style={[styles.startLabel, (connectionStatus !== 'connected' || isStarting) && styles.startLabelDisabled]}>
+            {isStarting ? t('wizard.starting') : t('wizard.start')}
           </Text>
         </TouchableOpacity>
 

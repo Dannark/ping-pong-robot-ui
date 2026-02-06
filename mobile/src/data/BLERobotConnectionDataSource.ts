@@ -15,6 +15,7 @@ import {
 const HM10_SERVICE_UUID = '0000ffe0-0000-1000-8000-00805f9b34fb';
 const HM10_CHAR_UUID = '0000ffe1-0000-1000-8000-00805f9b34fb';
 const CHUNK_SIZE = 20;
+const ACK_TIMEOUT_MS = 4000;
 
 function toBase64(str: string): string {
   const key = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -29,6 +30,15 @@ function toBase64(str: string): string {
     out += i + 2 < str.length ? key[c & 63] : '=';
   }
   return out;
+}
+
+function fromBase64ToStr(base64: string): string {
+  try {
+    const atobFn = (globalThis as unknown as { atob?: (s: string) => string }).atob;
+    return atobFn ? atobFn(base64) : '';
+  } catch {
+    return '';
+  }
 }
 
 export type BLEDevice = { id: string; name: string | null };
@@ -111,12 +121,18 @@ export async function scanBLEDevices(
   });
 }
 
+type PendingAck = { resolve: () => void; reject: (err: Error) => void; timeoutId: ReturnType<typeof setTimeout> };
+
 export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
   private state: ConnectionState = { status: 'disconnected' };
   private listeners = new Set<(s: ConnectionState) => void>();
   private deviceId: string | null = null;
   private deviceDisplayName: string | null = null;
   private disconnectionSubscription: { remove: () => void } | null = null;
+  private notificationSubscription: { remove: () => void } | null = null;
+  private rxBuffer = '';
+  private pendingConfigAck: PendingAck | null = null;
+  private pendingStartAck: PendingAck | null = null;
 
   private setState(next: Partial<ConnectionState>) {
     this.state = { ...this.state, ...next };
@@ -128,6 +144,83 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
       this.disconnectionSubscription.remove();
       this.disconnectionSubscription = null;
     }
+    if (this.notificationSubscription != null) {
+      this.notificationSubscription.remove();
+      this.notificationSubscription = null;
+    }
+  }
+
+  private clearPendingAck(pending: PendingAck | null): void {
+    if (!pending) return;
+    clearTimeout(pending.timeoutId);
+    this.pendingConfigAck = this.pendingConfigAck === pending ? null : this.pendingConfigAck;
+    this.pendingStartAck = this.pendingStartAck === pending ? null : this.pendingStartAck;
+  }
+
+  private onAckLine(line: string): void {
+    const t = line.trim();
+    if (t.startsWith('OK,C')) {
+      const p = this.pendingConfigAck;
+      this.pendingConfigAck = null;
+      if (p) {
+        clearTimeout(p.timeoutId);
+        p.resolve();
+      }
+      return;
+    }
+    if (t.startsWith('OK,S')) {
+      const p = this.pendingStartAck;
+      this.pendingStartAck = null;
+      if (p) {
+        clearTimeout(p.timeoutId);
+        p.resolve();
+      }
+      return;
+    }
+    if (t.startsWith('ERR,')) {
+      const err = new Error(`Robot error: ${t}`);
+      if (this.pendingConfigAck) {
+        const p = this.pendingConfigAck;
+        this.pendingConfigAck = null;
+        clearTimeout(p.timeoutId);
+        p.reject(err);
+      }
+      if (this.pendingStartAck) {
+        const p = this.pendingStartAck;
+        this.pendingStartAck = null;
+        clearTimeout(p.timeoutId);
+        p.reject(err);
+      }
+    }
+  }
+
+  private processAckBuffer(): void {
+    let idx: number;
+    while ((idx = this.rxBuffer.indexOf('\n')) >= 0) {
+      const line = this.rxBuffer.slice(0, idx);
+      this.rxBuffer = this.rxBuffer.slice(idx + 1);
+      this.onAckLine(line);
+    }
+    const cr = this.rxBuffer.indexOf('\r');
+    if (cr >= 0) {
+      const line = this.rxBuffer.slice(0, cr);
+      this.rxBuffer = this.rxBuffer.slice(cr + 1);
+      this.onAckLine(line);
+    }
+  }
+
+  private startNotificationMonitor(deviceId: string): void {
+    const manager = getManager();
+    this.notificationSubscription = manager.monitorCharacteristicForDevice(
+      deviceId,
+      HM10_SERVICE_UUID,
+      HM10_CHAR_UUID,
+      (error, characteristic) => {
+        if (error || !characteristic?.value) return;
+        this.rxBuffer += fromBase64ToStr(characteristic.value);
+        this.processAckBuffer();
+      }
+    );
   }
 
   private onBleDisconnected(): void {
@@ -162,6 +255,8 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
       await deviceObj.discoverAllServicesAndCharacteristics();
       this.deviceId = device.id;
       this.deviceDisplayName = device.name || 'HM-10';
+      this.rxBuffer = '';
+      this.startNotificationMonitor(device.id);
       this.setState({
         status: 'connected',
         error: undefined,
@@ -228,6 +323,42 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
 
   async sendConfig(config: RobotConfig): Promise<void> {
     await this.writeLine(configToConfigLine(config));
+  }
+
+  async sendConfigAndWaitAck(config: RobotConfig, timeoutMs: number = ACK_TIMEOUT_MS): Promise<void> {
+    if (!this.deviceId || this.state.status !== 'connected') {
+      throw new Error('Not connected');
+    }
+    this.clearPendingAck(this.pendingConfigAck);
+    await this.writeLine(configToConfigLine(config));
+    return new Promise<void>((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        if (this.pendingConfigAck === pending) {
+          this.pendingConfigAck = null;
+          reject(new Error('Config ACK timeout'));
+        }
+      }, timeoutMs);
+      const pending: PendingAck = { resolve, reject, timeoutId };
+      this.pendingConfigAck = pending;
+    });
+  }
+
+  async startAndWaitAck(timeoutMs: number = ACK_TIMEOUT_MS): Promise<void> {
+    if (!this.deviceId || this.state.status !== 'connected') {
+      throw new Error('Not connected');
+    }
+    this.clearPendingAck(this.pendingStartAck);
+    await this.writeLine(getStartCommand());
+    return new Promise<void>((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        if (this.pendingStartAck === pending) {
+          this.pendingStartAck = null;
+          reject(new Error('Start ACK timeout'));
+        }
+      }, timeoutMs);
+      const pending: PendingAck = { resolve, reject, timeoutId };
+      this.pendingStartAck = pending;
+    });
   }
 
   async sendLiveAim(pan: number, tilt: number): Promise<void> {

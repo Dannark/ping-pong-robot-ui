@@ -16,6 +16,8 @@ export interface RobotConnectionDataSource {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   sendConfig(config: RobotConfig): Promise<void>;
+  sendConfigAndWaitAck(config: RobotConfig, timeoutMs?: number): Promise<void>;
+  startAndWaitAck(timeoutMs?: number): Promise<void>;
   sendLiveAim(pan: number, tilt: number): Promise<void>;
   start(): Promise<void>;
   stop(): Promise<void>;
@@ -38,6 +40,14 @@ export class StubRobotConnectionDataSource implements RobotConnectionDataSource 
   }
 
   async sendConfig(_config: RobotConfig): Promise<void> {
+    await Promise.resolve();
+  }
+
+  async sendConfigAndWaitAck(_config: RobotConfig, _timeoutMs?: number): Promise<void> {
+    await Promise.resolve();
+  }
+
+  async startAndWaitAck(_timeoutMs?: number): Promise<void> {
     await Promise.resolve();
   }
 

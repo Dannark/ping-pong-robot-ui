@@ -41,13 +41,24 @@ function createRepository(dataSource: RobotConnectionDataSource) {
     },
 
     async startRun(config: RobotConfig): Promise<void> {
-      await dataSource.sendConfig(config);
-      await dataSource.start();
-      runState = {
-        runStartTime: Date.now(),
-        runConfig: { ...config },
-      };
-      notifyRunState();
+      const maxAttempts = 3;
+      let lastError: Error | null = null;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          await dataSource.sendConfigAndWaitAck(config);
+          await dataSource.startAndWaitAck();
+          runState = {
+            runStartTime: Date.now(),
+            runConfig: { ...config },
+          };
+          notifyRunState();
+          return;
+        } catch (e) {
+          lastError = e instanceof Error ? e : new Error(String(e));
+          if (attempt === maxAttempts) break;
+        }
+      }
+      throw lastError ?? new Error('Start failed');
     },
 
     async stopRun(): Promise<void> {

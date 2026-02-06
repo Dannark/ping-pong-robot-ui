@@ -25,14 +25,11 @@ type RunningScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Running'>;
 };
 
-const LIVE_AIM_THROTTLE_MS = 80;
-
 export function RunningScreen({ navigation }: RunningScreenProps) {
   const [runState, setRunState] = useState(() => getRunState());
   const [, setTick] = useState(0);
   const [currentRandomSpin, setCurrentRandomSpin] = useState<SpinDirection>(() => pickRandomSpin());
   const [liveAim, setLiveAim] = useState<LiveAim | null>(null);
-  const liveAimLastSendRef = useRef(0);
 
   useEffect(() => {
     const cfg = runState.runConfig;
@@ -45,10 +42,6 @@ export function RunningScreen({ navigation }: RunningScreenProps) {
 
   const handleLiveAimChange = useCallback((pan: number, tilt: number) => {
     setLiveAim({ pan, tilt });
-    const now = Date.now();
-    if (now - liveAimLastSendRef.current < LIVE_AIM_THROTTLE_MS) return;
-    liveAimLastSendRef.current = now;
-    sendLiveAim(pan, tilt).catch(() => {});
   }, []);
 
   const handleLiveAimRelease = useCallback((pan: number, tilt: number) => {

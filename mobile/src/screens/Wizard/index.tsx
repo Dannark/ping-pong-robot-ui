@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import { SPIN_DIRECTIONS } from '../../data/RobotConfig';
@@ -39,6 +39,7 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
     RobotConnectionRepository.getDataSource().getConnectionState()
   );
   const [showDisconnectedToast, setShowDisconnectedToast] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   const prevStatusRef = useRef(connectionState.status);
 
   useEffect(() => {
@@ -108,8 +109,15 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
   };
 
   const handleStartPress = async () => {
-    await RobotConnectionRepository.startRun(config);
-    navigation.navigate('Running');
+    setIsStarting(true);
+    try {
+      await RobotConnectionRepository.startRun(config);
+      navigation.navigate('Running');
+    } catch {
+      Alert.alert(t('wizard.startFailedTitle'), t('wizard.startFailedMessage'));
+    } finally {
+      setIsStarting(false);
+    }
   };
 
   const handleSavePreset = useCallback(async (name: string) => {
@@ -139,6 +147,7 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
         }
         onItemPress={handleItemPress}
         onStartPress={handleStartPress}
+        isStarting={isStarting}
       />
 
       <WizardMenuModal
