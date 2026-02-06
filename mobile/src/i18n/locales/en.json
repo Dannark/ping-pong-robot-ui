@@ -31,6 +31,9 @@
   "wizard": {
     "robotConnected": "Robot connected",
     "robotDisconnected": "Robot not connected",
+    "reconnecting": "(reconnecting)",
+    "reconnectingInSeconds": "Reconnecting in a few seconds",
+    "robotDisconnectedToast": "Robot was disconnected from Bluetooth",
     "preview": "Preview",
     "aim": "Aim",
     "feeder": "Feeder",

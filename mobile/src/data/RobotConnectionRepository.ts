@@ -24,6 +24,13 @@ function notifyRunState() {
 }
 
 function createRepository(dataSource: RobotConnectionDataSource) {
+  dataSource.subscribeConnectionState((state) => {
+    if (state.status === 'disconnected') {
+      runState = { ...defaultRunState };
+      notifyRunState();
+    }
+  });
+
   return {
     async startRun(config: RobotConfig): Promise<void> {
       await dataSource.sendConfig(config);
@@ -37,6 +44,11 @@ function createRepository(dataSource: RobotConnectionDataSource) {
 
     async stopRun(): Promise<void> {
       await dataSource.stop();
+      runState = { ...defaultRunState };
+      notifyRunState();
+    },
+
+    cancelRun(): void {
       runState = { ...defaultRunState };
       notifyRunState();
     },

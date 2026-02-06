@@ -26,6 +26,11 @@
     "cardSettingsSubtitle": "Servos und Motoren"
   },
   "wizard": {
+    "robotConnected": "Roboter verbunden",
+    "robotDisconnected": "Roboter nicht verbunden",
+    "reconnecting": "(verbinde erneut)",
+    "reconnectingInSeconds": "Verbinde in Kürze erneut",
+    "robotDisconnectedToast": "Der Roboter wurde von Bluetooth getrennt",
     "preview": "Vorschau",
     "aim": "Ziel",
     "feeder": "Zubringer",

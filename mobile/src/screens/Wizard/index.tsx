@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type { RootStackParamList } from '../../navigation/RootStack';
 import { SPIN_DIRECTIONS } from '../../data/RobotConfig';
@@ -9,6 +9,7 @@ import type { SpinDirection } from '../../data/RobotConfig';
 import { RobotConnectionRepository } from '../../data/RobotConnectionRepository';
 import { RobotConfigRepository } from '../../data/RobotConfigRepository';
 import { PresetsRepository } from '../../data/PresetsRepository';
+import { getBLETargetDevice } from '../../data/BLERobotConnectionDataSource';
 import { getWizardItems, subscribeConfig, getConfig } from './Wizard.viewModel';
 import { WizardView } from './Wizard.view';
 import { WizardMenuModal } from './WizardMenuModal';
@@ -37,6 +38,28 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
   const [connectionState, setConnectionState] = useState(() =>
     RobotConnectionRepository.getDataSource().getConnectionState()
   );
+  const [showDisconnectedToast, setShowDisconnectedToast] = useState(false);
+  const prevStatusRef = useRef(connectionState.status);
+
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = connectionState.status;
+    if (prev === 'connected' && connectionState.status !== 'connected') {
+      setShowDisconnectedToast(true);
+      const t = setTimeout(() => setShowDisconnectedToast(false), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [connectionState.status]);
+
+  useEffect(() => {
+    if (connectionState.status !== 'disconnected') return;
+    const target = getBLETargetDevice();
+    if (!target) return;
+    const id = setInterval(() => {
+      RobotConnectionRepository.getDataSource().connect().catch(() => {});
+    }, 8000);
+    return () => clearInterval(id);
+  }, [connectionState.status]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -101,11 +124,19 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
 
   return (
     <>
+      {showDisconnectedToast ? (
+        <View style={toastStyles.toast}>
+          <Text style={toastStyles.toastText}>{t('wizard.robotDisconnectedToast')}</Text>
+        </View>
+      ) : null}
       <WizardView
         items={items}
         config={config}
         displaySpin={displaySpin}
         connectionStatus={connectionState.status}
+        willTryReconnect={
+          connectionState.status === 'disconnected' && getBLETargetDevice() !== null
+        }
         onItemPress={handleItemPress}
         onStartPress={handleStartPress}
       />
@@ -132,3 +163,23 @@ export function WizardScreen({ navigation }: WizardScreenProps) {
     </>
   );
 }
+
+const toastStyles = StyleSheet.create({
+  toast: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    backgroundColor: theme.colors.surfaceOverlay,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  toastText: {
+    ...theme.typography.caption,
+    color: theme.colors.text,
+    textAlign: 'center',
+  },
+});

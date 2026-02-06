@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -21,6 +20,7 @@ type WizardViewProps = {
   config: RobotConfig;
   displaySpin: SpinDirection;
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
+  willTryReconnect?: boolean;
   onItemPress: (screen: WizardItem['screen']) => void;
   onStartPress: () => void;
 };
@@ -28,9 +28,11 @@ type WizardViewProps = {
 const PREVIEW_SIZE = 90;
 const SPIN_PREVIEW_SIZE = 90;
 
-export function WizardView({ items, config, displaySpin, connectionStatus, onItemPress, onStartPress }: WizardViewProps) {
+export function WizardView({ items, config, displaySpin, connectionStatus, willTryReconnect, onItemPress, onStartPress }: WizardViewProps) {
   const { t } = useTranslation();
   const spinForPreview = config.spinRandom ? displaySpin : config.spinDirection;
+  const showReconnectingMessage =
+    connectionStatus === 'connecting' || (connectionStatus === 'disconnected' && willTryReconnect);
 
   return (
     <View style={styles.container}>
@@ -41,7 +43,11 @@ export function WizardView({ items, config, displaySpin, connectionStatus, onIte
           color={connectionStatus === 'connected' ? theme.colors.primary : theme.colors.textSecondary}
         />
         <Text style={[styles.robotStatusText, connectionStatus === 'connected' && styles.robotStatusConnected]}>
-          {connectionStatus === 'connected' ? t('wizard.robotConnected') : t('wizard.robotDisconnected')}
+          {connectionStatus === 'connected'
+            ? t('wizard.robotConnected')
+            : showReconnectingMessage
+              ? t('wizard.reconnectingInSeconds')
+              : t('wizard.robotDisconnected')}
         </Text>
       </View>
       <ScrollView
@@ -138,9 +144,20 @@ export function WizardView({ items, config, displaySpin, connectionStatus, onIte
           ))}
         </View>
 
-        <TouchableOpacity style={styles.startButton} onPress={onStartPress} activeOpacity={0.85}>
-          <MaterialCommunityIcons name="play" size={28} color={theme.colors.background} />
-          <Text style={styles.startLabel}>{t('wizard.start')}</Text>
+        <TouchableOpacity
+          style={[styles.startButton, connectionStatus !== 'connected' && styles.startButtonDisabled]}
+          onPress={onStartPress}
+          activeOpacity={0.85}
+          disabled={connectionStatus !== 'connected'}
+        >
+          <MaterialCommunityIcons
+            name="play"
+            size={28}
+            color={connectionStatus === 'connected' ? theme.colors.background : theme.colors.textSecondary}
+          />
+          <Text style={[styles.startLabel, connectionStatus !== 'connected' && styles.startLabelDisabled]}>
+            {t('wizard.start')}
+          </Text>
         </TouchableOpacity>
 
         <View style={{ height: theme.spacing.xxl }} />
@@ -265,5 +282,11 @@ const styles = StyleSheet.create({
     ...theme.typography.hero,
     color: theme.colors.background,
     fontSize: 22,
+  },
+  startButtonDisabled: {
+    backgroundColor: theme.colors.surfaceOverlay,
+  },
+  startLabelDisabled: {
+    color: theme.colors.textSecondary,
   },
 });

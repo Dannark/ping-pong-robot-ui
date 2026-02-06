@@ -26,6 +26,11 @@
     "cardSettingsSubtitle": "舵机与电机"
   },
   "wizard": {
+    "robotConnected": "机器人已连接",
+    "robotDisconnected": "机器人未连接",
+    "reconnecting": "（正在重连）",
+    "reconnectingInSeconds": "几秒后重连",
+    "robotDisconnectedToast": "机器人已从蓝牙断开连接",
     "preview": "预览",
     "aim": "瞄准",
     "feeder": "供球",
