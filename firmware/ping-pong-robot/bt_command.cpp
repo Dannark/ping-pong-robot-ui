@@ -176,15 +176,35 @@ static void processLine() {
     lineLen = 0;
     return;
   }
-  if (lineBuf[0] == 'C' && lineBuf[1] == ',') {
-    // CONFIG: 26 inteiros separados por vírgula (ordem igual ao app)
-    // panMode, tiltMode, panTarget*1000, tiltTarget*1000, panMin*1000, panMax*1000, tiltMin*1000, tiltMax*1000,
-    // panAuto1Speed*1000, panAuto2Step*1000, panAuto2PauseMs, tiltAuto1Speed*1000, tiltAuto2Step*1000, tiltAuto2PauseMs,
-    // panRandomMinDist*1000, panRandomPauseMs, tiltRandomMinDist*1000, tiltRandomPauseMs,
-    // launcherPower, spinMode, spinIntensity, feederMode, feederSpeed, feederCustomOnMs, feederCustomOffMs, timerIndex
+  // CONFIG: framed as <C,v0,v1,...,v25> so we only run when a complete block (start+end) is received.
+  const char* configStartMarker = "<C,";
+  const size_t configStartLen = 3;
+  char* lastBlock = (char*)lineBuf;
+  for (char* q = lineBuf; *q; q++) {
+    if (q[0] == '<' && q[1] == 'C' && q[2] == ',') lastBlock = q + configStartLen;
+  }
+  bool hasConfigMarker = (strstr(lineBuf, configStartMarker) != nullptr);
+  bool endsWithClose = (lineLen >= 1 && lineBuf[lineLen - 1] == '>');
+
+  if (hasConfigMarker) {
+    if (!endsWithClose) {
+      Serial.println(F("[BT] Config rejected: incomplete (block does not end with '>')"));
+      BT_SERIAL.print(F("ERR,C,INCOMPLETE\n"));
+      lineLen = 0;
+      return;
+    }
+    char* endBlock = (char*)(lineBuf + lineLen - 1);
+    if (lastBlock > endBlock) {
+      Serial.println(F("[BT] Config rejected: invalid (no content between markers)"));
+      BT_SERIAL.print(F("ERR,C,INVALID\n"));
+      lineLen = 0;
+      return;
+    }
+    *endBlock = '\0';
+    // CONFIG: 26 ints (order same as app): panMode, tiltMode, panTarget*1000, ...
     int v[26];
     int n = 0;
-    char *p = lineBuf + 2;
+    char* p = lastBlock;
     while (n < 26 && *p) {
       v[n++] = atoi(p);
       while (*p && *p != ',') p++;
@@ -249,7 +269,8 @@ static void processLine() {
       }
       BT_SERIAL.print(F("OK,C\n"));
     } else {
-      BT_SERIAL.print(F("ERR,C\n"));
+      Serial.println(F("[BT] Config rejected: invalid (expected 26 fields)"));
+      BT_SERIAL.print(F("ERR,C,INVALID\n"));
     }
     lineLen = 0;
     return;

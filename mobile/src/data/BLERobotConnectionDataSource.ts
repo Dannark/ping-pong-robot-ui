@@ -15,7 +15,8 @@ import {
 const HM10_SERVICE_UUID = '0000ffe0-0000-1000-8000-00805f9b34fb';
 const HM10_CHAR_UUID = '0000ffe1-0000-1000-8000-00805f9b34fb';
 const CHUNK_SIZE = 20;
-const ACK_TIMEOUT_MS = 4000;
+const CHUNK_DELAY_MS = 35;
+const ACK_TIMEOUT_MS = 2500;
 
 function toBase64(str: string): string {
   const key = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -318,8 +319,15 @@ export class BLERobotConnectionDataSource implements RobotConnectionDataSource {
 
   private async writeLine(line: string): Promise<void> {
     if (!this.deviceId || this.state.status !== 'connected') return;
+    if (__DEV__) {
+      const preview = line.includes('\n') ? line.replace(/\n/g, '\\n') : line;
+      console.log('[BLE TX]', preview);
+    }
     const manager = getManager();
     for (let i = 0; i < line.length; i += CHUNK_SIZE) {
+      if (i > 0) {
+        await new Promise<void>((r) => setTimeout(() => r(), CHUNK_DELAY_MS));
+      }
       const chunk = line.slice(i, i + CHUNK_SIZE);
       const base64 = toBase64(chunk);
       await manager.writeCharacteristicWithoutResponseForDevice(

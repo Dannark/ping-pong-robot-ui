@@ -17,7 +17,10 @@ function spinDirectionToInt(d: SpinDirection): number {
   return i >= 0 ? i : 0;
 }
 
-/** Converte RobotConfig na linha CONFIG do protocolo (C,v0,v1,...,v25). Valores float em *1000. */
+const CONFIG_START = '<C,';
+const CONFIG_END = '>';
+
+/** Config line with framing: <C,v0,v1,...,v25>\n so robot only runs when a complete block (start+end) is received. */
 export function configToConfigLine(config: RobotConfig): string {
   const a = [
     axisModeToInt(config.panMode),
@@ -47,8 +50,10 @@ export function configToConfigLine(config: RobotConfig): string {
     config.feederCustomOffMs,
     config.timerIndex,
   ];
-  return 'C,' + a.join(',') + '\n';
+  return CONFIG_START + a.join(',') + CONFIG_END + '\n';
 }
+
+/** Error codes from robot: ERR,C,INCOMPLETE = block truncated; ERR,C,INVALID = wrong field count. App retries on any ERR,C. */
 
 export function getStartCommand(): string {
   return 'S\n';

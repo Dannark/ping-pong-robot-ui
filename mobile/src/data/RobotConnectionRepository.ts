@@ -42,9 +42,18 @@ function createRepository(dataSource: RobotConnectionDataSource) {
 
     async startRun(config: RobotConfig): Promise<void> {
       const maxAttempts = 3;
+      const retryDelayAfterRejectMs = 350;
+      const retryDelayAfterTimeoutMs = 800;
       let lastError: Error | null = null;
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
+          if (attempt > 1) {
+            const delay =
+              lastError?.message?.includes('ERR,C') ?? false
+                ? retryDelayAfterRejectMs
+                : retryDelayAfterTimeoutMs;
+            await new Promise((r) => setTimeout(r, delay));
+          }
           await dataSource.sendConfigAndWaitAck(config);
           await dataSource.startAndWaitAck();
           runState = {
