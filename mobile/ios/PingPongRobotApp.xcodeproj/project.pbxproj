@@ -10,7 +10,7 @@
 		0C80B921A6F3F58F76C31292 /* libPods-PingPongRobotApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-PingPongRobotApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		4458474CB04AB0F8B23AD116 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
-		650CE6E52F37F6D20074F0C3 /* SpinBot Remote Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy); }; };
+		650CE6E52F37F6D20074F0C3 /* SpinBot Remote Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		650CE6F82F37F9D70074F0C3 /* WatchConnectivityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650CE6F72F37F9D70074F0C3 /* WatchConnectivityModule.swift */; };
 		650CE6F92F37F9D70074F0C3 /* WatchConnectivityModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 650CE6F62F37F9D70074F0C3 /* WatchConnectivityModule.m */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
