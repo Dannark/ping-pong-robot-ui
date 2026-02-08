@@ -1,7 +1,8 @@
 import { AppState, NativeEventEmitter, NativeModules, Platform } from 'react-native';
 import { RobotConnectionRepository } from '../data/RobotConnectionRepository';
 import { RobotConfigRepository } from '../data/RobotConfigRepository';
-import type { AxisMode, RobotConfig } from '../data/RobotConfig';
+import type { AxisMode, RobotConfig, SpinDirection } from '../data/RobotConfig';
+import { SPIN_DIRECTIONS } from '../data/RobotConfig';
 import { getConfig } from '../screens/Wizard/Wizard.viewModel';
 import { stopRun } from '../screens/Running/Running.viewModel';
 import { navigateToRunning } from '../navigation/navigationRef';
@@ -51,6 +52,9 @@ const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'RANDOM'];
 function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
   const num = (): number => Number(value);
   const mode = (): AxisMode => (AXIS_MODES.includes(value as AxisMode) ? (value as AxisMode) : 'LIVE');
+  const spinDir = (): SpinDirection =>
+    SPIN_DIRECTIONS.includes(value as SpinDirection) ? (value as SpinDirection) : 'NONE';
+  const bool = (): boolean => value === 'true';
   const map: Record<string, () => RobotConfig[keyof RobotConfig]> = {
     panMode: mode,
     tiltMode: mode,
@@ -70,6 +74,11 @@ function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
     tiltRandomMinDist: num,
     panRandomPauseMs: num,
     tiltRandomPauseMs: num,
+    launcherPower: num,
+    spinDirection: spinDir,
+    spinIntensity: num,
+    spinRandom: bool,
+    spinRandomIntervalSec: num,
   };
   const fn = map[key as keyof typeof map];
   if (!fn) return {};
