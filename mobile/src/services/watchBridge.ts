@@ -1,8 +1,8 @@
 import { AppState, NativeEventEmitter, NativeModules, Platform } from 'react-native';
 import { RobotConnectionRepository } from '../data/RobotConnectionRepository';
 import { RobotConfigRepository } from '../data/RobotConfigRepository';
-import type { AxisMode, RobotConfig, SpinDirection } from '../data/RobotConfig';
-import { SPIN_DIRECTIONS } from '../data/RobotConfig';
+import type { AxisMode, FeederMode, RobotConfig, SpinDirection } from '../data/RobotConfig';
+import { FEEDER_MODES, SPIN_DIRECTIONS } from '../data/RobotConfig';
 import { getConfig } from '../screens/Wizard/Wizard.viewModel';
 import { stopRun } from '../screens/Running/Running.viewModel';
 import { navigateToRunning } from '../navigation/navigationRef';
@@ -54,6 +54,8 @@ function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
   const mode = (): AxisMode => (AXIS_MODES.includes(value as AxisMode) ? (value as AxisMode) : 'LIVE');
   const spinDir = (): SpinDirection =>
     SPIN_DIRECTIONS.includes(value as SpinDirection) ? (value as SpinDirection) : 'NONE';
+  const feederMode = (): FeederMode =>
+    FEEDER_MODES.includes(value as FeederMode) ? (value as FeederMode) : 'CONT';
   const bool = (): boolean => value === 'true';
   const map: Record<string, () => RobotConfig[keyof RobotConfig]> = {
     panMode: mode,
@@ -79,6 +81,10 @@ function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
     spinIntensity: num,
     spinRandom: bool,
     spinRandomIntervalSec: num,
+    feederMode: feederMode,
+    feederSpeed: num,
+    feederCustomOnMs: num,
+    feederCustomOffMs: num,
   };
   const fn = map[key as keyof typeof map];
   if (!fn) return {};
