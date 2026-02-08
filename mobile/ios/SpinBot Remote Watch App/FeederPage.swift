@@ -2,14 +2,13 @@ import SwiftUI
 
 struct FeederPage: View {
   var body: some View {
-    VStack(spacing: 8) {
-      Image(systemName: "tray.full.fill")
-        .font(.system(size: 34))
-      Text("Feeder")
-        .font(.headline)
+    VStack(spacing: 0) {
+      ScreenTitleView(title: "Feeder", systemImage: "tray.full.fill")
+        .padding(.bottom, 10)
       Text("Em breve")
         .font(.footnote)
         .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity)
     }
     .padding()
   }

@@ -2,14 +2,13 @@ import SwiftUI
 
 struct LauncherPage: View {
   var body: some View {
-    VStack(spacing: 8) {
-      Image(systemName: "paperplane.fill")
-        .font(.system(size: 34))
-      Text("Launcher")
-        .font(.headline)
+    VStack(spacing: 0) {
+      ScreenTitleView(title: "Launcher", systemImage: "paperplane.fill")
+        .padding(.bottom, 10)
       Text("Em breve")
         .font(.footnote)
         .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity)
     }
     .padding()
   }

@@ -64,10 +64,8 @@ class WatchConnectivityModule: RCTEventEmitter, WCSessionDelegate {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
       if command == "ping" {
-        print("[PingTest iPhone] received ping (no replyHandler)")
         if session.isReachable {
           session.sendMessage(["response": "pong"], replyHandler: nil, errorHandler: nil)
-          print("[PingTest iPhone] sent pong (no replyHandler)")
         }
         return
       }
@@ -75,9 +73,13 @@ class WatchConnectivityModule: RCTEventEmitter, WCSessionDelegate {
         if self.hasListeners {
           self.sendEvent(withName: "WatchStateRequest", body: nil)
         }
-      } else {
-        self.sendEvent(withName: "WatchCommand", body: ["command": command])
+        return
       }
+      if command == "config", let key = message["key"] as? String, let value = message["value"] as? String {
+        self.sendEvent(withName: "WatchCommand", body: ["command": command, "key": key, "value": value])
+        return
+      }
+      self.sendEvent(withName: "WatchCommand", body: ["command": command])
     }
   }
 
@@ -104,8 +106,12 @@ class WatchConnectivityModule: RCTEventEmitter, WCSessionDelegate {
       snapshot["appActive"] = appActive
       snapshot["appState"] = appActive ? "active" : "not_active"
       snapshot["replyAtMs"] = Date().timeIntervalSince1970 * 1000
-      print("[State iPhone] getState reply appActive=\(appActive) robotConnected=\(snapshot["robotConnected"] ?? "nil") robotName=\"\(snapshot["robotName"] ?? "")\"")
       replyHandler(snapshot)
+      return
+    }
+    if command == "config", let key = message["key"] as? String, let value = message["value"] as? String {
+      sendEvent(withName: "WatchCommand", body: ["command": command, "key": key, "value": value])
+      replyHandler(["ok": true])
       return
     }
     replyHandler([:])

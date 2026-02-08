@@ -1,10 +1,14 @@
 import { AppState, NativeEventEmitter, NativeModules, Platform } from 'react-native';
 import { RobotConnectionRepository } from '../data/RobotConnectionRepository';
+import { RobotConfigRepository } from '../data/RobotConfigRepository';
+import type { AxisMode, RobotConfig } from '../data/RobotConfig';
 import { getConfig } from '../screens/Wizard/Wizard.viewModel';
 import { stopRun } from '../screens/Running/Running.viewModel';
 import { navigateToRunning } from '../navigation/navigationRef';
 
 const { WatchConnectivityModule } = NativeModules;
+
+export type WatchCommandPayload = { command: string; key?: string; value?: string };
 
 function pushWatchState(): void {
   if (Platform.OS !== 'ios' || !WatchConnectivityModule?.updateWatchState) {
@@ -31,18 +35,56 @@ function pushWatchState(): void {
   WatchConnectivityModule.updateWatchState(payload);
 }
 
-export function subscribeWatchCommands(callback: (command: string) => void): () => void {
+export function subscribeWatchCommands(callback: (payload: WatchCommandPayload) => void): () => void {
   if (Platform.OS !== 'ios' || !WatchConnectivityModule) {
     return () => {};
   }
   const emitter = new NativeEventEmitter(WatchConnectivityModule);
-  const sub = emitter.addListener('WatchCommand', (payload: { command: string }) => {
-    callback(payload?.command ?? '');
+  const sub = emitter.addListener('WatchCommand', (payload: WatchCommandPayload) => {
+    callback(payload ?? { command: '' });
   });
   return () => sub.remove();
 }
 
-export function handleWatchCommand(command: string): void {
+const AXIS_MODES: AxisMode[] = ['LIVE', 'AUTO1', 'AUTO2', 'RANDOM'];
+
+function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
+  const num = (): number => Number(value);
+  const mode = (): AxisMode => (AXIS_MODES.includes(value as AxisMode) ? (value as AxisMode) : 'LIVE');
+  const map: Record<string, () => RobotConfig[keyof RobotConfig]> = {
+    panMode: mode,
+    tiltMode: mode,
+    panTarget: num,
+    tiltTarget: num,
+    panMin: num,
+    panMax: num,
+    tiltMin: num,
+    tiltMax: num,
+    panAuto1Speed: num,
+    tiltAuto1Speed: num,
+    panAuto2Step: num,
+    tiltAuto2Step: num,
+    panAuto2PauseMs: num,
+    tiltAuto2PauseMs: num,
+    panRandomMinDist: num,
+    tiltRandomMinDist: num,
+    panRandomPauseMs: num,
+    tiltRandomPauseMs: num,
+  };
+  const fn = map[key as keyof typeof map];
+  if (!fn) return {};
+  return { [key]: fn() } as Partial<RobotConfig>;
+}
+
+export function handleWatchCommand(payload: WatchCommandPayload): void {
+  const { command, key, value } = payload;
+  if (command === 'config' && key != null && value != null) {
+    const partial = applyWatchConfig(key, value);
+    if (Object.keys(partial).length > 0) {
+      RobotConfigRepository.setConfig(partial);
+    }
+    return;
+  }
   if (command === 'start') {
     const config = getConfig();
     const status = RobotConnectionRepository.getDataSource().getConnectionState().status;
