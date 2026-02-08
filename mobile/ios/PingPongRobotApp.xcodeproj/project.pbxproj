@@ -3,16 +3,57 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-PingPongRobotApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-PingPongRobotApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		4458474CB04AB0F8B23AD116 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		650CE6E52F37F6D20074F0C3 /* SpinBot Remote Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy); }; };
+		650CE6F82F37F9D70074F0C3 /* WatchConnectivityModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650CE6F72F37F9D70074F0C3 /* WatchConnectivityModule.swift */; };
+		650CE6F92F37F9D70074F0C3 /* WatchConnectivityModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 650CE6F62F37F9D70074F0C3 /* WatchConnectivityModule.m */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		650CE6D22F37F6D20074F0C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 650CE6C42F37F6D00074F0C3;
+			remoteInfo = "SpinBot Remote Watch App";
+		};
+		650CE6DC2F37F6D20074F0C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 650CE6C42F37F6D00074F0C3;
+			remoteInfo = "SpinBot Remote Watch App";
+		};
+		650CE6E32F37F6D20074F0C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 650CE6C42F37F6D00074F0C3;
+			remoteInfo = "SpinBot Remote Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		650CE6E92F37F6D20074F0C3 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				650CE6E52F37F6D20074F0C3 /* SpinBot Remote Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* PingPongRobotApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PingPongRobotApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,10 +63,22 @@
 		3B4392A12AC88292D35C810B /* Pods-PingPongRobotApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PingPongRobotApp.debug.xcconfig"; path = "Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-PingPongRobotApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PingPongRobotApp.release.xcconfig"; path = "Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-PingPongRobotApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PingPongRobotApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		650CE6C02F37F51D0074F0C3 /* PingPongRobotApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PingPongRobotApp-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpinBot Remote Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		650CE6D12F37F6D20074F0C3 /* SpinBot Remote Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SpinBot Remote Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		650CE6DB2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SpinBot Remote Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		650CE6F62F37F9D70074F0C3 /* WatchConnectivityModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WatchConnectivityModule.m; sourceTree = "<group>"; };
+		650CE6F72F37F9D70074F0C3 /* WatchConnectivityModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityModule.swift; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PingPongRobotApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PingPongRobotApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		650CE6C62F37F6D00074F0C3 /* SpinBot Remote Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "SpinBot Remote Watch App"; sourceTree = "<group>"; };
+		650CE6D42F37F6D20074F0C3 /* SpinBot Remote Watch AppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "SpinBot Remote Watch AppTests"; sourceTree = "<group>"; };
+		650CE6DE2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "SpinBot Remote Watch AppUITests"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
@@ -36,12 +89,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		650CE6C22F37F6D00074F0C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6CE2F37F6D20074F0C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6D82F37F6D20074F0C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		13B07FAE1A68108700A75B9A /* PingPongRobotApp */ = {
 			isa = PBXGroup;
 			children = (
+				650CE6F62F37F9D70074F0C3 /* WatchConnectivityModule.m */,
+				650CE6F72F37F9D70074F0C3 /* WatchConnectivityModule.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -72,9 +148,13 @@
 			children = (
 				13B07FAE1A68108700A75B9A /* PingPongRobotApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				650CE6C62F37F6D00074F0C3 /* SpinBot Remote Watch App */,
+				650CE6D42F37F6D20074F0C3 /* SpinBot Remote Watch AppTests */,
+				650CE6DE2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				650CE6C02F37F51D0074F0C3 /* PingPongRobotApp-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -85,6 +165,9 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* PingPongRobotApp.app */,
+				650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */,
+				650CE6D12F37F6D20074F0C3 /* SpinBot Remote Watch AppTests.xctest */,
+				650CE6DB2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,15 +195,85 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				650CE6E92F37F6D20074F0C3 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				650CE6E42F37F6D20074F0C3 /* PBXTargetDependency */,
 			);
 			name = PingPongRobotApp;
 			productName = PingPongRobotApp;
 			productReference = 13B07F961A680F5B00A75B9A /* PingPongRobotApp.app */;
 			productType = "com.apple.product-type.application";
+		};
+		650CE6C42F37F6D00074F0C3 /* SpinBot Remote Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 650CE6E62F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch App" */;
+			buildPhases = (
+				650CE6C12F37F6D00074F0C3 /* Sources */,
+				650CE6C22F37F6D00074F0C3 /* Frameworks */,
+				650CE6C32F37F6D00074F0C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				650CE6C62F37F6D00074F0C3 /* SpinBot Remote Watch App */,
+			);
+			name = "SpinBot Remote Watch App";
+			packageProductDependencies = (
+			);
+			productName = "SpinBot Remote Watch App";
+			productReference = 650CE6C52F37F6D00074F0C3 /* SpinBot Remote Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		650CE6D02F37F6D20074F0C3 /* SpinBot Remote Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 650CE6EA2F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch AppTests" */;
+			buildPhases = (
+				650CE6CD2F37F6D20074F0C3 /* Sources */,
+				650CE6CE2F37F6D20074F0C3 /* Frameworks */,
+				650CE6CF2F37F6D20074F0C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				650CE6D32F37F6D20074F0C3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				650CE6D42F37F6D20074F0C3 /* SpinBot Remote Watch AppTests */,
+			);
+			name = "SpinBot Remote Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "SpinBot Remote Watch AppTests";
+			productReference = 650CE6D12F37F6D20074F0C3 /* SpinBot Remote Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		650CE6DA2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 650CE6ED2F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch AppUITests" */;
+			buildPhases = (
+				650CE6D72F37F6D20074F0C3 /* Sources */,
+				650CE6D82F37F6D20074F0C3 /* Frameworks */,
+				650CE6D92F37F6D20074F0C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				650CE6DD2F37F6D20074F0C3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				650CE6DE2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests */,
+			);
+			name = "SpinBot Remote Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "SpinBot Remote Watch AppUITests";
+			productReference = 650CE6DB2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -128,10 +281,22 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 2600;
+					};
+					650CE6C42F37F6D00074F0C3 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					650CE6D02F37F6D20074F0C3 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 650CE6C42F37F6D00074F0C3;
+					};
+					650CE6DA2F37F6D20074F0C3 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 650CE6C42F37F6D00074F0C3;
 					};
 				};
 			};
@@ -149,6 +314,9 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* PingPongRobotApp */,
+				650CE6C42F37F6D00074F0C3 /* SpinBot Remote Watch App */,
+				650CE6D02F37F6D20074F0C3 /* SpinBot Remote Watch AppTests */,
+				650CE6DA2F37F6D20074F0C3 /* SpinBot Remote Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -161,6 +329,27 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4458474CB04AB0F8B23AD116 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6C32F37F6D00074F0C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6CF2F37F6D20074F0C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6D92F37F6D20074F0C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,9 +380,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -230,9 +423,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PingPongRobotApp/Pods-PingPongRobotApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -246,11 +443,52 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				650CE6F82F37F9D70074F0C3 /* WatchConnectivityModule.swift in Sources */,
+				650CE6F92F37F9D70074F0C3 /* WatchConnectivityModule.m in Sources */,
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		650CE6C12F37F6D00074F0C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6CD2F37F6D20074F0C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		650CE6D72F37F6D20074F0C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		650CE6D32F37F6D20074F0C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 650CE6C42F37F6D00074F0C3 /* SpinBot Remote Watch App */;
+			targetProxy = 650CE6D22F37F6D20074F0C3 /* PBXContainerItemProxy */;
+		};
+		650CE6DD2F37F6D20074F0C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 650CE6C42F37F6D00074F0C3 /* SpinBot Remote Watch App */;
+			targetProxy = 650CE6DC2F37F6D20074F0C3 /* PBXContainerItemProxy */;
+		};
+		650CE6E42F37F6D20074F0C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 650CE6C42F37F6D00074F0C3 /* SpinBot Remote Watch App */;
+			targetProxy = 650CE6E32F37F6D20074F0C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
@@ -276,6 +514,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dannark.PingPongRobotApp;
 				PRODUCT_NAME = PingPongRobotApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "PingPongRobotApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -304,8 +543,252 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dannark.PingPongRobotApp;
 				PRODUCT_NAME = PingPongRobotApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "PingPongRobotApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		650CE6E72F37F6D20074F0C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpinBot Remote";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.dannark.PingPongRobotApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dannark.PingPongRobotApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		650CE6E82F37F6D20074F0C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpinBot Remote";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.dannark.PingPongRobotApp;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dannark.PingPongRobotApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		650CE6EB2F37F6D20074F0C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dannark.SpinBot-Remote-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpinBot Remote Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpinBot Remote Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		650CE6EC2F37F6D20074F0C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dannark.SpinBot-Remote-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpinBot Remote Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpinBot Remote Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		650CE6EE2F37F6D20074F0C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dannark.SpinBot-Remote-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "SpinBot Remote Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		650CE6EF2F37F6D20074F0C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 39W2KWF954;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dannark.SpinBot-Remote-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "SpinBot Remote Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
@@ -463,6 +946,33 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		650CE6E62F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				650CE6E72F37F6D20074F0C3 /* Debug */,
+				650CE6E82F37F6D20074F0C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		650CE6EA2F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				650CE6EB2F37F6D20074F0C3 /* Debug */,
+				650CE6EC2F37F6D20074F0C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		650CE6ED2F37F6D20074F0C3 /* Build configuration list for PBXNativeTarget "SpinBot Remote Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				650CE6EE2F37F6D20074F0C3 /* Debug */,
+				650CE6EF2F37F6D20074F0C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
