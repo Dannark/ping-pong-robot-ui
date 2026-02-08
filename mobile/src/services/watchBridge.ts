@@ -85,6 +85,8 @@ function applyWatchConfig(key: string, value: string): Partial<RobotConfig> {
     feederSpeed: num,
     feederCustomOnMs: num,
     feederCustomOffMs: num,
+    timerIndex: num,
+    timerSoundAlert: bool,
   };
   const fn = map[key as keyof typeof map];
   if (!fn) return {};
