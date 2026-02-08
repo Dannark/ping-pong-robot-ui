@@ -38,10 +38,11 @@ struct FeederPage: View {
   }
 
   private var modeSection: some View {
-    VStack(alignment: .center, spacing: 6) {
+    VStack(alignment: .center, spacing: 0) {
       Text("Mode")
         .font(.caption2)
         .foregroundStyle(.secondary)
+        .padding(.bottom, 12)
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 6) {
           ForEach(0..<feederModes.count, id: \.self) { index in

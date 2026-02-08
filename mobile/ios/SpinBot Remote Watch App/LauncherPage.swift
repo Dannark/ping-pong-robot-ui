@@ -77,10 +77,11 @@ struct LauncherPage: View {
   }
 
   private var directionSection: some View {
-    VStack(alignment: .center, spacing: 6) {
+    VStack(alignment: .center, spacing: 0) {
       Text("Spin")
         .font(.caption2)
         .foregroundStyle(.secondary)
+        .padding(.bottom, 12)
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 6) {
           ForEach(0..<spinDirections.count, id: \.self) { index in

@@ -14,9 +14,10 @@ struct TimerPage: View {
     ScrollView(.vertical, showsIndicators: true) {
       VStack(alignment: .center, spacing: 0) {
         ScreenTitleView(title: "Timer", systemImage: "timer")
-          .padding(.bottom, 10)
+          .padding(.bottom, 14)
 
         durationSection
+          .padding(.top, 2)
           .padding(.bottom, 12)
 
         if timerEnabled {
@@ -30,10 +31,11 @@ struct TimerPage: View {
   }
 
   private var durationSection: some View {
-    VStack(alignment: .center, spacing: 6) {
+    VStack(alignment: .center, spacing: 0) {
       Text("Duration")
         .font(.caption2)
         .foregroundStyle(.secondary)
+        .padding(.bottom, 12)
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 6) {
           ForEach(0..<timerOptions.count, id: \.self) { index in
