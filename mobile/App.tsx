@@ -13,7 +13,7 @@ import { initStoredLanguage } from './src/i18n';
 import { initBleManager } from './src/data/BLERobotConnectionDataSource';
 import { RootStack } from './src/navigation/RootStack';
 import { theme } from './src/theme';
-import { subscribeWatchCommands, handleWatchCommand } from './src/services/watchBridge';
+import { subscribeWatchCommands, handleWatchCommand, startWatchStateSync } from './src/services/watchBridge';
 
 function App() {
   useEffect(() => {
@@ -24,6 +24,11 @@ function App() {
   useEffect(() => {
     const unsubscribe = subscribeWatchCommands(handleWatchCommand);
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const stopSync = startWatchStateSync();
+    return stopSync;
   }, []);
 
   return (

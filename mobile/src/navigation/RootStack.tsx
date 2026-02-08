@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { navigationRef } from './navigationRef';
 import { theme } from '../theme';
 import { HomeScreen } from '../screens/Home';
 import { WizardScreen } from '../screens/Wizard';
@@ -58,7 +59,7 @@ export function RootStack() {
   const { t } = useTranslation();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => {
