@@ -82,18 +82,22 @@ void loop() {
         } else if (settingsIndex == 2) {
           settingsMotorTest = 1;
           settingsMotorSpeed = 0;
+          settingsMotorFocus = 0;
           currentScreen = SCREEN_SETTINGS_MOTOR;
         } else if (settingsIndex == 3) {
           settingsMotorTest = 2;
           settingsMotorSpeed = 0;
+          settingsMotorFocus = 0;
           currentScreen = SCREEN_SETTINGS_MOTOR;
         } else if (settingsIndex == 4) {
           settingsMotorTest = 3;
           settingsMotorSpeed = 0;
+          settingsMotorFocus = 0;
           currentScreen = SCREEN_SETTINGS_MOTOR;
         } else if (settingsIndex == 5) {
           settingsMotorTest = 4;
           settingsMotorSpeed = 0;
+          settingsMotorFocus = 0;
           currentScreen = SCREEN_SETTINGS_MOTOR;
         } else if (settingsIndex == 6) {
           stopAllMotors();
@@ -106,12 +110,21 @@ void loop() {
     }
 
     case SCREEN_SETTINGS_MOTOR: {
-      if (nav == NAV_LEFT) settingsMotorSpeed = clampInt(settingsMotorSpeed - 10, 0, 255);
-      if (nav == NAV_RIGHT) settingsMotorSpeed = clampInt(settingsMotorSpeed + 10, 0, 255);
+      int focusMax = (settingsMotorTest == 4) ? 2 : 1;  // M4: 0=Speed, 1=Revert, 2=Back; M1..M3: 0=Speed, 1=Back
+      if (nav == NAV_UP)   settingsMotorFocus = clampInt(settingsMotorFocus - 1, 0, focusMax);
+      if (nav == NAV_DOWN) settingsMotorFocus = clampInt(settingsMotorFocus + 1, 0, focusMax);
+      if (nav == NAV_LEFT) {
+        if (settingsMotorFocus == 0) settingsMotorSpeed = clampInt(settingsMotorSpeed - 10, 0, 255);
+        else if (settingsMotorTest == 4 && settingsMotorFocus == 1) settingsMotorM4Revert = !settingsMotorM4Revert;
+      }
+      if (nav == NAV_RIGHT) {
+        if (settingsMotorFocus == 0) settingsMotorSpeed = clampInt(settingsMotorSpeed + 10, 0, 255);
+        else if (settingsMotorTest == 4 && settingsMotorFocus == 1) settingsMotorM4Revert = !settingsMotorM4Revert;
+      }
 
-      runSingleMotor(settingsMotorTest, settingsMotorSpeed);
+      runSingleMotor(settingsMotorTest, settingsMotorSpeed, settingsMotorTest == 4 ? settingsMotorM4Revert : false);
 
-      if (swPressedEvent) {
+      if (swPressedEvent && settingsMotorFocus == focusMax) {
         stopAllMotors();
         currentScreen = SCREEN_SETTINGS;
       }

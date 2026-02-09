@@ -32,6 +32,8 @@ extern int settingsServoEditIndex;  // 0: MIN, 1: MID, 2: MAX, 3: Back
 extern int settingsServoSelected;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
 extern int settingsMotorTest;       // 0=nada, 1=M1, 2=M2, 3=M3, 4=M4
 extern int settingsMotorSpeed;     // 0..255 para teste individual
+extern int settingsMotorFocus;     // 0=Speed, 1=Revert(M4) ou Back(M1..M3), 2=Back(M4)
+extern bool settingsMotorM4Revert; // sentido reverso no teste M4
 
 extern Config cfg;
 

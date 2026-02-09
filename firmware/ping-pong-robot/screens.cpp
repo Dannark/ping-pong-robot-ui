@@ -350,11 +350,15 @@ void renderSettingsMotor() {
   display.clearDisplay();
   drawHeader(title);
 
-  display.setCursor(0, BODY_Y);
+  int focusMax = (settingsMotorTest == 4) ? 2 : 1;
+  int y = BODY_Y;
+
+  // Row 0: Speed
+  display.setCursor(0, y);
+  display.print(settingsMotorFocus == 0 ? "> " : "  ");
   display.print("Speed: ");
   display.println(settingsMotorSpeed);
 
-  // Barra 0..255
   int barX = 0;
   int barY = BODY_Y + 14;
   int barW = 128;
@@ -365,8 +369,18 @@ void renderSettingsMotor() {
     display.fillRect(barX + 1, barY + 1, fillW, barH - 2, SSD1306_WHITE);
   }
 
-  display.setCursor(0, BODY_Y + 28);
-  display.println("> Back");
+  y = BODY_Y + 28;
+  if (settingsMotorTest == 4) {
+    display.setCursor(0, y);
+    display.print(settingsMotorFocus == 1 ? "> " : "  ");
+    display.print("Revert: ");
+    display.println(settingsMotorM4Revert ? "Yes" : "No");
+    y += 12;
+  }
+
+  display.setCursor(0, y);
+  display.print(settingsMotorFocus == focusMax ? "> " : "  ");
+  display.println("Back");
 
   display.display();
 }

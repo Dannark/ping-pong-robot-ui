@@ -45,6 +45,8 @@ int settingsServoEditIndex = 0;  // 0: MIN, 1: MID, 2: MAX, 3: Back
 int settingsServoSelected = 0;  // 0: Servo 1 (TILT), 1: Servo 2 (PAN)
 int settingsMotorTest = 0;      // 0=nada, 1=M1, 2=M2, 3=M3, 4=M4
 int settingsMotorSpeed = 0;     // 0..255 para teste individual
+int settingsMotorFocus = 0;     // 0=Speed, 1=Revert (apenas M4)
+bool settingsMotorM4Revert = false;
 
 Config cfg;
 

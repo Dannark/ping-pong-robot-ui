@@ -227,7 +227,7 @@ void setMotorCache(int s1, int s2, int s3) {
   lastLauncherSpeed3 = s3;
 }
 
-void runSingleMotor(int which, int speed) {
+void runSingleMotor(int which, int speed, bool m4Revert) {
   motor1.run(RELEASE);
   motor2.run(RELEASE);
   motor3.run(RELEASE);
@@ -247,7 +247,7 @@ void runSingleMotor(int which, int speed) {
     motor3.run(FORWARD);
   } else if (which == 4) {
     motor4.setSpeed(s);
-    motor4.run(FORWARD);
+    motor4.run(m4Revert ? BACKWARD : FORWARD);
   }
 }
 
