@@ -136,10 +136,28 @@ void getLauncherMotorSpeeds(int power, SpinMode spinMode, int spinIntensity, int
   speed3 = (speed3 < -255) ? -255 : (speed3 > 255) ? 255 : speed3;
 }
 
-void updateFeederMotor(int speed, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs) {
+void updateFeederMotor(int speed, FeederMode mode, unsigned long customOnMs, unsigned long customOffMs, unsigned long runStartMs) {
   unsigned long now = millis();
-  bool shouldRun = false;
 
+  // Recuada padrão ao iniciar partida: M4 gira em reverso por FEEDER_PULLBACK_MS para a bolinha recuar antes do spin máximo
+  static bool wasInPullback = false;
+  if (runStartMs != 0UL && (now - runStartMs) < FEEDER_PULLBACK_MS) {
+    wasInPullback = true;
+    if (speed != lastFeederSpeed) {
+      motor4.setSpeed(speed);
+      lastFeederSpeed = speed;
+    }
+    motor4.run(BACKWARD);
+    lastFeederRunning = true;
+    return;
+  }
+  if (wasInPullback) {
+    lastFeederRunning = false;
+    lastFeederSpeed = -1;
+    wasInPullback = false;
+  }
+
+  bool shouldRun = false;
   switch (mode) {
     case FEED_CONTINUOUS:
       shouldRun = true;

@@ -148,8 +148,8 @@ void updateRunningLogic() {
   // Atualizar motores do launcher (M1, M2, M3)
   updateLauncherMotors(cfg.launcherPower, cfg.spinMode, cfg.spinIntensity);
 
-  // Atualizar motor feeder (M4)
-  updateFeederMotor(cfg.feederSpeed, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs);
+  // Atualizar motor feeder (M4); runStartMs usado para recuada inicial de 0,5 s
+  updateFeederMotor(cfg.feederSpeed, cfg.feederMode, cfg.feederCustomOnMs, cfg.feederCustomOffMs, runStartMs);
 }
 
 void updateAxisPreviewTargets() {

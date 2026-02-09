@@ -27,6 +27,9 @@
 #define AIM_STEP 0.025f
 #define AIM_FAST 2.8f
 
+// Feeder M4 recua por este tempo (ms) ao iniciar partida; depois inicia no sentido configurado
+#define FEEDER_PULLBACK_MS 500UL
+
 // ================= UI States =================
 enum Screen {
   SCREEN_HOME = 0,
